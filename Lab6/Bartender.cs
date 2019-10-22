@@ -59,11 +59,6 @@ namespace Lab6
         }
         void WaitingForPatron(Bar bar)
         {
-            if (CheckBarCue(bar))
-            {
-                CurrentState = State.WaitingForCleanGlass;
-                return;
-            }
             if (!CheckBarCue(bar))
             {
                 // Log Waiting for Patron
@@ -71,6 +66,10 @@ namespace Lab6
             while (!CheckBarCue(bar))
             {
                 Thread.Sleep(3000);
+            }
+            if (CheckBarCue(bar))
+            {
+                CurrentState = State.WaitingForCleanGlass;
             }
 
         }
@@ -80,11 +79,6 @@ namespace Lab6
         }
         void WaitingForCleanGlass(Bar bar)
         {
-            if (CheckBarShelf(bar))
-            {
-                CurrentState = State.PouringBeer;
-                return;
-            }
             if (!CheckBarShelf(bar))
             {
                 // Log Waiting for glass
@@ -92,6 +86,10 @@ namespace Lab6
             while (!CheckBarShelf(bar))
             {
                 Thread.Sleep(3000);
+            }
+            if (CheckBarShelf(bar))
+            {
+                CurrentState = State.PouringBeer;
             }
         }
         void LeavingWork()
