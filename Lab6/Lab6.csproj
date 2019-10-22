@@ -55,7 +55,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Chair.cs" />
+    <Compile Include="Establishment.cs" />
     <Compile Include="Glass.cs" />
+    <Compile Include="Patron.cs" />
     <Compile Include="Table.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
