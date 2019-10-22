@@ -7,15 +7,27 @@ using System.Threading.Tasks;
 
 namespace Lab6
 {
-    class Bar
+    public class Bar
     {
         public ConcurrentBag<Glass> Shelf { get; private set; }
         public ConcurrentBag<Glass> BarTop { get; set; }
-        public ConcurrentQueue<Patron> BarCue { get; set; }
-        public Bar(Establishment est)
+        public ConcurrentQueue<Patron> BarQueue { get; set; }
+        public Bar(Establishment establishment)
         {
             Shelf = new ConcurrentBag<Glass>();
             BarTop = new ConcurrentBag<Glass>();
+            BarQueue = new ConcurrentQueue<Patron>();
+            FillShelf(establishment);
+        }
+
+        private void FillShelf(Establishment establishment)
+        {
+            for (int i = 0; i < establishment.MaxGlasses; i++)
+            {
+                var glass = new Glass();
+                glass.CurrentState = Glass.State.Clean;
+                Shelf.Add(glass);
+            }
         }
     }
 }

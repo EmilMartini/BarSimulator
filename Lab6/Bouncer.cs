@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -69,7 +68,7 @@ namespace Lab6
         {
         }
 
-        public void Simulate(Establishment est, SimulationManager sim)
+        public void Simulate(SimulationManager sim)
         {
             currentState = State.Working;
             Task.Run(() =>
@@ -82,7 +81,7 @@ namespace Lab6
                             Wait();
                             break;
                         case State.Working:
-                            Work(est, sim);
+                            Work(sim);
                             break;
                         case State.LeavingWork:
                             LeavingWork();
@@ -97,15 +96,15 @@ namespace Lab6
             throw new NotImplementedException();
         }
 
-        private void Work(Establishment est, SimulationManager sim)
+        private void Work(SimulationManager sim)
         {
-            if (!est.IsOpen)
+            if (!sim.establishment.IsOpen)
             {
                 currentState = State.LeavingWork;
                 return;
             }
 
-            Patron patron = new Patron(patronNames[rnd.Next(0, patronNames.Length - 1)], est.Table);
+            Patron patron = new Patron(patronNames[rnd.Next(0, patronNames.Length - 1)], sim.establishment);
             sim.CurrentPatrons.Insert(0, patron);
             Enter(patron);
             currentState = State.Waiting;

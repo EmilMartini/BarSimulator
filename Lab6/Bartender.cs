@@ -8,12 +8,14 @@ namespace Lab6
     {
         public enum State { WaitingForPatron, WaitingForCleanGlass, PouringBeer, LeavingWork }
         public State CurrentState { get; set; }
-        
+        public delegate void BartenderEvent();
+        public event BartenderEvent WaitingForPatronEvent, WaitingForCleanGlassEvent, PouringBeerEvent, LeavingWorkEvent;
+
         public Bartender(Establishment est)
         {
-
+            CurrentState = State.WaitingForPatron;
         }
-        void Simulate(Bar bar)
+        public void Simulate(Establishment est)
         {
             Task.Run(() =>
             {
@@ -22,13 +24,13 @@ namespace Lab6
                     switch (CurrentState)
                     {
                         case State.WaitingForPatron:
-                            WaitingForPatron();
+                            WaitingForPatron(est.Bar);
                             break;
                         case State.WaitingForCleanGlass:
-                            WaitingForCleanGlass();
+                            WaitingForCleanGlass(est.Bar);
                             break;
                         case State.PouringBeer:
-                            PouringBeer();
+                            PouringBeer(est.Bar);
                             break;
                         case State.LeavingWork:
                             LeavingWork();
@@ -36,52 +38,66 @@ namespace Lab6
                         default:
                             break;
                     }
-
-
                 } while (CurrentState != State.LeavingWork);
             });
         }
-        bool CheckBarCue(Bar bar)
+        bool CheckBarQueue(Bar bar)
         {
-            if (bar.BarCue != null)
-            {
+            if (bar.BarQueue.Count > 0)
                 return true;
-            }
+            
             return false;
         }
         bool CheckBarShelf(Bar bar)
         {
-            if (bar.Shelf != null)
-            {
+            if (bar.Shelf.Count > 0)
                 return true;
-            }
+            
             return false;
         }
+
         void WaitingForPatron(Bar bar)
         {
-            if (!CheckBarCue(bar))
+            if (!CheckBarQueue(bar))
             {
-                // Log Waiting for Patron
+                WaitingForPatronEvent();
             }
-            while (!CheckBarCue(bar))
+            
+            while (!CheckBarQueue(bar))
             {
-                Thread.Sleep(3000);
+                Thread.Sleep(300);
             }
-            if (CheckBarCue(bar))
+            
+            if (CheckBarQueue(bar))
             {
-                CurrentState = State.WaitingForCleanGlass;
+                if (CheckBarShelf(bar))
+                {
+                    CurrentState = State.PouringBeer;
+                } else
+                {
+                    CurrentState = State.WaitingForCleanGlass;
+                }
             }
-
         }
         void PouringBeer(Bar bar)
         {
-            
+            Glass glass;
+            if(bar.Shelf.TryTake(out glass))
+            {
+                PouringBeerEvent();
+                bar.BarTop.Add(glass);
+                CurrentState = State.WaitingForPatron;
+            } else
+            {
+                CurrentState = State.WaitingForCleanGlass;
+            }
+            Thread.Sleep(3000);
         }
         void WaitingForCleanGlass(Bar bar)
         {
             if (!CheckBarShelf(bar))
             {
-                // Log Waiting for glass
+                WaitingForCleanGlassEvent();
             }
             while (!CheckBarShelf(bar))
             {

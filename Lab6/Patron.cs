@@ -6,18 +6,23 @@ using System.Threading.Tasks;
 
 namespace Lab6
 {
-    class Patron
-    {
+    public class Patron
+    { 
         public enum State { WaitingForChair, WaitingForBeer, DrinkingBeer, WalkingToBar, WalkingToChair, LeavingEstablishment }
+        public delegate void PatronEvent(Patron p);
+        public static event PatronEvent WaitingForBeerEvent, WaitingForChairEvent, WalkingToBarEvent, WalkingToChairEvent, DrinkingBeerEvent, LeavingEstablishmentEvent;
+
         public string Name { get; private set; }
         public State CurrentState { get; set; }
         public ConcurrentBag<Glass> Holding { get; set; }
-        public Patron(string name, Table table)
+        public Patron(string name, Establishment establishment)
         {
             Name = name;
             CurrentState = State.WalkingToBar;
+            Holding = new ConcurrentBag<Glass>();
+            Simulate(establishment);
         }
-        void Simulate(Table table, Bar bar)
+        void Simulate(Establishment establishment)
         {
             Task.Run(() =>
             {
@@ -26,16 +31,16 @@ namespace Lab6
                     switch (CurrentState)
                     {
                         case State.WaitingForChair:
-                            WaitingForChair(table);
+                            WaitingForChair(establishment.Table);
                             break;
                         case State.WaitingForBeer:
-                            WaitingForBeer(bar);
+                            WaitingForBeer(establishment.Bar);
                             break;
                         case State.DrinkingBeer:
-                            DrikingBeer();
+                            DrinkingBeer(establishment.Table);
                             break;
                         case State.WalkingToBar:
-                            WalkingToBar();
+                            WalkingToBar(establishment.Bar);
                             break;
                         case State.WalkingToChair:
                             WalkingToChair();
@@ -51,12 +56,9 @@ namespace Lab6
         }
         bool CheckBarTopForBeer(Bar bar)
         {
-            foreach (var beer in bar.BarTop)
+            if(bar.BarTop.Count > 0)
             {
-                if (bar.BarTop != null)
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
@@ -73,7 +75,7 @@ namespace Lab6
         }
         void DrinkingBeer(Table table)
         {
-            // Skicka logg till LogManager "Name: sätter sig och dricker öl
+            DrinkingBeerEvent(this);
             Thread.Sleep(15000);
             foreach (var glass in Holding) // gör med lambda sedan
             {
@@ -88,14 +90,14 @@ namespace Lab6
             if (!CheckForEmptyChair(table))
             {
                 Thread.Sleep(3000);
-                // Skicka logg till LogManager "Name: väntar på en stol
+                WaitingForChairEvent(this);
                 return;
             }
             foreach (var chair in table.ChairsAroundTable)
             {
                 if (CheckForEmptyChair(table))
                 {
-                    chair.Available = false;
+                    chair.Available = true;
                     CurrentState = State.DrinkingBeer;
                 }
             }
@@ -105,30 +107,28 @@ namespace Lab6
         {
             if (CheckBarTopForBeer(bar)) // och först i kön
             {
-                foreach (var glass in bar.BarTop)
-                {
-                    Holding.Add(glass);
-                    bar.BarTop = new ConcurrentBag<Glass>(bar.BarTop.Except(new[] { glass }));
-                    CurrentState = State.WaitingForChair;
-                    return;
-                }
+                Glass glass = bar.BarTop.ElementAt(0);
+                Holding.Add(glass);
+                bar.BarTop = new ConcurrentBag<Glass>(bar.BarTop.Except(new[] { glass }));
+                bar.BarQueue = new ConcurrentQueue<Patron>(bar.BarQueue.Except(new[] { this }));
+                CurrentState = State.WaitingForChair;
             }
             Thread.Sleep(2000);
         }
         void LeavingEstablishment()
         {
-            //Log Leaving the establishment
+            LeavingEstablishmentEvent(this);
             Thread.Sleep(5000);
         }
-        void WalkingToBar()
+        void WalkingToBar(Bar bar)
         {
-            //Log Walking to table
-            Thread.Sleep(5000);
+            WalkingToBarEvent(this);
+            bar.BarQueue.Enqueue(this);
             CurrentState = State.WaitingForBeer;
         }
         void WalkingToChair()
         {
-            //Log Walking to table
+            WalkingToChairEvent(this);
             Thread.Sleep(5000);
             CurrentState = State.WaitingForChair;
         }

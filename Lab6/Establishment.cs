@@ -11,6 +11,7 @@ namespace Lab6
         public bool IsOpen { get; set; }
         public int TimeToClose { get; set; }
         public Table Table { get; set; }
+        public Bar Bar { get; set; }
 
         public Establishment(int maxGlasses, int maxChairs, int timeToClose, int simulationSpeed)
         {
@@ -20,6 +21,7 @@ namespace Lab6
             SimulationSpeed = simulationSpeed;
             Table = new Table(this);
             IsOpen = true;
+            Bar = new Bar(this);
         }
     }
 }
