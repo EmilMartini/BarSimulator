@@ -9,7 +9,7 @@ namespace Lab6
 {
     class Bar
     {
-        public ConcurrentBag<Glass> Shelf { get; private set; }
+        public ConcurrentBag<Glass> Shelf { get; set; }
         public ConcurrentBag<Glass> BarTop { get; set; }
         public ConcurrentQueue<Patron> BarCue { get; set; }
         public Bar(Establishment est)

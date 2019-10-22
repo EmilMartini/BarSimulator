@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,7 +10,8 @@ namespace Lab6
     {
         public enum State { WaitingForPatron, WaitingForCleanGlass, PouringBeer, LeavingWork }
         public State CurrentState { get; set; }
-        
+        public delegate void BartenderAction();
+        public event BartenderAction WaitingForPatronEvent, WaitingForCleanGlassEvent, PouringBeerEvent, LeavingWorkEvent, HasLeftWorkEvent;
         public Bartender(Establishment est)
         {
 
@@ -22,13 +25,13 @@ namespace Lab6
                     switch (CurrentState)
                     {
                         case State.WaitingForPatron:
-                            WaitingForPatron();
+                            WaitingForPatron(bar);
                             break;
                         case State.WaitingForCleanGlass:
-                            WaitingForCleanGlass();
+                            WaitingForCleanGlass(bar);
                             break;
                         case State.PouringBeer:
-                            PouringBeer();
+                            PouringBeer(bar);
                             break;
                         case State.LeavingWork:
                             LeavingWork();
@@ -61,7 +64,7 @@ namespace Lab6
         {
             if (!CheckBarCue(bar))
             {
-                // Log Waiting for Patron
+                WaitingForPatronEvent();
             }
             while (!CheckBarCue(bar))
             {
@@ -75,13 +78,21 @@ namespace Lab6
         }
         void PouringBeer(Bar bar)
         {
-            
+            PouringBeerEvent();
+            foreach (var glass in bar.Shelf)
+            {
+                glass.CurrentState = Glass.State.Full;
+                bar.BarTop.Add(glass);
+                bar.Shelf = new ConcurrentBag<Glass>(bar.Shelf.Except(new[] { glass }));
+                return;
+            }
+
         }
         void WaitingForCleanGlass(Bar bar)
         {
             if (!CheckBarShelf(bar))
             {
-                // Log Waiting for glass
+                WaitingForCleanGlassEvent();
             }
             while (!CheckBarShelf(bar))
             {
@@ -94,7 +105,9 @@ namespace Lab6
         }
         void LeavingWork()
         {
-            
+            LeavingWorkEvent();
+            Thread.Sleep(5000);
+            HasLeftWorkEvent();
         }
     }
 }

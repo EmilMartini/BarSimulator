@@ -27,6 +27,36 @@ namespace Lab6
         public void SubscribeToEvents(SimulationManager sim)
         {
             bouncer.Enter += OnBouncerWork;
+            bartender.WaitingForPatronEvent += OnWaitingForPatron;
+            bartender.WaitingForCleanGlassEvent += OnWaitingForCleanGlass;
+            bartender.PouringBeerEvent += OnPouringBeer;
+            bartender.LeavingWorkEvent += OnLeavingWork;
+            bartender.HasLeftWorkEvent += OnHasLeftWorkEvent;
+        }
+
+        private void OnHasLeftWorkEvent()
+        {
+            throw new NotImplementedException();
+        }
+
+        void OnLeavingWork()
+        {
+            throw new NotImplementedException();
+        }
+
+        void OnPouringBeer()
+        {
+            throw new NotImplementedException();
+        }
+
+        void OnWaitingForCleanGlass()
+        {
+            throw new NotImplementedException();
+        }
+
+        void OnWaitingForPatron()
+        {
+            throw new NotImplementedException();
         }
 
         void OnBouncerWork(Patron patron)
