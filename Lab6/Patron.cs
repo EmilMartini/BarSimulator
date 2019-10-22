@@ -32,7 +32,7 @@ namespace Lab6
                             WaitingForBeer(bar);
                             break;
                         case State.DrinkingBeer:
-                            DrinkingBeer(table);
+                            DrikingBeer();
                             break;
                         case State.WalkingToBar:
                             WalkingToBar();
