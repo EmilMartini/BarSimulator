@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,12 @@ namespace Lab6
 {
     class Bar
     {
+        public ConcurrentBag<Glass> Shelf { get; private set; }
+        public ConcurrentBag<Glass> BarTop { get; private set; }
+        public Bar(Establishment est)
+        {
+            Shelf = new ConcurrentBag<Glass>();
+            BarTop = new ConcurrentBag<Glass>();
+        }
     }
 }

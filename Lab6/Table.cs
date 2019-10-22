@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 
 namespace Lab6
 {
-    class Table
+    public class Table
     {
         BlockingCollection<Glass> GlassesOnTable;
         BlockingCollection<Chair> ChairsAroundTable;

@@ -2,8 +2,9 @@
 {
     public class Bartender
     {
-        public Bartender()
+        public Bartender(Establishment est)
         {
+
         }
     }
 }

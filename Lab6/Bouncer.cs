@@ -58,6 +58,7 @@ namespace Lab6
             "Carter",
             "Owen"
             };
+        public ConcurrentBag 
         public Bouncer(Establishment est)
         {
             Simulate(est);

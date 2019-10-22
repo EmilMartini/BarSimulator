@@ -7,26 +7,27 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="518" Width="1200.5">
     <Grid>
-        <Label Content="Bouncer" HorizontalAlignment="Left" Height="26" Margin="58,122,0,0" VerticalAlignment="Top" Width="156"/>
-        <ListBox HorizontalAlignment="Left" Height="186" Margin="58,148,0,0" VerticalAlignment="Top" Width="156"/>
-        <Label Content="Bartender" HorizontalAlignment="Left" Height="26" Margin="266,122,0,0" VerticalAlignment="Top" Width="156"/>
-        <ListBox HorizontalAlignment="Left" Height="186" Margin="266,148,0,0" VerticalAlignment="Top" Width="156"/>
-        <ListBox HorizontalAlignment="Left" Height="186" Margin="498,148,0,0" VerticalAlignment="Top" Width="156"/>
-        <ListBox HorizontalAlignment="Left" Height="186" Margin="718,148,0,0" VerticalAlignment="Top" Width="156"/>
-        <Label Content="Waitress" HorizontalAlignment="Left" Height="26" Margin="498,122,0,0" VerticalAlignment="Top" Width="156"/>
-        <Label Content="Patrons" HorizontalAlignment="Left" Height="26" Margin="718,122,0,0" VerticalAlignment="Top" Width="156"/>
-        <Label Content="Gäster i baren(max gäster)" HorizontalAlignment="Left" Margin="945,148,0,0" VerticalAlignment="Top" Height="31" Width="223"/>
-        <Label Content="Rena glas i baren(Total glas)" HorizontalAlignment="Left" Margin="945,204,0,0" VerticalAlignment="Top" Height="30" Width="223"/>
-        <Label Content="Lediga stolar (Total stolar)" HorizontalAlignment="Left" Margin="945,253,0,0" VerticalAlignment="Top" Height="31" Width="223"/>
-        <Button Content="Paus/start" HorizontalAlignment="Left" Height="27" Margin="58,334,0,0" VerticalAlignment="Top" Width="156"/>
-        <Button Content="Paus/start" HorizontalAlignment="Left" Height="27" Margin="266,334,0,0" VerticalAlignment="Top" Width="156"/>
-        <Button Content="Paus/start" HorizontalAlignment="Left" Height="27" Margin="498,334,0,0" VerticalAlignment="Top" Width="156"/>
-        <Button Content="Paus/start" HorizontalAlignment="Left" Height="27" Margin="718,334,0,0" VerticalAlignment="Top" Width="156"/>
-        <Button Content="Stop all&#xD;&#xA;" HorizontalAlignment="Left" Height="27" Margin="945,334,0,0" VerticalAlignment="Top" Width="204"/>
-        <Button Content="Öppna stäng/baren&#xD;&#xA;" HorizontalAlignment="Left" Height="37" Margin="309,366,0,0" VerticalAlignment="Top" Width="345"/>
-        <Label Content="Setting" HorizontalAlignment="Left" Height="26" Margin="58,10,0,0" VerticalAlignment="Top" Width="156"/>
-        <ListBox HorizontalAlignment="Left" Height="69" Margin="58,48,0,0" VerticalAlignment="Top" Width="156"/>
-        <Label Content="Tid öppnat (Total stolar)" HorizontalAlignment="Left" Margin="945,289,0,0" VerticalAlignment="Top" Height="31" Width="223"/>
+        <Label x:Name="BouncerLabel" Content="Bouncer" HorizontalAlignment="Left" Height="26" Margin="58,122,0,0" VerticalAlignment="Top" Width="156" Visibility="Hidden"/>
+        <ListBox x:Name="BouncerListbox" HorizontalAlignment="Left" Height="186" Margin="58,148,0,0" VerticalAlignment="Top" Width="156" Visibility="Hidden"/>
+        <Label x:Name="BartenderLabel" Content="Bartender" HorizontalAlignment="Left" Height="26" Margin="266,122,0,0" VerticalAlignment="Top" Width="156" Visibility="Hidden"/>
+        <ListBox x:Name="BartenderListbox" HorizontalAlignment="Left" Height="186" Margin="266,148,0,0" VerticalAlignment="Top" Width="156" Visibility="Hidden"/>
+        <ListBox x:Name="WaitressListbox" HorizontalAlignment="Left" Height="186" Margin="498,148,0,0" VerticalAlignment="Top" Width="156" Visibility="Hidden"/>
+        <ListBox x:Name="PatronsListbox" HorizontalAlignment="Left" Height="186" Margin="718,148,0,0" VerticalAlignment="Top" Width="156" Visibility="Hidden"/>
+        <Label x:Name="WaitressLabel" Content="Waitress" HorizontalAlignment="Left" Height="26" Margin="498,122,0,0" VerticalAlignment="Top" Width="156" Visibility="Hidden"/>
+        <Label x:Name="PatronsLabel" Content="Patrons" HorizontalAlignment="Left" Height="26" Margin="718,122,0,0" VerticalAlignment="Top" Width="156" Visibility="Hidden"/>
+        <Label x:Name="GuestsInBarLabel" Content="Patrons in bar(Max patrons)" HorizontalAlignment="Left" Margin="945,148,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Hidden"/>
+        <Label x:Name="CleanGlassesLabel" Content="Clean glasses(Total glasses)" HorizontalAlignment="Left" Margin="945,204,0,0" VerticalAlignment="Top" Height="30" Width="223" Visibility="Hidden"/>
+        <Label x:Name="FreeChairsLabel" Content="Available chairs (Total chairs)" HorizontalAlignment="Left" Margin="945,253,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Hidden"/>
+        <Button x:Name="BouncerButton" Content="Paus/Start" HorizontalAlignment="Left" Height="27" Margin="58,334,0,0" VerticalAlignment="Top" Width="156" Visibility="Hidden"/>
+        <Button x:Name="BartenderButton" Content="Paus/Start" HorizontalAlignment="Left" Height="27" Margin="266,334,0,0" VerticalAlignment="Top" Width="156" Visibility="Hidden"/>
+        <Button x:Name="WaitressButton" Content="Paus/Start" HorizontalAlignment="Left" Height="27" Margin="498,334,0,0" VerticalAlignment="Top" Width="156" Visibility="Hidden"/>
+        <Button x:Name="PatronsButton" Content="Paus/Start" HorizontalAlignment="Left" Height="27" Margin="718,334,0,0" VerticalAlignment="Top" Width="156" Visibility="Hidden"/>
+        <Button x:Name="StopAllButton" Content="Stop All&#xD;&#xA;" HorizontalAlignment="Left" Height="27" Margin="945,334,0,0" VerticalAlignment="Top" Width="204" Visibility="Hidden"/>
+        <Button x:Name="OpenCLoseButton" Content="Open Close/Bar&#xD;&#xA;" HorizontalAlignment="Left" Height="37" Margin="309,366,0,0" VerticalAlignment="Top" Width="345" Visibility="Hidden"/>
+        <Label x:Name="SettingsLabel" Content="Setting" HorizontalAlignment="Left" Height="26" Margin="477,187,0,0" VerticalAlignment="Top" Width="156"/>
+        <Label x:Name="TimeToCloseLabel" Content="Time to closing" HorizontalAlignment="Left" Margin="945,289,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Hidden"/>
+        <ComboBox x:Name="SimulationStateDropDown" HorizontalAlignment="Left" Margin="477,213,0,0" VerticalAlignment="Top" Width="156" Height="48" Initialized="ComboBox_Initialized"/>
+        <Button x:Name="StartSimButton" Content="Start&#xD;&#xA;Simulation" HorizontalAlignment="Left" Margin="638,213,0,0" VerticalAlignment="Top" Width="75" Height="48" Click="StartSimButton_Click"/>
 
     </Grid>
 </Window>

@@ -64,6 +64,7 @@
     <Compile Include="LogManager.cs" />
     <Compile Include="Patron.cs" />
     <Compile Include="SimulationManager.cs" />
+    <Compile Include="SimulationState.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="Waiter.cs" />
     <Page Include="MainWindow.xaml">

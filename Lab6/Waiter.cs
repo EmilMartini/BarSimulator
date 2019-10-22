@@ -6,14 +6,15 @@ namespace Lab6
     public class Waiter
     {
         BlockingCollection<Glass> carryingGlasses;
-        public Waiter(Establishment est)
+        public Waiter(Table table)
         {
-            carryingGlasses = new BlockingCollection<Glass>(est.MaxGlasses);
-            Simulate(est);
+            carryingGlasses = new BlockingCollection<Glass>();
+            Simulate(table);
         }
 
-        private void Simulate(Establishment est)
+        private void Simulate(Table table)
         {
+
         }
     }
 }

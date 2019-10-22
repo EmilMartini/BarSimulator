@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Lab6
 {
@@ -23,6 +12,49 @@ namespace Lab6
         public MainWindow()
         {
             InitializeComponent();
+        }
+        private void DisplayComponents()
+        {
+            BouncerButton.Visibility = Visibility.Visible;
+            BouncerLabel.Visibility = Visibility.Visible;
+            BouncerListbox.Visibility = Visibility.Visible;
+
+            BartenderButton.Visibility = Visibility.Visible;
+            BartenderLabel.Visibility = Visibility.Visible;
+            BartenderListbox.Visibility = Visibility.Visible;
+
+            WaitressButton.Visibility = Visibility.Visible;
+            WaitressLabel.Visibility = Visibility.Visible;
+            WaitressListbox.Visibility = Visibility.Visible;
+
+            PatronsButton.Visibility = Visibility.Visible;
+            PatronsLabel.Visibility = Visibility.Visible;
+            PatronsListbox.Visibility = Visibility.Visible;
+
+            OpenCLoseButton.Visibility = Visibility.Visible;
+
+            GuestsInBarLabel.Visibility = Visibility.Visible;
+            CleanGlassesLabel.Visibility = Visibility.Visible;
+            FreeChairsLabel.Visibility = Visibility.Visible;
+            TimeToCloseLabel.Visibility = Visibility.Visible;
+            StopAllButton.Visibility = Visibility.Visible;
+
+            SettingsLabel.Visibility = Visibility.Hidden;
+            SimulationStateDropDown.Visibility = Visibility.Hidden;
+            StartSimButton.Visibility = Visibility.Hidden;
+        }
+        public MainWindow GetWindow()
+        {
+            return this;
+        }
+        private void ComboBox_Initialized(object sender, EventArgs e)
+        {
+            SimulationStateDropDown.ItemsSource = Enum.GetValues(typeof(SimulationState)).Cast<SimulationState>(); 
+        }
+        private void StartSimButton_Click(object sender, RoutedEventArgs e)
+        {
+            DisplayComponents();
+            SimulationManager Manager = new SimulationManager((SimulationState)SimulationStateDropDown.SelectedItem);
         }
     }
 }

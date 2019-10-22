@@ -14,7 +14,7 @@ namespace Lab6
         void Simulate()
         {
             //Task.Run();
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }

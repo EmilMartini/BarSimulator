@@ -4,7 +4,15 @@ namespace Lab6
 {
     class LogManager
     {
-        //Timestamp
-        //ref till main window och subscriba på events från alla agenter
+        DateTime startTime;
+        MainWindow PresentationLayer;
+        public LogManager(MainWindow presentationLayer, SimulationManager sim)
+        {
+            startTime = DateTime.Now;
+            PresentationLayer = presentationLayer;
+            presentationLayer.PatronsListbox.ItemsSource = sim.GetBou
+        }
+
+
     }
 }
