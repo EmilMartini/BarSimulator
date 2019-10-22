@@ -4,11 +4,10 @@ namespace Lab6
 {
     class Patron
     {
-        public Patron()
+        public string Name { get; private set; }
+        public Patron(string name)
         {
-            //INFO
-            //
-            //
+            Name = name;
             Simulate();
         }
 
