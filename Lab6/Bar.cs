@@ -11,6 +11,7 @@ namespace Lab6
     {
         public ConcurrentBag<Glass> Shelf { get; private set; }
         public ConcurrentBag<Glass> BarTop { get; set; }
+        public ConcurrentQueue<Patron> BarCue { get; set; }
         public Bar(Establishment est)
         {
             Shelf = new ConcurrentBag<Glass>();
