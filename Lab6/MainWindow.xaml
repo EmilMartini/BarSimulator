@@ -26,7 +26,7 @@
         <Button x:Name="OpenCLoseButton" Content="Open Close/Bar&#xD;&#xA;" HorizontalAlignment="Left" Height="37" Margin="309,366,0,0" VerticalAlignment="Top" Width="345" Visibility="Hidden"/>
         <Label x:Name="SettingsLabel" Content="Setting" HorizontalAlignment="Left" Height="26" Margin="477,187,0,0" VerticalAlignment="Top" Width="156"/>
         <Label x:Name="TimeToCloseLabel" Content="Time to closing" HorizontalAlignment="Left" Margin="945,289,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Hidden"/>
-        <ComboBox x:Name="SimulationStateDropDown" HorizontalAlignment="Left" Margin="477,213,0,0" VerticalAlignment="Top" Width="156" Height="48" Initialized="ComboBox_Initialized"/>
+        <ComboBox x:Name="SimulationStateDropDown" HorizontalAlignment="Left" Margin="477,213,0,0" VerticalAlignment="Top" Width="156" Height="48" Initialized="ComboBox_Initialized" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <Button x:Name="StartSimButton" Content="Start&#xD;&#xA;Simulation" HorizontalAlignment="Left" Margin="638,213,0,0" VerticalAlignment="Top" Width="75" Height="48" Click="StartSimButton_Click"/>
 
     </Grid>

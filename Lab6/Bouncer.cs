@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Lab6
 {
     class Bouncer
     {
+        public delegate void Entry(Patron p);
+        public event Entry Enter;
         Random rnd = new Random();
         string[] patronNames = new string[]
         {
@@ -58,16 +63,57 @@ namespace Lab6
             "Carter",
             "Owen"
             };
-        public ConcurrentBag 
-        public Bouncer(Establishment est)
+        enum State { Waiting, Working, LeavingWork}
+        State currentState { get; set; }
+        public Bouncer(Establishment est, SimulationManager sim)
         {
-            Simulate(est);
         }
 
-        private void Simulate(Establishment est)
+        public void Simulate(Establishment est, SimulationManager sim)
         {
-            Patron patron = new Patron(patronNames[rnd.Next(0, patronNames.Length - 1)]);
-            
+            currentState = State.Working;
+            Task.Run(() =>
+            {
+                do
+                {
+                    switch (currentState)
+                    {
+                        case State.Waiting:
+                            Wait();
+                            break;
+                        case State.Working:
+                            Work(est, sim);
+                            break;
+                        case State.LeavingWork:
+                            LeavingWork();
+                            break;
+                    }
+                } while (currentState != State.LeavingWork);
+            });
+        }
+
+        private void LeavingWork()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Work(Establishment est, SimulationManager sim)
+        {
+            if (!est.IsOpen)
+            {
+                currentState = State.LeavingWork;
+                return;
+            }
+
+            Patron patron = new Patron(patronNames[rnd.Next(0, patronNames.Length - 1)], est.Table);
+            sim.CurrentPatrons.Insert(0, patron);
+            Enter(patron);
+            currentState = State.Waiting;
+        }
+        private void Wait()
+        {
+            Thread.Sleep(rnd.Next(8000, 10000));
+            currentState = State.Working;
         }
     }
 }

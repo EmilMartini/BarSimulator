@@ -17,7 +17,6 @@ namespace Lab6
             CurrentState = State.WalkingToBar;
             Simulate(table);
         }
-
         void Simulate(Table table)
         {
             Task.Run(() =>
@@ -33,7 +32,7 @@ namespace Lab6
                             WaitingForBeer();
                             break;
                         case State.DrinkingBeer:
-                            DrikingBeer();
+                            DrinkingBeer(table);
                             break;
                         case State.WalkingToBar:
                             WalkingToBar();
@@ -58,7 +57,7 @@ namespace Lab6
             }
             return false;
         }
-        void DrikingBeer(Table table)
+        void DrinkingBeer(Table table)
         {
             // Skicka logg till LogManager "Name: sätter sig och dricker öl
             Thread.Sleep(15000);
