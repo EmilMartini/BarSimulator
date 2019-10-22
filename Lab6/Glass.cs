@@ -1,6 +1,8 @@
 ﻿namespace Lab6
 {
-    internal class Glass
+    public class Glass
     {
+        public enum State { Full, Dirty, Clean }
+        public State CurrentState { get; set; }
     }
 }
