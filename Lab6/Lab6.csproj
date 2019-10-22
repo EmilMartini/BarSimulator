@@ -55,11 +55,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Bar.cs" />
+    <Compile Include="Bartender.cs" />
+    <Compile Include="Bouncer.cs" />
     <Compile Include="Chair.cs" />
     <Compile Include="Establishment.cs" />
     <Compile Include="Glass.cs" />
+    <Compile Include="LogManager.cs" />
     <Compile Include="Patron.cs" />
+    <Compile Include="SimulationManager.cs" />
     <Compile Include="Table.cs" />
+    <Compile Include="Waiter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

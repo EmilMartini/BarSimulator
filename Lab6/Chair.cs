@@ -2,6 +2,6 @@
 {
     public class Chair
     {
-        public bool IsSeated {get; set;}
+        public bool Available {get; set;}
     }
 }

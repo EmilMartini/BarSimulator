@@ -19,7 +19,7 @@ namespace Lab6
             for (int i = 0; i < ChairsAroundTable.BoundedCapacity; i++)
             {
                 var chair = new Chair();
-                chair.IsSeated = false;
+                chair.Available = true;
                 ChairsAroundTable.TryAdd(chair);
             }
         }

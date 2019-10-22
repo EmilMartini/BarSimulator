@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 
 namespace Lab6
 {
-    class Establishment
+    public class Establishment
     {
         public int MaxGlasses { get; private set; }
         public int MaxChairs { get; private set; }
