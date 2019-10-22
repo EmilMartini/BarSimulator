@@ -1,20 +1,103 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Lab6
 {
     class Patron
     {
+        public enum State { WaitingForChair, WaitingForBeer, DrinkingBeer, WalkingToBar, LeavingEstablishment }
         public string Name { get; private set; }
-        public Patron(string name)
+        public State CurrentState { get; set; }
+        public ConcurrentBag<Glass> Holding { get; set; }
+        public Patron(string name, Table table)
         {
             Name = name;
-            Simulate();
+            CurrentState = State.WalkingToBar;
+            Simulate(table);
         }
 
-        void Simulate()
+        void Simulate(Table table)
         {
-            //Task.Run();
-            throw new NotImplementedException();
+            Task.Run(() =>
+            {
+                do
+                {
+                    switch (CurrentState)
+                    {
+                        case State.WaitingForChair:
+                            WaitingForChair(table);
+                            break;
+                        case State.WaitingForBeer:
+                            WaitingForBeer();
+                            break;
+                        case State.DrinkingBeer:
+                            DrikingBeer();
+                            break;
+                        case State.WalkingToBar:
+                            WalkingToBar();
+                            break;
+                        case State.LeavingEstablishment:
+                            LeavingEstablishment();
+                            break;
+                        default:
+                            break;
+                    }
+                } while (CurrentState != State.LeavingEstablishment);
+            });
+        }
+        bool CheckForEmptyChair(Table table)
+        {
+            foreach (var chair in table.ChairsAroundTable)
+            {
+                if (chair.Available)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        void DrikingBeer(Table table)
+        {
+            // Skicka logg till LogManager "Name: sätter sig och dricker öl
+            Thread.Sleep(15000);
+            foreach (var glass in Holding) // gör med lambda sedan
+            {
+                glass.CurrentState = Glass.State.Dirty;
+                table.GlassesOnTable.Add(glass);
+            }
+            CurrentState = State.LeavingEstablishment;
+        }
+        void WaitingForChair(Table table)
+        {
+            if (!CheckForEmptyChair(table))
+            {
+                Thread.Sleep(3000);
+                // Skicka logg till LogManager "Name: väntar på en stol
+                return;
+            }
+            foreach (var chair in table.ChairsAroundTable)
+            {
+                if (CheckForEmptyChair(table))
+                {
+                    chair.Available = false;
+                    CurrentState = State.DrinkingBeer;
+                }
+            }
+
+        } // saknas saker
+        void WaitingForBeer()
+        {
+
+        }
+        void LeavingEstablishment()
+        {
+
+        }
+        void WalkingToBar()
+        {
+
         }
     }
 }

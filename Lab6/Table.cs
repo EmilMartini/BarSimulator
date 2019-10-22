@@ -5,9 +5,9 @@ namespace Lab6
 {
     class Table
     {
-        BlockingCollection<Glass> GlassesOnTable;
-        BlockingCollection<Chair> ChairsAroundTable;
-
+        public BlockingCollection<Glass> GlassesOnTable { get; set; }
+        public BlockingCollection<Chair> ChairsAroundTable { get; set; }
+       
         public Table(Establishment est)
         {
             GlassesOnTable = new BlockingCollection<Glass>();
