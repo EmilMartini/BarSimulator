@@ -119,6 +119,7 @@ namespace Lab6
         {
             LeavingEstablishmentEvent(this);
             Thread.Sleep(5000);
+            //Log Has left the establishment
         }
         void WalkingToBar(Bar bar)
         {

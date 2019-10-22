@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -110,7 +112,9 @@ namespace Lab6
         }
         void LeavingWork()
         {
-            
+            LeavingWorkEvent();
+            Thread.Sleep(5000);
+            HasLeftWorkEvent();
         }
     }
 }
