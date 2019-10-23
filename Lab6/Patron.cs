@@ -85,35 +85,46 @@ namespace Lab6
             }
             CurrentState = State.LeavingEstablishment;
         }
-        void WaitingForChair(Table table)
+        void WaitingForChair(Table table) 
         {
             if (!CheckForEmptyChair(table))
             {
-                Thread.Sleep(3000);
                 WaitingForChairEvent(this);
-                return;
+            }
+            while (!CheckForEmptyChair(table))
+            {
+                Thread.Sleep(3000);
             }
             foreach (var chair in table.ChairsAroundTable)
             {
                 if (CheckForEmptyChair(table))
                 {
-                    chair.Available = true;
+                    chair.Available = false;
                     CurrentState = State.DrinkingBeer;
+                    return;
                 }
             }
 
-        } // saknas saker
+        }
         void WaitingForBeer(Bar bar)
         {
+            if (!CheckBarTopForBeer(bar))
+            {
+                WaitingForBeerEvent(this);
+            }
+            while (!CheckBarTopForBeer(bar))
+            {
+                Thread.Sleep(3000);
+            }
             if (CheckBarTopForBeer(bar)) // och först i kön
             {
                 Glass glass = bar.BarTop.ElementAt(0);
                 Holding.Add(glass);
                 bar.BarTop = new ConcurrentBag<Glass>(bar.BarTop.Except(new[] { glass }));
                 bar.BarQueue = new ConcurrentQueue<Patron>(bar.BarQueue.Except(new[] { this }));
-                CurrentState = State.WaitingForChair;
+                CurrentState = State.WalkingToChair;
             }
-            Thread.Sleep(2000);
+            
         }
         void LeavingEstablishment()
         {

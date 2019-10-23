@@ -3,10 +3,12 @@ using System.Collections.Concurrent;
 
 namespace Lab6
 {
-    public class Waiter
+    public class Waitress
     {
+        // public static event PatronEvent;
+        public enum State { WaitingForDirtyGlass, PickingUpGlass, WalkingToSink, WalkingToTable }
         BlockingCollection<Glass> carryingGlasses;
-        public Waiter(Table table)
+        public Waitress(Table table)
         {
             carryingGlasses = new BlockingCollection<Glass>();
             Simulate(table);

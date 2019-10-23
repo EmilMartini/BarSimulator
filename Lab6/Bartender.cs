@@ -13,7 +13,7 @@ namespace Lab6
         public delegate void BartenderEvent();
         public event BartenderEvent WaitingForPatronEvent, WaitingForCleanGlassEvent, PouringBeerEvent, LeavingWorkEvent;
 
-        public Bartender(Establishment est)
+        public Bartender(Establishment est) // behöver ine ta in Establishment för att sätta currentstate
         {
             CurrentState = State.WaitingForPatron;
         }
@@ -64,13 +64,11 @@ namespace Lab6
             {
                 WaitingForPatronEvent();
             }
-            
             while (!CheckBarQueue(bar))
             {
-                Thread.Sleep(300);
+                Thread.Sleep(3000);
             }
-            
-            if (CheckBarQueue(bar))
+            if (CheckBarQueue(bar))// ska tas bort
             {
                 if (CheckBarShelf(bar))
                 {
@@ -114,7 +112,7 @@ namespace Lab6
         {
             LeavingWorkEvent();
             Thread.Sleep(5000);
-            HasLeftWorkEvent();
+            
         }
     }
 }

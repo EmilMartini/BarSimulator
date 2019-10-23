@@ -20,7 +20,7 @@ namespace Lab6
             {
                 var chair = new Chair();
                 chair.Available = true;
-                ChairsAroundTable.TryAdd(chair);
+                ChairsAroundTable.Add(chair);
             }
         }
     }

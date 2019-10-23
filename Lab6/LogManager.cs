@@ -11,7 +11,7 @@ namespace Lab6
         static MainWindow PresentationLayer;
         Bouncer bouncer;
         Bartender bartender;
-        Waiter waiter;
+        Waitress waiter;
         Patron patron;
         List<string> WaitressLogMessages = new List<string>();
         List<string> BouncerLogMessages = new List<string>();
