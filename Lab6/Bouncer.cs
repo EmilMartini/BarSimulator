@@ -9,7 +9,7 @@ namespace Lab6
         public delegate void LogEvent(string s);
         public event LogEvent Log;
 
-        Random rnd = new Random();
+        Random random = new Random();
         string[] patronNames = new string[]
         {
             "Emma",
@@ -105,7 +105,7 @@ namespace Lab6
 
             for (int i = 0; i < establishment.PatronsPerEntry; i++)
             {
-                Patron patron = new Patron(patronNames[rnd.Next(0, patronNames.Length - 1)], establishment);
+                Patron patron = new Patron(patronNames[random.Next(0, patronNames.Length - 1)], establishment);
                 establishment.CurrentPatrons.Insert(0, patron);
                 Log($"{patron.Name} enters the pub");
             }
@@ -113,7 +113,7 @@ namespace Lab6
         }
         private void Wait()
         {
-            Thread.Sleep(SpeedModifier(rnd.Next(8000, 10000)));
+            Thread.Sleep(SpeedModifier(random.Next(8000, 10000)));
             currentState = State.Working;
         }
         private int SpeedModifier(int StartTime)

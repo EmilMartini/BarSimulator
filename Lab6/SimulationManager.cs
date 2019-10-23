@@ -49,10 +49,10 @@ namespace Lab6
                 case SimulationState.WaitressBoostMode:
                     return new Establishment(8, 9, new TimeSpan(0, 2, 0),1, simulationSpeed, 1, 2);
                 case SimulationState.BarOpenForFiveMins:
-                    break;
+                    return new Establishment(8, 9, new TimeSpan(0, 5, 0), 1, simulationSpeed, 1, 1);
                 case SimulationState.CouplesNight:
                     return new Establishment(8, 9, new TimeSpan(0, 2, 0), 2, simulationSpeed, 1, 1);
-                case SimulationState.BusLoad:
+                case SimulationState.BusLoad: // någon fancy lösning
                     break;
             }
             return null;

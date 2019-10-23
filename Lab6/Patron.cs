@@ -8,10 +8,11 @@ namespace Lab6
 {
     public class Patron
     { 
-        public enum State { WaitingForChair, WaitingForBeer, DrinkingBeer, WalkingToBar, WalkingToChair, LeavingEstablishment, RemovePatron }
+        public enum State { WaitingForChair, WaitingForBeer, DrinkingBeer, LeavingEstablishment, LeftPub, WalkingToBar, WalkingToTable }
         public delegate void PatronEvent(string s);
         public static event PatronEvent Log;
-
+        Random random = new Random();
+        // Det tar en sekund att komma till baren, fyra sekunder att gå till ett bord, och mellan tio och tjugo sekunder (slumpa) att dricka ölen
         double patronSpeed;
         double simulationSpeed;
         public string Name { get; private set; }
@@ -30,7 +31,7 @@ namespace Lab6
         {
             Task.Run(() =>
             {
-                do
+                while (CurrentState != State.LeftPub)
                 {
                     switch (CurrentState)
                     {
@@ -43,21 +44,34 @@ namespace Lab6
                         case State.DrinkingBeer:
                             DrinkingBeer(establishment);
                             break;
+                        case State.LeavingEstablishment:
+                            LeavingEstablishment(establishment);
+                            RemovePatron(this, establishment);
+                            break;
                         case State.WalkingToBar:
                             WalkingToBar(establishment);
                             break;
-                        case State.WalkingToChair:
-                            WalkingToChair();
-                            break;
-                        case State.LeavingEstablishment:
-                            LeavingEstablishment(establishment);
+                        case State.WalkingToTable:
+                            WalkingToTable();
                             break;
                         default:
                             break;
                     }
-                } while (CurrentState != State.RemovePatron);
-                RemovePatron(this, establishment);
+                }
             });
+        }
+        private void WalkingToTable()
+        {
+            Log($"{this.Name} walks to the table");
+            Thread.Sleep(SpeedModifier(4000));
+            CurrentState = State.WaitingForChair;
+        }
+        void WalkingToBar(Establishment establishment)
+        {
+            Log($"{this.Name} walks to the bar");
+            Thread.Sleep(SpeedModifier(1000));
+            establishment.Bar.BarQueue.Enqueue(this);
+            CurrentState = State.WaitingForBeer;
         }
         private void RemovePatron(Patron patron, Establishment establishment)
         {
@@ -66,9 +80,8 @@ namespace Lab6
         bool CheckBarTopForBeer(Establishment establishment)
         {
             if(establishment.Bar.BarTop.Count > 0)
-            {
                 return true;
-            }
+
             return false;
         }
         bool CheckForEmptyChair(Establishment establishment)
@@ -76,16 +89,14 @@ namespace Lab6
             foreach (var chair in establishment.Table.ChairsAroundTable)
             {
                 if (chair.Available)
-                {
                     return true;
-                }
             }
             return false;
-        }
+        }// lambda
         void DrinkingBeer(Establishment establishment)
         {
-            Log($"{this.Name} is drinking a beer");
-            Thread.Sleep(SpeedModifier(15000));
+            Log($"{this.Name} drinks a beer");
+            Thread.Sleep(SpeedModifier(random.Next(10000, 15000)));
             foreach (var glass in Holding)
             {
                 glass.CurrentState = Glass.State.Dirty;
@@ -93,7 +104,7 @@ namespace Lab6
                 Holding = new ConcurrentBag<Glass>(Holding.Except(new[] { glass }));
             }
             CurrentState = State.LeavingEstablishment;
-        }
+        }// lambda
         void WaitingForChair(Establishment establishment) 
         {
             if (!CheckForEmptyChair(establishment))
@@ -114,7 +125,7 @@ namespace Lab6
                 }
             }
 
-        }
+        }// snygga till eventuellt
         void WaitingForBeer(Establishment establishment)
         {
             if (!CheckBarTopForBeer(establishment))
@@ -123,7 +134,7 @@ namespace Lab6
             }
             while (!CheckBarTopForBeer(establishment))
             {
-                Thread.Sleep(SpeedModifier(3000));
+                Thread.Sleep(SpeedModifier(300));
             }
             if (CheckBarTopForBeer(establishment)) // och först i kön
             {
@@ -131,7 +142,7 @@ namespace Lab6
                 Holding.Add(glass);
                 establishment.Bar.BarTop = new ConcurrentBag<Glass>(establishment.Bar.BarTop.Except(new[] { glass }));
                 establishment.Bar.BarQueue = new ConcurrentQueue<Patron>(establishment.Bar.BarQueue.Except(new[] { this }));
-                CurrentState = State.WalkingToChair;
+                CurrentState = State.WalkingToTable;
             }
             
         }
@@ -145,25 +156,10 @@ namespace Lab6
                     break;
                 }
             }
-            Log($"{this.Name} is leaving establishment");
-            Thread.Sleep(SpeedModifier(5000));
             Log($"{this.Name} has left the pub");
-            CurrentState = State.RemovePatron;
+            CurrentState = State.LeftPub;
             
-        }
-        void WalkingToBar(Establishment establishment)
-        {
-            Log($"{this.Name} is walking to the bar.");
-            Thread.Sleep(SpeedModifier(5000));
-            establishment.Bar.BarQueue.Enqueue(this);
-            CurrentState = State.WaitingForBeer;
-        }
-        void WalkingToChair()
-        {
-            Log($"{this.Name} is walking to a chair");
-            Thread.Sleep(SpeedModifier(5000));
-            CurrentState = State.WaitingForChair;
-        }
+        }// lambda
         int SpeedModifier(int StartTime)
         {
             return (int)((StartTime / patronSpeed) / simulationSpeed);
