@@ -12,10 +12,12 @@ namespace Lab6
         public State CurrentState { get; set; }
         public delegate void BartenderEvent(string s);
         public event BartenderEvent Log;
+        double simulationSpeed;
 
-        public Bartender(Establishment est) // behöver ine ta in Establishment för att sätta currentstate
+        public Bartender(Establishment establishment)
         {
             CurrentState = State.WaitingForPatron;
+            simulationSpeed = establishment.SimulationSpeed;
         }
         public void Simulate(Establishment est)
         {
@@ -42,6 +44,10 @@ namespace Lab6
                     }
                 }
             });
+        }
+        private int SpeedModifier(int StartTime)
+        {
+            return (int)(StartTime / simulationSpeed);
         }
         bool CheckBarQueue(Bar bar)
         {
@@ -76,7 +82,7 @@ namespace Lab6
                     CurrentState = State.LeavingWork;
                     return;
                 }
-                Thread.Sleep(3000);
+                Thread.Sleep(SpeedModifier(3000));
             }
             if (CheckBarQueue(establishment.Bar))// ska tas bort
             {
@@ -101,7 +107,7 @@ namespace Lab6
             {
                 CurrentState = State.WaitingForCleanGlass;
             }
-            Thread.Sleep(3000);
+            Thread.Sleep(SpeedModifier(3000));
         }
         void WaitingForCleanGlass(Bar bar)
         {
@@ -111,7 +117,7 @@ namespace Lab6
             }
             while (!CheckBarShelf(bar))
             {
-                Thread.Sleep(3000);
+                Thread.Sleep(SpeedModifier(3000));
             }
             if (CheckBarShelf(bar))
             {
@@ -121,7 +127,7 @@ namespace Lab6
         void LeavingWork()
         {
             Log("is leaving work");
-            Thread.Sleep(5000);
+            Thread.Sleep(SpeedModifier(5000));
             CurrentState = State.LeftWork;
             Log("has left the pub.");
         }
