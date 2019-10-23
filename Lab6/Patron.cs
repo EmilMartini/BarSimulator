@@ -12,6 +12,8 @@ namespace Lab6
         public delegate void PatronEvent(string s);
         public static event PatronEvent Log;
 
+        double patronSpeed;
+        double simulationSpeed;
         public string Name { get; private set; }
         public State CurrentState { get; set; }
         public ConcurrentBag<Glass> Holding { get; set; }
@@ -20,6 +22,8 @@ namespace Lab6
             Name = name;
             CurrentState = State.WalkingToBar;
             Holding = new ConcurrentBag<Glass>();
+            patronSpeed = establishment.PatronSpeed;
+            simulationSpeed = establishment.SimulationSpeed;
             Simulate(establishment);
         }
         void Simulate(Establishment establishment)
@@ -31,16 +35,16 @@ namespace Lab6
                     switch (CurrentState)
                     {
                         case State.WaitingForChair:
-                            WaitingForChair(establishment.Table);
+                            WaitingForChair(establishment);
                             break;
                         case State.WaitingForBeer:
-                            WaitingForBeer(establishment.Bar);
+                            WaitingForBeer(establishment);
                             break;
                         case State.DrinkingBeer:
-                            DrinkingBeer(establishment.Table);
+                            DrinkingBeer(establishment);
                             break;
                         case State.WalkingToBar:
-                            WalkingToBar(establishment.Bar);
+                            WalkingToBar(establishment);
                             break;
                         case State.WalkingToChair:
                             WalkingToChair();
@@ -55,23 +59,21 @@ namespace Lab6
                 RemovePatron(this, establishment);
             });
         }
-
         private void RemovePatron(Patron patron, Establishment establishment)
         {
             establishment.CurrentPatrons.Remove(patron);
         }
-
-        bool CheckBarTopForBeer(Bar bar)
+        bool CheckBarTopForBeer(Establishment establishment)
         {
-            if(bar.BarTop.Count > 0)
+            if(establishment.Bar.BarTop.Count > 0)
             {
                 return true;
             }
             return false;
         }
-        bool CheckForEmptyChair(Table table)
+        bool CheckForEmptyChair(Establishment establishment)
         {
-            foreach (var chair in table.ChairsAroundTable)
+            foreach (var chair in establishment.Table.ChairsAroundTable)
             {
                 if (chair.Available)
                 {
@@ -80,29 +82,29 @@ namespace Lab6
             }
             return false;
         }
-        void DrinkingBeer(Table table)
+        void DrinkingBeer(Establishment establishment)
         {
             Log($"{this.Name} is drinking a beer");
-            Thread.Sleep(15000);
-            foreach (var glass in Holding) // gör med lambda sedan
+            Thread.Sleep(SpeedModifier(15000));
+            foreach (var glass in Holding)
             {
                 glass.CurrentState = Glass.State.Dirty;
-                table.GlassesOnTable.Add(glass);
+                establishment.Table.GlassesOnTable.Add(glass);
                 Holding = new ConcurrentBag<Glass>(Holding.Except(new[] { glass }));
             }
             CurrentState = State.LeavingEstablishment;
         }
-        void WaitingForChair(Table table) 
+        void WaitingForChair(Establishment establishment) 
         {
-            if (!CheckForEmptyChair(table))
+            if (!CheckForEmptyChair(establishment))
             {
                 Log($"{this.Name} is waiting for a chair");
             }
-            while (!CheckForEmptyChair(table))
+            while (!CheckForEmptyChair(establishment))
             {
-                Thread.Sleep(3000);
+                Thread.Sleep(SpeedModifier(3000));
             }
-            foreach (var chair in table.ChairsAroundTable)
+            foreach (var chair in establishment.Table.ChairsAroundTable)
             {
                 if (chair.Available)
                 {
@@ -113,25 +115,22 @@ namespace Lab6
             }
 
         }
-        void WaitingForBeer(Bar bar)
+        void WaitingForBeer(Establishment establishment)
         {
-            if (!CheckBarTopForBeer(bar))
+            if (!CheckBarTopForBeer(establishment))
             {
-                Log($"{this.Name} is waiting for a beer"); //detta är ett generiskt event, vad som helst skulle kunna hända
-                //det ända ni gör någonsin är att logga. Då kanske de bör represetera det.
-                //Log(this,"Patron is waiting for beer");
-
+                Log($"{this.Name} is waiting for a beer");
             }
-            while (!CheckBarTopForBeer(bar))
+            while (!CheckBarTopForBeer(establishment))
             {
-                Thread.Sleep(3000);
+                Thread.Sleep(SpeedModifier(3000));
             }
-            if (CheckBarTopForBeer(bar)) // och först i kön
+            if (CheckBarTopForBeer(establishment)) // och först i kön
             {
-                Glass glass = bar.BarTop.ElementAt(0);
+                Glass glass = establishment.Bar.BarTop.ElementAt(0);
                 Holding.Add(glass);
-                bar.BarTop = new ConcurrentBag<Glass>(bar.BarTop.Except(new[] { glass }));
-                bar.BarQueue = new ConcurrentQueue<Patron>(bar.BarQueue.Except(new[] { this }));
+                establishment.Bar.BarTop = new ConcurrentBag<Glass>(establishment.Bar.BarTop.Except(new[] { glass }));
+                establishment.Bar.BarQueue = new ConcurrentQueue<Patron>(establishment.Bar.BarQueue.Except(new[] { this }));
                 CurrentState = State.WalkingToChair;
             }
             
@@ -147,23 +146,27 @@ namespace Lab6
                 }
             }
             Log($"{this.Name} is leaving establishment");
-            Thread.Sleep(5000);
+            Thread.Sleep(SpeedModifier(5000));
             Log($"{this.Name} has left the pub");
             CurrentState = State.RemovePatron;
             
         }
-        void WalkingToBar(Bar bar)
+        void WalkingToBar(Establishment establishment)
         {
             Log($"{this.Name} is walking to the bar.");
-            Thread.Sleep(5000);
-            bar.BarQueue.Enqueue(this);
+            Thread.Sleep(SpeedModifier(5000));
+            establishment.Bar.BarQueue.Enqueue(this);
             CurrentState = State.WaitingForBeer;
         }
         void WalkingToChair()
         {
             Log($"{this.Name} is walking to a chair");
-            Thread.Sleep(5000);
+            Thread.Sleep(SpeedModifier(5000));
             CurrentState = State.WaitingForChair;
+        }
+        int SpeedModifier(int StartTime)
+        {
+            return (int)((StartTime / patronSpeed) / simulationSpeed);
         }
     }
 }
