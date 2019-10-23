@@ -68,7 +68,7 @@ namespace Lab6
         }
         void WalkingToBar(Establishment establishment)
         {
-            Log($"{this.Name} walks to the bar");
+            //Log($"{this.Name} walks to the bar"); Kanske inte skall användas, se spec
             Thread.Sleep(SpeedModifier(1000));
             establishment.Bar.BarQueue.Enqueue(this);
             CurrentState = State.WaitingForBeer;
@@ -95,7 +95,7 @@ namespace Lab6
         }// lambda
         void DrinkingBeer(Establishment establishment)
         {
-            Log($"{this.Name} drinks a beer");
+            Log($"{this.Name} sits down and drinks a beer");
             Thread.Sleep(SpeedModifier(random.Next(10000, 15000)));
             foreach (var glass in Holding)
             {
@@ -130,7 +130,7 @@ namespace Lab6
         {
             if (!CheckBarTopForBeer(establishment))
             {
-                Log($"{this.Name} is waiting for a beer");
+                //Log($"{this.Name} is waiting for a beer"); Kanske inte skall användas, se spec
             }
             while (!CheckBarTopForBeer(establishment))
             {
@@ -156,7 +156,7 @@ namespace Lab6
                     break;
                 }
             }
-            Log($"{this.Name} has left the pub");
+            Log($"{this.Name} finished the beer and left the pub");
             CurrentState = State.LeftPub;
             
         }// lambda

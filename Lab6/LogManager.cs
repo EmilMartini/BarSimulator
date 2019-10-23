@@ -13,9 +13,9 @@ namespace Lab6
         Bouncer bouncer;
         Bartender bartender;
         Waitress waitress;
-        List<string> WaitressLogMessages = new List<string>();
-        List<string> BartenderLogMessages = new List<string>();
-        List<string> PatronLogMessages = new List<string>();
+        List<string> WaitressLogMessages;
+        List<string> BartenderLogMessages;
+        List<string> PatronLogMessages;
         public LogManager(MainWindow presentationLayer, SimulationManager sim)
         {
             PresentationLayer = presentationLayer;
@@ -28,6 +28,9 @@ namespace Lab6
             bouncer = sim.GetBouncer();
             waitress = sim.GetWaitress();
             bartender = sim.GetBartender();
+            WaitressLogMessages = new List<string>();
+            BartenderLogMessages = new List<string>();
+            PatronLogMessages = new List<string>();
             presentationLayer.WaitressListbox.ItemsSource = WaitressLogMessages;
             presentationLayer.BartenderListbox.ItemsSource = BartenderLogMessages;
             presentationLayer.PatronsListbox.ItemsSource = PatronLogMessages;
@@ -61,9 +64,7 @@ namespace Lab6
             var timeStamp = func(DateTime.UtcNow);
             PresentationLayer.Dispatcher.Invoke(() => 
             {
-                string timeFormat = String.Format("{0:c}", timeStamp.ToString());
-                string output = $" {message}";
-                list.Insert(0,timeFormat + output);
+                list.Insert(0, $"{timeStamp.ToString(@"mm\:ss")} {message}");
                 listBox.Items.Refresh();
             });
         }

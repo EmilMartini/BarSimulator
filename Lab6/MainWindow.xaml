@@ -7,22 +7,22 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="518" Width="1200.5">
     <Grid>
-        <ListBox x:Name="BartenderListbox" HorizontalAlignment="Left" Height="186" Margin="67,148,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>
-        <ListBox x:Name="WaitressListbox" HorizontalAlignment="Left" Height="186" Margin="313,148,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>
-        <ListBox x:Name="PatronsListbox" HorizontalAlignment="Left" Height="186" Margin="559,148,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>
-        <Label x:Name="WaitressLabel" Content="Waitress" HorizontalAlignment="Left" Height="26" Margin="313,122,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>
-        <Label x:Name="PatronsLabel" Content="Patrons" HorizontalAlignment="Left" Height="26" Margin="559,122,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>
-        <Label x:Name="PatronsInPubLabel" Content="Patrons in bar(Max patrons)" HorizontalAlignment="Left" Margin="805,150,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
-        <Label x:Name="CleanGlassesLabel" Content="Clean glasses(Total glasses)" HorizontalAlignment="Left" Margin="805,186,0,0" VerticalAlignment="Top" Height="30" Width="223" Visibility="Visible"/>
-        <Label x:Name="FreeChairsLabel" Content="Available chairs (Total chairs)" HorizontalAlignment="Left" Margin="805,221,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
+        <ListBox x:Name="BartenderListbox" HorizontalAlignment="Left" Height="186" Margin="126,163,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>
+        <ListBox x:Name="WaitressListbox" HorizontalAlignment="Left" Height="186" Margin="372,163,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>
+        <ListBox x:Name="PatronsListbox" HorizontalAlignment="Left" Height="186" Margin="618,163,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>
+        <Label x:Name="WaitressLabel" Content="Waitress" HorizontalAlignment="Left" Height="26" Margin="372,137,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>
+        <Label x:Name="PatronsLabel" Content="Patrons" HorizontalAlignment="Left" Height="26" Margin="618,137,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>
+        <Label x:Name="PatronsInPubLabel" Content="Patrons in bar(Max patrons)" HorizontalAlignment="Left" Margin="864,195,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
+        <Label x:Name="CleanGlassesLabel" Content="Clean glasses(Total glasses)" HorizontalAlignment="Left" Margin="864,231,0,0" VerticalAlignment="Top" Height="30" Width="223" Visibility="Visible"/>
+        <Label x:Name="FreeChairsLabel" Content="Available chairs (Total chairs)" HorizontalAlignment="Left" Margin="864,266,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
         <Label x:Name="SettingsLabel" Content="Setting" HorizontalAlignment="Left" Height="26" Margin="477,187,0,0" VerticalAlignment="Top" Width="156" Visibility="Hidden"/>
-        <Label x:Name="TimeToCloseLabel" Content="Time to closing" HorizontalAlignment="Left" Margin="805,257,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
+        <Label x:Name="TimeToCloseLabel" Content="Time to closing" HorizontalAlignment="Left" Margin="864,302,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
         <ComboBox x:Name="SimulationStateDropDown" HorizontalAlignment="Left" Margin="477,213,0,0" VerticalAlignment="Top" Width="156" Height="48" Initialized="ComboBox_Initialized" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Visibility="Hidden"/>
         <Button x:Name="StartSimButton" Content="Start&#xD;&#xA;Simulation" HorizontalAlignment="Left" Margin="638,213,0,0" VerticalAlignment="Top" Width="75" Height="48" Click="StartSimButton_Click" Visibility="Hidden"/>
-        <Label x:Name="BartenderLabel" Content="Bartender" HorizontalAlignment="Left" Margin="67,122,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>
+        <Label x:Name="BartenderLabel" Content="Bartender" HorizontalAlignment="Left" Margin="126,137,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>
         <TextBox x:Name="speedModifierTextbox" HorizontalAlignment="Left" Height="23" Margin="638,190,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="75" Visibility="Hidden"/>
         <Label x:Name="SimulationSpeedLabel" Content="Simulation&#xD;&#xA;Speed" HorizontalAlignment="Left" Margin="638,148,0,0" VerticalAlignment="Top" Width="75" Visibility="Hidden"/>
-        <Label x:Name="SimulationSpeedLabelInfo" Content="" HorizontalAlignment="Left" Margin="805,122,0,0" VerticalAlignment="Top" Width="217"/>
+        <Label x:Name="SimulationSpeedLabelInfo" Content="" HorizontalAlignment="Left" Margin="864,137,0,0" VerticalAlignment="Top" Width="217"/>
 
     </Grid>
 </Window>

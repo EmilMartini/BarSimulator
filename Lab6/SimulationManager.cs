@@ -54,6 +54,8 @@ namespace Lab6
                     return new Establishment(8, 9, new TimeSpan(0, 2, 0), 2, simulationSpeed, 1, 1);
                 case SimulationState.BusLoad: // någon fancy lösning
                     break;
+                case SimulationState.CrazyState:
+                    return new Establishment(100, 100, new TimeSpan(1, 0, 0), 2, 5, 0.2, 2);
             }
             return null;
         }
@@ -71,23 +73,23 @@ namespace Lab6
         }
         void InitUITimer()
         {
-            dispatcherTimer.Tick += dispatcherTimer_Tick;
-            dispatcherTimer.Interval = new TimeSpan(0,0,0,0,50);
+            dispatcherTimer.Tick += TimerTick;
+            dispatcherTimer.Interval = new TimeSpan(0,0,0,0,25);
             dispatcherTimer.Start();
         }
-        void dispatcherTimer_Tick(object sender, EventArgs e)
+        void TimerTick(object sender, EventArgs e)
         {
             int availableChairs = 0;
-            window.PatronsInPubLabel.Content = $"Patrons in bar {establishment.CurrentPatrons.Count} (Max patrons)";
-            window.CleanGlassesLabel.Content = $"Number of clean glasses {establishment.Bar.Shelf.Count}";
+            window.PatronsInPubLabel.Content = $"Patrons in bar: {establishment.CurrentPatrons.Count}";
+            window.CleanGlassesLabel.Content = $"Number of clean glasses: {establishment.Bar.Shelf.Count}";
 
             foreach (var chair in establishment.Table.ChairsAroundTable)
             {
                 if (chair.Available)
                     availableChairs++;
             }
-            window.FreeChairsLabel.Content = $"Number of available chairs {availableChairs}";
-            window.TimeToCloseLabel.Content = $"Time left until closing {GetElapsedTime(DateTime.Now)}";
+            window.FreeChairsLabel.Content = $"Number of available chairs: {availableChairs}";
+            window.TimeToCloseLabel.Content = $"Time left until closing: {GetElapsedTime(DateTime.Now)}";
         }
         int GetElapsedTime(DateTime now)
         {

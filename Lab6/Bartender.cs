@@ -9,10 +9,10 @@ namespace Lab6
     public class Bartender
     {
         public enum State { WaitingForPatron, WaitingForCleanGlass, PouringBeer, LeavingWork , LeftWork}
-        public State CurrentState { get; set; }
         public delegate void BartenderEvent(string s);
         public event BartenderEvent Log;
-        double simulationSpeed;
+        public State CurrentState { get; set; }
+        double simulationSpeed { get; set; }
 
         public Bartender(Establishment establishment)
         {
@@ -45,7 +45,7 @@ namespace Lab6
                 }
             });
         }
-        private int SpeedModifier(int StartTime)
+        int SpeedModifier(int StartTime)
         {
             return (int)(StartTime / simulationSpeed);
         }
@@ -113,7 +113,7 @@ namespace Lab6
         {
             if (!CheckBarShelf(bar))
             {
-                Log("is waiting for a clean glass");
+                Log("is waiting at the shelf for a clean glass");
             }
             while (!CheckBarShelf(bar))
             {
