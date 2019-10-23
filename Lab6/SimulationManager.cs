@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace Lab6
 {
-    class SimulationManager
+    public class SimulationManager
     {
         public List<Patron> CurrentPatrons { get; private set; }
         public Bouncer bouncer { get; private set; }

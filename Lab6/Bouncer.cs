@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Lab6
 {
-    class Bouncer
+    public class Bouncer
     {
         public delegate void Entry(Patron p);
         public event Entry Enter;
@@ -104,7 +104,7 @@ namespace Lab6
                 return;
             }
 
-            Patron patron = new Patron(patronNames[rnd.Next(0, patronNames.Length - 1)], sim.establishment);
+            Patron patron = new Patron(patronNames[rnd.Next(0, patronNames.Length - 1)], sim.establishment, sim);
             sim.CurrentPatrons.Insert(0, patron);
             Enter(patron);
             currentState = State.Waiting;

@@ -12,7 +12,7 @@
         <ListBox x:Name="PatronsListbox" HorizontalAlignment="Left" Height="186" Margin="559,148,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>
         <Label x:Name="WaitressLabel" Content="Waitress" HorizontalAlignment="Left" Height="26" Margin="313,122,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>
         <Label x:Name="PatronsLabel" Content="Patrons" HorizontalAlignment="Left" Height="26" Margin="559,122,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>
-        <Label x:Name="GuestsInBarLabel" Content="Patrons in bar(Max patrons)" HorizontalAlignment="Left" Margin="805,150,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
+        <Label x:Name="PatronsInPubLabel" Content="Patrons in bar(Max patrons)" HorizontalAlignment="Left" Margin="805,150,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
         <Label x:Name="CleanGlassesLabel" Content="Clean glasses(Total glasses)" HorizontalAlignment="Left" Margin="805,186,0,0" VerticalAlignment="Top" Height="30" Width="223" Visibility="Visible"/>
         <Label x:Name="FreeChairsLabel" Content="Available chairs (Total chairs)" HorizontalAlignment="Left" Margin="805,221,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
         <Button x:Name="BartenderButton" Content="Paus/Start" HorizontalAlignment="Left" Height="27" Margin="67,334,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>

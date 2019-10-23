@@ -6,10 +6,11 @@ using System.Windows.Threading;
 
 namespace Lab6
 {
-    class LogManager
+    public class LogManager
     {
         DateTime startTime;
         static MainWindow PresentationLayer;
+        SimulationManager simulationManager;
         Bouncer bouncer;
         Bartender bartender;
         Waitress waitress;
@@ -26,6 +27,7 @@ namespace Lab6
         {
             startTime = DateTime.UtcNow;
             PresentationLayer = presentationLayer;
+            simulationManager = sim;
             bouncer = sim.GetBouncer();
             waitress = sim.GetWaitress();
             bartender = sim.GetBartender();
@@ -42,6 +44,8 @@ namespace Lab6
             Patron.WalkingToBarEvent += OnWalkingToBar;
             Patron.WalkingToChairEvent += OnWalkingToChair;
             Patron.DrinkingBeerEvent += OnDrinkingBeer;
+            Patron.LeavingEstablishmentEvent += OnLeavingEstablishment;
+            Patron.UpdatePatronCount += OnUpdatePatronCount;
             bartender.WaitingForPatronEvent += OnWaitingForPatron;
             bartender.WaitingForCleanGlassEvent += OnWaitingForCleanGlass;
             bartender.PouringBeerEvent += OnPouringBeer;

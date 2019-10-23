@@ -62,6 +62,7 @@ namespace Lab6
                 bar.Shelf.Add(glass);
                 carryingGlasses = new ConcurrentBag<Glass>(carryingGlasses.Except(new[] { glass }));
             }
+            CurrentState = State.WalkingToTable;
         }
         bool CheckTableForDirtyGlass(Table table)
         {
@@ -79,7 +80,7 @@ namespace Lab6
         }
         void CleaningGlass()
         {
-            CleaningGlassEvent();
+            //CleaningGlassEvent();
             Thread.Sleep(15000);
             foreach (var glass in carryingGlasses) // gör med lambda sedan
             {
@@ -120,15 +121,7 @@ namespace Lab6
             {
                 Thread.Sleep(3000);
             }
-            foreach (var chair in table.ChairsAroundTable)
-            {
-                if (CheckTableForDirtyGlass(table))
-                {
-                    chair.Available = false;
-                    CurrentState = State.PickingUpGlass;
-                    return;
-                }
-            }
+            CurrentState = State.PickingUpGlass;
         }
     }
 }

@@ -10,19 +10,20 @@ namespace Lab6
     { 
         public enum State { WaitingForChair, WaitingForBeer, DrinkingBeer, WalkingToBar, WalkingToChair, LeavingEstablishment }
         public delegate void PatronEvent(Patron p);
-        public static event PatronEvent WaitingForBeerEvent, WaitingForChairEvent, WalkingToBarEvent, WalkingToChairEvent, DrinkingBeerEvent, LeavingEstablishmentEvent;
+        public static event PatronEvent WaitingForBeerEvent, WaitingForChairEvent, WalkingToBarEvent, WalkingToChairEvent, DrinkingBeerEvent, LeavingEstablishmentEvent, UpdatePatronCount;
 
         public string Name { get; private set; }
         public State CurrentState { get; set; }
         public ConcurrentBag<Glass> Holding { get; set; }
-        public Patron(string name, Establishment establishment)
+        public Patron(string name, Establishment establishment, SimulationManager sim)
         {
             Name = name;
             CurrentState = State.WalkingToBar;
             Holding = new ConcurrentBag<Glass>();
-            Simulate(establishment);
+            Simulate(establishment, sim);
+            UpdatePatronCount(this);
         }
-        void Simulate(Establishment establishment)
+        void Simulate(Establishment establishment, SimulationManager sim) // ta bort establishment ersätt med sim
         {
             Task.Run(() =>
             {
@@ -46,12 +47,12 @@ namespace Lab6
                             WalkingToChair();
                             break;
                         case State.LeavingEstablishment:
-                            LeavingEstablishment();
                             break;
                         default:
                             break;
                     }
                 } while (CurrentState != State.LeavingEstablishment);
+                LeavingEstablishment(sim);
             });
         }
         bool CheckBarTopForBeer(Bar bar)
@@ -126,15 +127,17 @@ namespace Lab6
             }
             
         }
-        void LeavingEstablishment()
+        void LeavingEstablishment(SimulationManager sim)
         {
             LeavingEstablishmentEvent(this);
             Thread.Sleep(5000);
-            //Log Has left the establishment
+            UpdatePatronCount(this);
+            sim.CurrentPatrons.Remove(this);
         }
         void WalkingToBar(Bar bar)
         {
             WalkingToBarEvent(this);
+            Thread.Sleep(5000);
             bar.BarQueue.Enqueue(this);
             CurrentState = State.WaitingForBeer;
         }
