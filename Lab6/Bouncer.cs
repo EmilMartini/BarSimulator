@@ -63,14 +63,13 @@ namespace Lab6
             "Carter",
             "Owen"
             };
+        double simulationSpeed;
         enum State { Waiting, Working, LeavingWork, StopBouncer}
         State currentState { get; set; }
-        public Bouncer()
-        {
-        }
 
         public void Simulate(Establishment establishment)
         {
+            simulationSpeed = establishment.SimulationSpeed;  
             currentState = State.Working;
             Task.Run(() =>
             {
@@ -91,13 +90,11 @@ namespace Lab6
                 }
             });
         }
-
         private void LeavingWork()
         {
             Log("Bouncer has left the pub.");
             currentState = State.StopBouncer;
         }
-
         private void Work(Establishment establishment)
         {
             if (!establishment.IsOpen)
@@ -106,15 +103,22 @@ namespace Lab6
                 return;
             }
 
-            Patron patron = new Patron(patronNames[rnd.Next(0, patronNames.Length - 1)], establishment);
-            establishment.CurrentPatrons.Insert(0, patron);
-            Log($"{patron.Name} enters the pub");
+            for (int i = 0; i < establishment.PatronsPerEntry; i++)
+            {
+                Patron patron = new Patron(patronNames[rnd.Next(0, patronNames.Length - 1)], establishment);
+                establishment.CurrentPatrons.Insert(0, patron);
+                Log($"{patron.Name} enters the pub");
+            }
             currentState = State.Waiting;
         }
         private void Wait()
         {
-            Thread.Sleep(rnd.Next(8000, 10000));
+            Thread.Sleep(SpeedModifier(rnd.Next(8000, 10000), simulationSpeed));
             currentState = State.Working;
+        }
+        private int SpeedModifier(int StartTime, double simulationSpeed)
+        {
+            return (int)(StartTime / simulationSpeed);
         }
     }
 }
