@@ -27,6 +27,7 @@ namespace Lab6
             
             logManager = new LogManager(window, this);
             logManager.SubscribeToEvents(this);
+            window.SimulationSpeedLabelInfo.Content = $"Simulation speed: {establishment.SimulationSpeed}";
             StartSimulation(establishment);
             InitUITimer();
         }
@@ -55,7 +56,6 @@ namespace Lab6
                     break;
                 case SimulationState.CouplesNight:
                     return new Establishment(8, 9, new TimeSpan(0, 2, 0), 2, simulationSpeed, 1, 1);
-                    break;
                 case SimulationState.BusLoad:
                     break;
             }
