@@ -135,6 +135,7 @@ namespace Lab6
         void WalkingToBar(Bar bar)
         {
             WalkingToBarEvent(this);
+            Thread.Sleep(5000);
             bar.BarQueue.Enqueue(this);
             CurrentState = State.WaitingForBeer;
         }
