@@ -9,17 +9,21 @@ namespace Lab6
         public int MaxGlasses { get; private set; }
         public int MaxChairs { get; private set; }
         public int SimulationSpeed { get; private set; }
+        public int WaitressSpeed { get; set; }
+        public double PatronSpeed { get; set; }
         public bool IsOpen { get; set; }
         public TimeSpan TimeToClose { get; set; }
         public Table Table { get; set; }
         public Bar Bar { get; set; }
         public List<Patron> CurrentPatrons { get; private set; }
-        public Establishment(int maxGlasses, int maxChairs, TimeSpan timeToClose, int simulationSpeed)
+        public Establishment(int maxGlasses, int maxChairs, TimeSpan timeToClose, int simulationSpeed, double patronSpeed, int waitressSpeed)
         {
             MaxGlasses = maxGlasses;
             MaxChairs = maxChairs;
             TimeToClose = timeToClose;
             SimulationSpeed = simulationSpeed;
+            WaitressSpeed = waitressSpeed;
+            PatronSpeed = patronSpeed;
             Table = new Table(this);
             IsOpen = true; 
             Bar = new Bar(this);

@@ -42,7 +42,21 @@ namespace Lab6
             switch (state)
             {
                 case SimulationState.Default:
-                    return new Establishment(8, 9, new TimeSpan(0,2,0), 1);
+                    return new Establishment(8, 9, new TimeSpan(0, 2, 0), 1,1,1);
+                case SimulationState.TwentyGlassThreeChairs:
+                    return new Establishment(20, 3, new TimeSpan(0, 2, 0), 1,1,1);
+                case SimulationState.TwentyChairsThreeGlass:
+                    return new Establishment(3, 20, new TimeSpan(0, 2, 0), 1,1,1);
+                case SimulationState.PatronsSlowMode:
+                    return new Establishment(8, 9, new TimeSpan(0, 2, 0), 1, 0.5, 1);
+                case SimulationState.WaitressBoostMode:
+                    return new Establishment(8, 9, new TimeSpan(0, 2, 0), 1, 1, 2);
+                case SimulationState.BarOpenForFiveMins:
+                    break;
+                case SimulationState.CouplesNight:
+                    break;
+                case SimulationState.BusLoad:
+                    break;
             }
             return null;
         }
