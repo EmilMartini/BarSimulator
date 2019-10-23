@@ -80,9 +80,19 @@ namespace Lab6
             window.TimeToCloseLabel.Content = $"Time left until closing {GetElapsedTime(DateTime.Now)}";
         }
 
-        private DateTime GetElapsedTime(DateTime now)
+        private int GetElapsedTime(DateTime now)
         {
-            return 
+            var calculation = (int)(TimeToClose - now).TotalSeconds;
+
+            if (calculation <= 0)
+            {
+                establishment.IsOpen = false;
+                return 0;
+            }
+            else
+            {
+                return calculation;
+            }
         }
     }
 }
