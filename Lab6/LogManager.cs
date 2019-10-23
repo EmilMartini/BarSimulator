@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -12,7 +13,6 @@ namespace Lab6
         Bouncer bouncer;
         Bartender bartender;
         Waitress waiter;
-        Patron patron;
         List<string> WaitressLogMessages = new List<string>();
         List<string> BouncerLogMessages = new List<string>();
         List<string> BartenderLogMessages = new List<string>();
@@ -22,125 +22,6 @@ namespace Lab6
         {
             PresentationLayer = presentationLayer;
             InitLogManager(PresentationLayer, sim);
-            RefreshAll();
-        }
-
-        public void SubscribeToEvents(SimulationManager sim)
-        {
-            bouncer.Enter += OnBouncerWork;
-            Patron.WaitingForBeerEvent += OnWaitingForBeer;
-            Patron.WaitingForChairEvent += OnWaitingForChair;
-            Patron.WalkingToBarEvent += OnWalkingToBar;
-            Patron.WalkingToChairEvent += OnWalkingToChair;
-            bartender.WaitingForPatronEvent += OnWaitingForPatron;
-            bartender.WaitingForCleanGlassEvent += OnWaitingForCleanGlass;
-            bartender.PouringBeerEvent += OnPouringBeer;
-            bartender.LeavingWorkEvent += OnLeavingWork;
-        }
-
-        private void OnLeavingWork()
-        {
-            var dif = GetTime(DateTime.Now);
-            PresentationLayer.Dispatcher.Invoke(() =>
-            {
-                BartenderLogMessages.Add($"{dif.Minutes}:{dif.Seconds} Bartender leaving establishment.");
-                PresentationLayer.BartenderListbox.Items.Refresh();
-            });
-        }
-
-        private void OnPouringBeer()
-        {
-            var dif = GetTime(DateTime.Now);
-            PresentationLayer.Dispatcher.Invoke(() =>
-            {
-                BartenderLogMessages.Add($"{dif.Minutes}:{dif.Seconds} Bartender pouring beer.");
-                PresentationLayer.BartenderListbox.Items.Refresh();
-            });
-        }
-
-        private void OnWaitingForCleanGlass()
-        {
-            var dif = GetTime(DateTime.Now);
-            PresentationLayer.Dispatcher.Invoke(() =>
-            {
-                BartenderLogMessages.Add($"{dif.Minutes}:{dif.Seconds} Waiting for clean glass.");
-                PresentationLayer.BartenderListbox.Items.Refresh();
-            });
-        }
-
-        private void OnWaitingForPatron()
-        {
-            var dif = GetTime(DateTime.Now);
-            PresentationLayer.Dispatcher.Invoke(() =>
-            {
-                BartenderLogMessages.Add($"{dif.Minutes}:{dif.Seconds} Bartender waits for a patron.");
-                PresentationLayer.BartenderListbox.Items.Refresh();
-            });
-        }
-
-        private void OnWalkingToChair(Patron p)
-        {
-            var dif = GetTime(DateTime.Now);
-            PresentationLayer.Dispatcher.Invoke(() =>
-            {
-                PatronLogMessages.Add($"{dif.Minutes}:{dif.Seconds} {p.Name} walks to a chair.");
-                PresentationLayer.PatronsListbox.Items.Refresh();
-            });
-        }
-
-        private void OnWalkingToBar(Patron p)
-        {
-            var dif = GetTime(DateTime.Now);
-            PresentationLayer.Dispatcher.Invoke(() =>
-            {
-                PatronLogMessages.Add($"{dif.Minutes}:{dif.Seconds} {p.Name} walks to the bar.");
-                PresentationLayer.PatronsListbox.Items.Refresh();
-            });
-        }
-
-        private void OnWaitingForChair(Patron p)
-        {
-            var dif = GetTime(DateTime.Now);
-            PresentationLayer.Dispatcher.Invoke(() =>
-            {
-                PatronLogMessages.Add($"{dif.Minutes}:{dif.Seconds} {p.Name} is waiting for a chair.");
-                PresentationLayer.PatronsListbox.Items.Refresh();
-            });
-        }
-
-        private void OnWaitingForBeer(Patron p)
-        {
-            var dif = GetTime(DateTime.Now);
-            PresentationLayer.Dispatcher.Invoke(() =>
-            {
-                PatronLogMessages.Add($"{dif.Minutes}:{dif.Seconds} {p.Name} is waiting for a beer.");
-                PresentationLayer.PatronsListbox.Items.Refresh();
-            });
-        }
-
-        void OnBouncerWork(Patron p)
-        {
-            var dif = GetTime(DateTime.Now);  
-            PresentationLayer.Dispatcher.Invoke(()=> 
-            {
-                PatronLogMessages.Add($"{dif.Minutes}:{dif.Seconds} {p.Name} entered the the bar.");
-                PresentationLayer.PatronsListbox.Items.Refresh();
-            });
-        }
-
-        private TimeSpan GetTime(DateTime now)
-        {
-            TimeSpan dif;
-            DateTime timeStamp = DateTime.UtcNow;
-            return dif = timeStamp - startTime;
-        }
-
-        private void RefreshAll()
-        {
-            PresentationLayer.PatronsListbox.Items.Refresh();
-            PresentationLayer.BartenderListbox.Items.Refresh();
-            PresentationLayer.WaitressListbox.Items.Refresh();
-            PresentationLayer.PatronsListbox.Items.Refresh();
         }
         private void InitLogManager(MainWindow presentationLayer, SimulationManager sim)
         {
@@ -150,9 +31,86 @@ namespace Lab6
             waiter = sim.GetWaiter();
             bartender = sim.GetBartender();
             presentationLayer.WaitressListbox.ItemsSource = WaitressLogMessages;
-            presentationLayer.BouncerListbox.ItemsSource = BouncerLogMessages;
             presentationLayer.BartenderListbox.ItemsSource = BartenderLogMessages;
             presentationLayer.PatronsListbox.ItemsSource = PatronLogMessages;
+        }
+
+        public void SubscribeToEvents(SimulationManager sim)
+        {
+            bouncer.Enter += OnBouncerWork;
+            Patron.WaitingForBeerEvent += OnWaitingForBeer;
+            Patron.WaitingForChairEvent += OnWaitingForChair;
+            Patron.WalkingToBarEvent += OnWalkingToBar;
+            Patron.WalkingToChairEvent += OnWalkingToChair;
+            Patron.DrinkingBeerEvent += OnDrinkingBeer;
+            bartender.WaitingForPatronEvent += OnWaitingForPatron;
+            bartender.WaitingForCleanGlassEvent += OnWaitingForCleanGlass;
+            bartender.PouringBeerEvent += OnPouringBeer;
+            bartender.LeavingWorkEvent += OnLeavingWork;
+        }
+        private void OnLeavingWork()
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.BartenderListbox, "Bartender", BartenderLogMessages, "is leaving work.");
+        }
+        private void OnPouringBeer()
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.BartenderListbox, "Bartender", BartenderLogMessages, "is waiting puring beer.");
+        }
+        private void OnWaitingForCleanGlass()
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.BartenderListbox, "Bartender", BartenderLogMessages, "is waiting for a clean glass.");
+        }
+        private void OnWaitingForPatron()
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.BartenderListbox, "Bartender", BartenderLogMessages, "is waiting for a patron.");
+        }
+        private void OnWalkingToChair(Patron p)
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, "is walking to a chair.");
+        }
+        private void OnWalkingToBar(Patron p)
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, "is walking to the bar.");
+        }
+        private void OnWaitingForChair(Patron p)
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, "is waiting for a chair.");
+        }
+        private void OnWaitingForBeer(Patron p)
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, "is waiting for a beer.");
+        }
+        private void OnDrinkingBeer(Patron p)
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, "is drinking a beer.");
+        }
+        private void OnBouncerWork(Patron p)
+        {
+            Print(GetTime, PresentationLayer,PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, "entered the pub.");
+        }
+        private void Print(Func<DateTime,TimeSpan>func, MainWindow PresentationLayer, System.Windows.Controls.ListBox listBox,string name,List<string> list,string message)
+        {
+            Task.Run(()=> 
+            {
+                var timeStamp = func(DateTime.UtcNow);
+                PresentationLayer.Dispatcher.Invoke(() => 
+                {
+                    list.Insert(0,$"{timeStamp.Minutes}:{timeStamp.Seconds} {name} {message}");
+                    listBox.Items.Refresh();
+                });
+            });
+        }
+        private TimeSpan GetTime(DateTime now)
+        {
+            TimeSpan dif;
+            DateTime timeStamp = now;
+            return dif = timeStamp - startTime;
+        }
+        private void RefreshAll(MainWindow PresentationLayer)
+        {
+            PresentationLayer.PatronsListbox.Items.Refresh();
+            PresentationLayer.BartenderListbox.Items.Refresh();
+            PresentationLayer.WaitressListbox.Items.Refresh();
         }
     }
 }

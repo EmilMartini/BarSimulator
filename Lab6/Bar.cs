@@ -19,7 +19,6 @@ namespace Lab6
             BarQueue = new ConcurrentQueue<Patron>();
             FillShelf(establishment);
         }
-
         private void FillShelf(Establishment establishment)
         {
             for (int i = 0; i < establishment.MaxGlasses; i++)

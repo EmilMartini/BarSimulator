@@ -19,9 +19,10 @@ namespace Lab6
             MaxChairs = maxChairs;
             TimeToClose = timeToClose;
             SimulationSpeed = simulationSpeed;
-            Table = new Table(this); // köra Table.InitTable() här? kanske i table konstrukton vi har inga stolar atm
+            Table = new Table(this);
             IsOpen = true; 
-            Bar = new Bar(this); 
+            Bar = new Bar(this);
+            Table.InitTable();
         }
     }
 }

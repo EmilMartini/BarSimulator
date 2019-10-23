@@ -12,13 +12,38 @@ namespace Lab6
         public MainWindow()
         {
             InitializeComponent();
+            HideComponents();
         }
+
+        private void HideComponents()
+        {
+            BartenderButton.Visibility = Visibility.Hidden;
+            BartenderLabel.Visibility = Visibility.Hidden;
+            BartenderListbox.Visibility = Visibility.Hidden;
+
+            WaitressButton.Visibility = Visibility.Hidden;
+            WaitressLabel.Visibility = Visibility.Hidden;
+            WaitressListbox.Visibility = Visibility.Hidden;
+
+            PatronsButton.Visibility = Visibility.Hidden;
+            PatronsLabel.Visibility = Visibility.Hidden;
+            PatronsListbox.Visibility = Visibility.Hidden;
+
+            OpenCLoseButton.Visibility = Visibility.Hidden;
+
+            GuestsInBarLabel.Visibility = Visibility.Hidden;
+            CleanGlassesLabel.Visibility = Visibility.Hidden;
+            FreeChairsLabel.Visibility = Visibility.Hidden;
+            TimeToCloseLabel.Visibility = Visibility.Hidden;
+            StopAllButton.Visibility = Visibility.Hidden;
+
+            SettingsLabel.Visibility = Visibility.Visible;
+            SimulationStateDropDown.Visibility = Visibility.Visible;
+            StartSimButton.Visibility = Visibility.Visible;
+        }
+
         private void DisplayComponents()
         {
-            BouncerButton.Visibility = Visibility.Visible;
-            BouncerLabel.Visibility = Visibility.Visible;
-            BouncerListbox.Visibility = Visibility.Visible;
-
             BartenderButton.Visibility = Visibility.Visible;
             BartenderLabel.Visibility = Visibility.Visible;
             BartenderListbox.Visibility = Visibility.Visible;
