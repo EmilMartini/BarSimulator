@@ -80,7 +80,7 @@ namespace Lab6
         }
         void CleaningGlass()
         {
-            CleaningGlassEvent();
+            //CleaningGlassEvent();
             Thread.Sleep(15000);
             foreach (var glass in carryingGlasses) // gör med lambda sedan
             {

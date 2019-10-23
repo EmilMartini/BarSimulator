@@ -6,10 +6,11 @@ using System.Windows.Threading;
 
 namespace Lab6
 {
-    class LogManager
+    public class LogManager
     {
         DateTime startTime;
         static MainWindow PresentationLayer;
+        SimulationManager simulationManager;
         Bouncer bouncer;
         Bartender bartender;
         Waitress waitress;
@@ -26,8 +27,9 @@ namespace Lab6
         {
             startTime = DateTime.UtcNow;
             PresentationLayer = presentationLayer;
+            simulationManager = sim;
             bouncer = sim.GetBouncer();
-            waiter = sim.GetWaiter();
+            waitress = sim.GetWaiter();
             bartender = sim.GetBartender();
             presentationLayer.WaitressListbox.ItemsSource = WaitressLogMessages;
             presentationLayer.BartenderListbox.ItemsSource = BartenderLogMessages;
@@ -42,6 +44,8 @@ namespace Lab6
             Patron.WalkingToBarEvent += OnWalkingToBar;
             Patron.WalkingToChairEvent += OnWalkingToChair;
             Patron.DrinkingBeerEvent += OnDrinkingBeer;
+            Patron.LeavingEstablishmentEvent += OnLeavingEstablishment;
+            Patron.UpdatePatronCount += OnUpdatePatronCount;
             bartender.WaitingForPatronEvent += OnWaitingForPatron;
             bartender.WaitingForCleanGlassEvent += OnWaitingForCleanGlass;
             bartender.PouringBeerEvent += OnPouringBeer;
@@ -52,6 +56,19 @@ namespace Lab6
             waitress.WaitingForDirtyGlassEvent += OnWaitingForDirtyGlass;
             waitress.WalkingToSinkEvent += OnWalkingToSink;
             waitress.WalkingToTableEvent += OnWalkingToTable;
+        }
+
+        private void OnUpdatePatronCount(Patron p)
+        {
+            PresentationLayer.Dispatcher.Invoke(()=>
+            {
+                PresentationLayer.PatronsInPubLabel.Content = $"Patrons in bar {simulationManager.CurrentPatrons.Count + 1} (Max patrons)";
+            });
+        }
+
+        private void OnLeavingEstablishment(Patron p)
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, "is leaving the pub.");
         }
 
         private void OnWalkingToTable()
