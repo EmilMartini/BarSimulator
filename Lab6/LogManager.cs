@@ -38,94 +38,39 @@ namespace Lab6
 
         public void SubscribeToEvents(SimulationManager sim)
         {
-            bouncer.Enter += OnBouncerWork;
-            Patron.WaitingForBeerEvent += OnWaitingForBeer;
-            Patron.WaitingForChairEvent += OnWaitingForChair;
-            Patron.WalkingToBarEvent += OnWalkingToBar;
-            Patron.WalkingToChairEvent += OnWalkingToChair;
-            Patron.DrinkingBeerEvent += OnDrinkingBeer;
-            Patron.LeavingEstablishmentEvent += OnLeavingEstablishment;
-            Patron.UpdatePatronCount += OnUpdatePatronCount;
-            bartender.WaitingForPatronEvent += OnWaitingForPatron;
-            bartender.WaitingForCleanGlassEvent += OnWaitingForCleanGlass;
-            bartender.PouringBeerEvent += OnPouringBeer;
-            bartender.LeavingWorkEvent += OnBartenderLeavingWork;
-            waitress.LeavingWorkEvent += OnWaitressLeavingWork;
-            waitress.PickingUpGlassEvent += OnPickingUpGlass;
-            waitress.CleaningGlassEvent += OnCleaningGlass;
-            waitress.ShelfingGlassEvent += OnShelfingGlass;
-            waitress.WaitingForDirtyGlassEvent += OnWaitingForDirtyGlass;
-            waitress.WalkingToSinkEvent += OnWalkingToSink;
-            waitress.WalkingToTableEvent += OnWalkingToTable;
+            bouncer.Log += OnBouncerLogEvent;
+            Patron.Log += OnPatronLogEvent;
+            Patron.UpdatePatronCount += OnPatronUpdateCount;
+            bartender.Log += OnBartenderLogEvent;
+            waitress.Log += OnWaitressLogEvent;
         }
 
-        private void OnCleaningGlass()
+        private void OnPatronUpdateCount(Patron p, string s)
         {
-            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is cleaning the glasses.");
+            PresentationLayer.Dispatcher.Invoke(()=> 
+            {
+                PresentationLayer.PatronsInPubLabel.Content = $"Patrons in bar {simulationManager.CurrentPatrons.Count + 1} (Max patrons)";
+            });
         }
-        private void OnWalkingToTable()
+
+        private void OnWaitressLogEvent(string s)
         {
-            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is walking to the table.");
+            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, s);
         }
-        private void OnWalkingToSink()
+
+        private void OnBouncerLogEvent(Patron p, string s)
         {
-            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is walking to sink.");
+            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, s);
         }
-        private void OnWaitingForDirtyGlass()
+
+        private void OnBartenderLogEvent(string s)
         {
-            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is waiting for a dirty glass.");
+            Print(GetTime, PresentationLayer, PresentationLayer.BartenderListbox, "Bartender", BartenderLogMessages, s);
         }
-        private void OnShelfingGlass()
+
+        private void OnPatronLogEvent(Patron p, string message)
         {
-            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is shelfing glasses.");
-        }
-        private void OnPickingUpGlass()
-        {
-            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is picking up glasses.");
-        }
-        private void OnWaitressLeavingWork()
-        {
-            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is leaving work.");
-        }
-        private void OnBartenderLeavingWork()
-        {
-            Print(GetTime, PresentationLayer, PresentationLayer.BartenderListbox, "Bartender", BartenderLogMessages, "is leaving work.");
-        }
-        private void OnPouringBeer()
-        {
-            Print(GetTime, PresentationLayer, PresentationLayer.BartenderListbox, "Bartender", BartenderLogMessages, "is waiting puring beer.");
-        }
-        private void OnWaitingForCleanGlass()
-        {
-            Print(GetTime, PresentationLayer, PresentationLayer.BartenderListbox, "Bartender", BartenderLogMessages, "is waiting for a clean glass.");
-        }
-        private void OnWaitingForPatron()
-        {
-            Print(GetTime, PresentationLayer, PresentationLayer.BartenderListbox, "Bartender", BartenderLogMessages, "is waiting for a patron.");
-        }
-        private void OnWalkingToChair(Patron p)
-        {
-            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, "is walking to a chair.");
-        }
-        private void OnWalkingToBar(Patron p)
-        {
-            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, "is walking to the bar.");
-        }
-        private void OnWaitingForChair(Patron p)
-        {
-            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, "is waiting for a chair.");
-        }
-        private void OnWaitingForBeer(Patron p)
-        {
-            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, "is waiting for a beer.");
-        }
-        private void OnDrinkingBeer(Patron p)
-        {
-            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, "is drinking a beer.");
-        }
-        private void OnBouncerWork(Patron p)
-        {
-            Print(GetTime, PresentationLayer,PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, "entered the pub.");
+            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, message);
         }
         
         private void Print(Func<DateTime,TimeSpan>func, MainWindow PresentationLayer, System.Windows.Controls.ListBox listBox,string name,List<string> list,string message)

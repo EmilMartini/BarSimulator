@@ -10,8 +10,8 @@ namespace Lab6
     {
         public enum State { WaitingForPatron, WaitingForCleanGlass, PouringBeer, LeavingWork }
         public State CurrentState { get; set; }
-        public delegate void BartenderEvent();
-        public event BartenderEvent WaitingForPatronEvent, WaitingForCleanGlassEvent, PouringBeerEvent, LeavingWorkEvent;
+        public delegate void BartenderEvent(string s);
+        public event BartenderEvent Log;
 
         public Bartender(Establishment est) // behöver ine ta in Establishment för att sätta currentstate
         {
@@ -62,7 +62,7 @@ namespace Lab6
         {
             if (!CheckBarQueue(bar))
             {
-                WaitingForPatronEvent();
+                Log("is waiting for a patron");
             }
             while (!CheckBarQueue(bar))
             {
@@ -84,7 +84,7 @@ namespace Lab6
             Glass glass;
             if(bar.Shelf.TryTake(out glass))
             {
-                PouringBeerEvent();
+                Log("is pouring beer");
                 bar.BarTop.Add(glass);
                 CurrentState = State.WaitingForPatron;
             } else
@@ -97,7 +97,7 @@ namespace Lab6
         {
             if (!CheckBarShelf(bar))
             {
-                WaitingForCleanGlassEvent();
+                Log("is waiting for a clean glass");
             }
             while (!CheckBarShelf(bar))
             {
@@ -110,7 +110,7 @@ namespace Lab6
         }
         void LeavingWork()
         {
-            LeavingWorkEvent();
+            Log("is leaving work");
             Thread.Sleep(5000);
             
         }

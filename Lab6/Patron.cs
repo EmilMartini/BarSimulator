@@ -8,9 +8,9 @@ namespace Lab6
 {
     public class Patron
     { 
-        public enum State { WaitingForChair, WaitingForBeer, DrinkingBeer, WalkingToBar, WalkingToChair, LeavingEstablishment }
-        public delegate void PatronEvent(Patron p);
-        public static event PatronEvent WaitingForBeerEvent, WaitingForChairEvent, WalkingToBarEvent, WalkingToChairEvent, DrinkingBeerEvent, LeavingEstablishmentEvent, UpdatePatronCount;
+        public enum State { WaitingForChair, WaitingForBeer, DrinkingBeer, WalkingToBar, WalkingToChair, LeavingEstablishment, RemovePatron }
+        public delegate void PatronEvent(Patron p, String s);
+        public static event PatronEvent Log, UpdatePatronCount;
 
         public string Name { get; private set; }
         public State CurrentState { get; set; }
@@ -21,7 +21,7 @@ namespace Lab6
             CurrentState = State.WalkingToBar;
             Holding = new ConcurrentBag<Glass>();
             Simulate(establishment, sim);
-            UpdatePatronCount(this);
+            UpdatePatronCount(this, "Update Visualization of patron count");
         }
         void Simulate(Establishment establishment, SimulationManager sim) // ta bort establishment ersätt med sim
         {
@@ -47,14 +47,23 @@ namespace Lab6
                             WalkingToChair();
                             break;
                         case State.LeavingEstablishment:
+                            LeavingEstablishment(sim);
                             break;
                         default:
                             break;
                     }
-                } while (CurrentState != State.LeavingEstablishment);
-                LeavingEstablishment(sim);
+                } while (CurrentState != State.RemovePatron);
             });
+            RemovePatron(this, sim);
         }
+
+        private void RemovePatron(Patron patron, SimulationManager sim)
+        {
+            sim.PatronsToDelete.Add(patron);
+            sim.CurrentPatrons.Remove(patron);
+            sim.PatronsToDelete.Clear();
+        }
+
         bool CheckBarTopForBeer(Bar bar)
         {
             if(bar.BarTop.Count > 0)
@@ -76,7 +85,7 @@ namespace Lab6
         }
         void DrinkingBeer(Table table)
         {
-            DrinkingBeerEvent(this);
+            Log(this,"is drinking a beer");
             Thread.Sleep(15000);
             foreach (var glass in Holding) // gör med lambda sedan
             {
@@ -90,7 +99,7 @@ namespace Lab6
         {
             if (!CheckForEmptyChair(table))
             {
-                WaitingForChairEvent(this);
+                Log(this, "is waiting for a chair");
             }
             while (!CheckForEmptyChair(table))
             {
@@ -111,7 +120,7 @@ namespace Lab6
         {
             if (!CheckBarTopForBeer(bar))
             {
-                WaitingForBeerEvent(this); //detta är ett generiskt event, vad som helst skulle kunna hända
+                Log(this,"is waiting for a beer"); //detta är ett generiskt event, vad som helst skulle kunna hända
                 //det ända ni gör någonsin är att logga. Då kanske de bör represetera det.
                 //Log(this,"Patron is waiting for beer");
 
@@ -132,21 +141,21 @@ namespace Lab6
         }
         void LeavingEstablishment(SimulationManager sim)
         {
-            LeavingEstablishmentEvent(this);
+            Log(this, "is leaving establishment");
             Thread.Sleep(5000);
-            UpdatePatronCount(this);
-            sim.CurrentPatrons.Remove(this);
+            CurrentState = State.RemovePatron;
+            
         }
         void WalkingToBar(Bar bar)
         {
-            WalkingToBarEvent(this);
+            Log(this, "is walking to the bar.");
             Thread.Sleep(5000);
             bar.BarQueue.Enqueue(this);
             CurrentState = State.WaitingForBeer;
         }
         void WalkingToChair()
         {
-            WalkingToChairEvent(this);
+            Log(this, "is walking to a chair");
             Thread.Sleep(5000);
             CurrentState = State.WaitingForChair;
         }

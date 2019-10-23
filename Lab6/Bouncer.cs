@@ -6,8 +6,8 @@ namespace Lab6
 {
     public class Bouncer
     {
-        public delegate void Entry(Patron p);
-        public event Entry Enter;
+        public delegate void LogEvent(Patron p, string s);
+        public event LogEvent Log;
         Random rnd = new Random();
         string[] patronNames = new string[]
         {
@@ -106,7 +106,7 @@ namespace Lab6
 
             Patron patron = new Patron(patronNames[rnd.Next(0, patronNames.Length - 1)], sim.establishment, sim);
             sim.CurrentPatrons.Insert(0, patron);
-            Enter(patron);
+            Log(patron, "enters the pub");
             currentState = State.Waiting;
         }
         private void Wait()

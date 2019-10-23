@@ -12,8 +12,8 @@ namespace Lab6
         public enum State { WaitingForDirtyGlass, PickingUpGlass, WalkingToSink, WalkingToTable, CleaningGlass, LeavingWork, ShelfingGlass }
         ConcurrentBag<Glass> carryingGlasses;
 
-        public delegate void WaitressEvent();
-        public event WaitressEvent WaitingForDirtyGlassEvent, PickingUpGlassEvent, WalkingToSinkEvent, WalkingToTableEvent, CleaningGlassEvent, LeavingWorkEvent, ShelfingGlassEvent; 
+        public delegate void WaitressEvent(string s);
+        public event WaitressEvent Log;
         public State CurrentState { get; set; }
         public Waitress(Table table, Bar bar)
         {
@@ -74,7 +74,7 @@ namespace Lab6
         }
         void LeavingWork()
         {
-            LeavingWorkEvent();
+            Log("is leaving work");
             Thread.Sleep(5000);
             //Log Has left the establishment
         }
@@ -90,19 +90,19 @@ namespace Lab6
         }
         void WalkingToTable()
         {
-            WalkingToTableEvent();
+            Log("is walking to the table");
             Thread.Sleep(5000);
             CurrentState = State.WaitingForDirtyGlass;
         }
         void WalkingToSink()
         {
-            WalkingToSinkEvent();
+            Log("is walking to the sink");
             Thread.Sleep(5000);
             CurrentState = State.CleaningGlass;
         }
         void PickingUpGlass(Table table)
         {
-            PickingUpGlassEvent();
+            Log("is picking up glasses");
             foreach (var glass in table.GlassesOnTable)
             {
                 Thread.Sleep(10000);
@@ -115,7 +115,7 @@ namespace Lab6
         {
             if (!CheckTableForDirtyGlass(table))
             {
-                WaitingForDirtyGlassEvent();
+                Log("is waiting for dirty glasses");
             }
             while (!CheckTableForDirtyGlass(table))
             {
