@@ -16,10 +16,10 @@ namespace Lab6
         MainWindow window { get; set; }
         DispatcherTimer dispatcherTimer { get; set; }
         DateTime TimeToClose { get; set; }
-        public SimulationManager(SimulationState stateToRun)
+        public SimulationManager(SimulationState stateToRun, double simulationSpeed)
         {
             dispatcherTimer = new DispatcherTimer();
-            establishment = GetEstablishment(stateToRun);
+            establishment = GetEstablishment(stateToRun, simulationSpeed);
             window = (MainWindow)App.Current.MainWindow;
             bouncer = new Bouncer();
             bartender = new Bartender(establishment);
@@ -37,24 +37,24 @@ namespace Lab6
             waitress.Simulate(establishment);
             TimeToClose = DateTime.Now + establishment.TimeToClose;
         }
-        private Establishment GetEstablishment(SimulationState state)
+        private Establishment GetEstablishment(SimulationState state, double simulationSpeed)
         {
             switch (state)
             {
                 case SimulationState.Default:
-                    return new Establishment(8, 9, new TimeSpan(0, 2, 0),1, 1,1,1);
+                    return new Establishment(8, 9, new TimeSpan(0, 2, 0),1, simulationSpeed, 1,1);
                 case SimulationState.TwentyGlassThreeChairs:
-                    return new Establishment(20, 3, new TimeSpan(0, 2, 0),1, 1,1,1);
+                    return new Establishment(20, 3, new TimeSpan(0, 2, 0),1, simulationSpeed, 1,1);
                 case SimulationState.TwentyChairsThreeGlass:
-                    return new Establishment(3, 20, new TimeSpan(0, 2, 0),1, 1,1,1);
+                    return new Establishment(3, 20, new TimeSpan(0, 2, 0),1, simulationSpeed, 1,1);
                 case SimulationState.PatronsSlowMode:
-                    return new Establishment(8, 9, new TimeSpan(0, 2, 0),1, 1, 0.5, 1);
+                    return new Establishment(8, 9, new TimeSpan(0, 2, 0),1, simulationSpeed, 0.5, 1);
                 case SimulationState.WaitressBoostMode:
-                    return new Establishment(8, 9, new TimeSpan(0, 2, 0),1, 1, 1, 2);
+                    return new Establishment(8, 9, new TimeSpan(0, 2, 0),1, simulationSpeed, 1, 2);
                 case SimulationState.BarOpenForFiveMins:
                     break;
                 case SimulationState.CouplesNight:
-                    return new Establishment(8, 9, new TimeSpan(0, 2, 0), 2, 1, 1, 1);
+                    return new Establishment(8, 9, new TimeSpan(0, 2, 0), 2, simulationSpeed, 1, 1);
                     break;
                 case SimulationState.BusLoad:
                     break;

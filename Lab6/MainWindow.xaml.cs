@@ -40,6 +40,8 @@ namespace Lab6
             SettingsLabel.Visibility = Visibility.Visible;
             SimulationStateDropDown.Visibility = Visibility.Visible;
             StartSimButton.Visibility = Visibility.Visible;
+            SimulationSpeedLabel.Visibility = Visibility.Visible;
+            speedModifierTextbox.Visibility = Visibility.Visible;
         }
 
         private void DisplaySimulation()
@@ -67,6 +69,8 @@ namespace Lab6
             SettingsLabel.Visibility = Visibility.Hidden;
             SimulationStateDropDown.Visibility = Visibility.Hidden;
             StartSimButton.Visibility = Visibility.Hidden;
+            SimulationSpeedLabel.Visibility = Visibility.Hidden;
+            speedModifierTextbox.Visibility = Visibility.Hidden;
         }
         private void ComboBox_Initialized(object sender, EventArgs e)
         {
@@ -75,7 +79,7 @@ namespace Lab6
         private void StartSimButton_Click(object sender, RoutedEventArgs e)
         {
             DisplaySimulation();
-            SimulationManager Manager = new SimulationManager((SimulationState)SimulationStateDropDown.SelectedItem);
+            SimulationManager Manager = new SimulationManager((SimulationState)SimulationStateDropDown.SelectedItem, double.Parse(speedModifierTextbox.Text));
         }
     }
 }
