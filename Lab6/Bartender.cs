@@ -63,7 +63,6 @@ namespace Lab6
             
             return false;
         }
-
         void WaitingForPatron(Establishment establishment)
         {
             if (establishment.CurrentPatrons.Count <= 0 && !establishment.IsOpen)
@@ -73,7 +72,7 @@ namespace Lab6
             }
             if (!CheckBarQueue(establishment.Bar))
             {
-                Log("is waiting for a patron");
+                Log("waiting for a patron");
             }
             while (!CheckBarQueue(establishment.Bar))
             {
@@ -82,32 +81,33 @@ namespace Lab6
                     CurrentState = State.LeavingWork;
                     return;
                 }
-                Thread.Sleep(SpeedModifier(3000));
+                Thread.Sleep(SpeedModifier(300));
             }
-            if (CheckBarQueue(establishment.Bar))// ska tas bort
+            if (CheckBarShelf(establishment.Bar))
             {
-                if (CheckBarShelf(establishment.Bar))
-                {
-                    CurrentState = State.PouringBeer;
-                } else
-                {
-                    CurrentState = State.WaitingForCleanGlass;
-                }
+                CurrentState = State.PouringBeer;
             }
+            else
+            {
+                CurrentState = State.WaitingForCleanGlass;
+            }
+            
         }
         void PouringBeer(Bar bar)
         {
             Glass glass;
             if(bar.Shelf.TryTake(out glass))
             {
-                Log("is pouring beer");
+                Log("fetching glass");
+                Thread.Sleep(SpeedModifier(3000));
+                Log("pouring beer");
+                Thread.Sleep(SpeedModifier(3000));
                 bar.BarTop.Add(glass);
                 CurrentState = State.WaitingForPatron;
             } else
             {
                 CurrentState = State.WaitingForCleanGlass;
             }
-            Thread.Sleep(SpeedModifier(3000));
         }
         void WaitingForCleanGlass(Bar bar)
         {
@@ -126,10 +126,8 @@ namespace Lab6
         }
         void LeavingWork()
         {
-            Log("is leaving work");
-            Thread.Sleep(SpeedModifier(5000));
             CurrentState = State.LeftWork;
-            Log("has left the pub.");
+            Log("left the pub.");
         }
     }
 }

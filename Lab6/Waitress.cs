@@ -8,18 +8,16 @@ namespace Lab6
 {
     public class Waitress
     {
-        // public static event PatronEvent;
-        public enum State { WaitingForDirtyGlass, PickingUpGlass, WalkingToSink, WalkingToTable, CleaningGlass, LeavingWork, ShelfingGlass }
         ConcurrentBag<Glass> carryingGlasses;
-
+        enum State { WaitingForDirtyGlass, PickingUpGlass, CleaningGlass, LeavingWork, ShelfingGlass, LeftWork }
         public delegate void WaitressEvent(string s);
         public event WaitressEvent Log;
         double waitressSpeed;
         double simulationSpeed;
-        public State CurrentState { get; set; }
+        State CurrentState { get; set; }
         public Waitress(Establishment establishment)
         {
-            CurrentState = State.WalkingToTable;
+            CurrentState = State.WaitingForDirtyGlass;
             carryingGlasses = new ConcurrentBag<Glass>();
             waitressSpeed = establishment.WaitressSpeed;
             simulationSpeed = establishment.SimulationSpeed;
@@ -28,7 +26,7 @@ namespace Lab6
         {
             Task.Run(() =>
             {
-                while (CurrentState != State.LeavingWork) 
+                while (CurrentState != State.LeftWork) 
                 {
                     switch (CurrentState)
                     {
@@ -38,23 +36,19 @@ namespace Lab6
                         case State.PickingUpGlass:
                             PickingUpGlass(establishment.Table);
                             break;
-                        case State.WalkingToSink:
-                            WalkingToSink();
-                            break;
-                        case State.WalkingToTable:
-                            WalkingToTable();
-                            break;
                         case State.CleaningGlass:
-                            CleaningGlass();
+                            WashingGlass();
                             break;
                         case State.ShelfingGlass:
                             ShelfingGlass(establishment.Bar);
+                            break;
+                        case State.LeavingWork:
+                            LeavingWork();
                             break;
                         default:
                             break;
                     }
                 } 
-                LeavingWork();
             });
         }
         void ShelfingGlass(Bar bar)
@@ -64,8 +58,8 @@ namespace Lab6
                 bar.Shelf.Add(glass);
                 carryingGlasses = new ConcurrentBag<Glass>(carryingGlasses.Except(new[] { glass }));
             }
-            CurrentState = State.WalkingToTable;
-        }
+            CurrentState = State.WaitingForDirtyGlass;
+        }// lambda
         bool CheckTableForDirtyGlass(Table table)
         {
             if (table.GlassesOnTable.Count > 0)
@@ -80,43 +74,31 @@ namespace Lab6
         }
         void LeavingWork()
         {
-            Log("is leaving work");
-            Thread.Sleep(SpeedModifier(5000));
             Log("has left the pub");
+            CurrentState = State.LeftWork;
         }
-        void CleaningGlass()
+        void WashingGlass()
         {
-            //CleaningGlassEvent();
+            Log("washing glasses");
             Thread.Sleep(SpeedModifier(15000));
-            foreach (var glass in carryingGlasses) // gör med lambda sedan
+            foreach (var glass in carryingGlasses)
             {
                 glass.CurrentState = Glass.State.Clean;
             }
             CurrentState = State.ShelfingGlass;
-        }
-        void WalkingToTable()
-        {
-            Log("is walking to the table");
-            Thread.Sleep(SpeedModifier(5000));
-            CurrentState = State.WaitingForDirtyGlass;
-        }
-        void WalkingToSink()
-        {
-            Log("is walking to the sink");
-            Thread.Sleep(SpeedModifier(5000));
-            CurrentState = State.CleaningGlass;
-        }
+
+        }// lambda
         void PickingUpGlass(Table table)
         {
             Log("is picking up glasses");
+            Thread.Sleep(SpeedModifier(10000));
             foreach (var glass in table.GlassesOnTable)
             {
-                Thread.Sleep(SpeedModifier(10000));
                 table.GlassesOnTable = new ConcurrentBag<Glass>(table.GlassesOnTable.Except(new[] { glass }));
                 carryingGlasses.Add(glass);
             }
-            CurrentState = State.WalkingToSink;
-        }
+            CurrentState = State.CleaningGlass;
+        }// lambda
         void WaitingForDirtyGlass(Establishment establishment)
         {
             if (!establishment.IsOpen && establishment.CurrentPatrons.Count < 1)
@@ -138,6 +120,6 @@ namespace Lab6
                 Thread.Sleep(SpeedModifier(3000));
             }
             CurrentState = State.PickingUpGlass;
-        }
+        }// snygga till eventuellt
     }
 }
