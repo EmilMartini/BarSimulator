@@ -13,7 +13,7 @@ namespace Lab6
         public List<Patron> CurrentPatrons { get; private set; }
         public Bouncer bouncer { get; private set; }
         public Bartender bartender { get; private set; }
-        public Waitress waiter { get; private set; }
+        public Waitress waitress { get; private set; }
         public LogManager logManager { get; private set; }
         public Establishment establishment { get; private set; }
         public SimulationManager(SimulationState stateToRun)
@@ -22,17 +22,17 @@ namespace Lab6
             MainWindow window = (MainWindow)App.Current.MainWindow;
             bouncer = new Bouncer(establishment, this);
             bartender = new Bartender(establishment);
-            waiter = new Waitress(establishment.Table, establishment.Bar);
+            waitress = new Waitress(establishment.Table, establishment.Bar);
             CurrentPatrons = new List<Patron>();
             logManager = new LogManager(window, this);
             logManager.SubscribeToEvents(this);
             StartSimulation(this);
         }
-
         private void StartSimulation(SimulationManager simulationManager)
         {
             bouncer.Simulate(simulationManager);
             bartender.Simulate(simulationManager.establishment);
+            waitress.Simulate(establishment.Table, establishment.Bar);
         }
         private Establishment GetEstablishment(SimulationState state)
         {
@@ -53,7 +53,7 @@ namespace Lab6
         }
         public Waitress GetWaiter()
         {
-            return waiter;
+            return waitress;
         }
     }
 }

@@ -16,9 +16,8 @@ namespace Lab6
         {
             CurrentState = State.WalkingToTable;
             carryingGlasses = new ConcurrentBag<Glass>();
-            Simulate(table, bar);
         }
-        private void Simulate(Table table, Bar bar)
+        public void Simulate(Table table, Bar bar)
         {
             Task.Run(() =>
             {

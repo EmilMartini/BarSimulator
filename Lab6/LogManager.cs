@@ -14,7 +14,6 @@ namespace Lab6
         Bartender bartender;
         Waitress waiter;
         List<string> WaitressLogMessages = new List<string>();
-        List<string> BouncerLogMessages = new List<string>();
         List<string> BartenderLogMessages = new List<string>();
         List<string> PatronLogMessages = new List<string>();
 
