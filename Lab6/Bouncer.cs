@@ -65,11 +65,11 @@ namespace Lab6
             };
         enum State { Waiting, Working, LeavingWork, StopBouncer}
         State currentState { get; set; }
-        public Bouncer(Establishment est, SimulationManager sim)
+        public Bouncer()
         {
         }
 
-        public void Simulate(SimulationManager sim)
+        public void Simulate(Establishment establishment)
         {
             currentState = State.Working;
             Task.Run(() =>
@@ -82,7 +82,7 @@ namespace Lab6
                             Wait();
                             break;
                         case State.Working:
-                            Work(sim);
+                            Work(establishment);
                             break;
                         case State.LeavingWork:
                             LeavingWork();
@@ -98,17 +98,17 @@ namespace Lab6
             currentState = State.StopBouncer;
         }
 
-        private void Work(SimulationManager sim)
+        private void Work(Establishment establishment)
         {
-            if (!sim.establishment.IsOpen)
+            if (!establishment.IsOpen)
             {
                 currentState = State.LeavingWork;
                 return;
             }
 
-            Patron patron = new Patron(patronNames[rnd.Next(0, patronNames.Length - 1)], sim.establishment, sim);
-            sim.CurrentPatrons.Insert(0, patron);
-            Log($"{patron.Name} enters the pub");
+            Patron patron = new Patron(patronNames[rnd.Next(0, patronNames.Length - 1)], establishment);
+            establishment.CurrentPatrons.Insert(0, patron);
+            Log(patron, "enters the pub");
             currentState = State.Waiting;
         }
         private void Wait()

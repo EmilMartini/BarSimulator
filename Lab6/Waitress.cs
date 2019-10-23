@@ -15,24 +15,24 @@ namespace Lab6
         public delegate void WaitressEvent(string s);
         public event WaitressEvent Log;
         public State CurrentState { get; set; }
-        public Waitress(Table table, Bar bar)
+        public Waitress(Establishment establishment)
         {
             CurrentState = State.WalkingToTable;
             carryingGlasses = new ConcurrentBag<Glass>();
         }
-        public void Simulate(Table table, Bar bar)
+        public void Simulate(Establishment establishment)
         {
             Task.Run(() =>
             {
-                do
+                while (CurrentState != State.LeavingWork) 
                 {
                     switch (CurrentState)
                     {
                         case State.WaitingForDirtyGlass:
-                            WaitingForDirtyGlass(table);
+                            WaitingForDirtyGlass(establishment);
                             break;
                         case State.PickingUpGlass:
-                            PickingUpGlass(table);
+                            PickingUpGlass(establishment.Table);
                             break;
                         case State.WalkingToSink:
                             WalkingToSink();
@@ -43,16 +43,14 @@ namespace Lab6
                         case State.CleaningGlass:
                             CleaningGlass();
                             break;
-                        case State.LeavingWork:
-                            LeavingWork();
-                            break;
                         case State.ShelfingGlass:
-                            ShelfingGlass(bar);
+                            ShelfingGlass(establishment.Bar);
                             break;
                         default:
                             break;
                     }
-                } while (CurrentState != State.LeavingWork);
+                } 
+                LeavingWork();
             });
         }
         void ShelfingGlass(Bar bar)
@@ -76,7 +74,7 @@ namespace Lab6
         {
             Log("is leaving work");
             Thread.Sleep(5000);
-            //Log Has left the establishment
+            Log("has left the pub");
         }
         void CleaningGlass()
         {
@@ -111,14 +109,24 @@ namespace Lab6
             }
             CurrentState = State.WalkingToSink;
         }
-        void WaitingForDirtyGlass(Table table)
+        void WaitingForDirtyGlass(Establishment establishment)
         {
-            if (!CheckTableForDirtyGlass(table))
+            if (!establishment.IsOpen && establishment.CurrentPatrons.Count < 1)
+            {
+                CurrentState = State.LeavingWork;
+                return;
+            }
+            if (!CheckTableForDirtyGlass(establishment.Table))
             {
                 Log("is waiting for dirty glasses");
             }
-            while (!CheckTableForDirtyGlass(table))
+            while (!CheckTableForDirtyGlass(establishment.Table))
             {
+                if (!establishment.IsOpen && establishment.CurrentPatrons.Count < 1)
+                {
+                    CurrentState = State.LeavingWork;
+                    return;
+                }
                 Thread.Sleep(3000);
             }
             CurrentState = State.PickingUpGlass;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace Lab6
 {
@@ -12,7 +13,7 @@ namespace Lab6
         public TimeSpan TimeToClose { get; set; }
         public Table Table { get; set; }
         public Bar Bar { get; set; }
-
+        public List<Patron> CurrentPatrons { get; private set; }
         public Establishment(int maxGlasses, int maxChairs, TimeSpan timeToClose, int simulationSpeed)
         {
             MaxGlasses = maxGlasses;
@@ -23,6 +24,7 @@ namespace Lab6
             IsOpen = true; 
             Bar = new Bar(this);
             Table.InitTable();
+            CurrentPatrons = new List<Patron>();
         }
     }
 }

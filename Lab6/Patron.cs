@@ -15,14 +15,14 @@ namespace Lab6
         public string Name { get; private set; }
         public State CurrentState { get; set; }
         public ConcurrentBag<Glass> Holding { get; set; }
-        public Patron(string name, Establishment establishment, SimulationManager sim)
+        public Patron(string name, Establishment establishment)
         {
             Name = name;
             CurrentState = State.WalkingToBar;
             Holding = new ConcurrentBag<Glass>();
-            Simulate(establishment, sim);
+            Simulate(establishment);
         }
-        void Simulate(Establishment establishment, SimulationManager sim) // ta bort establishment ersätt med sim
+        void Simulate(Establishment establishment)
         {
             Task.Run(() =>
             {
@@ -46,19 +46,19 @@ namespace Lab6
                             WalkingToChair();
                             break;
                         case State.LeavingEstablishment:
-                            LeavingEstablishment(sim);
+                            LeavingEstablishment(establishment);
                             break;
                         default:
                             break;
                     }
                 } while (CurrentState != State.RemovePatron);
-                RemovePatron(this, sim);
+                RemovePatron(this, establishment);
             });
         }
 
-        private void RemovePatron(Patron patron, SimulationManager sim)
+        private void RemovePatron(Patron patron, Establishment establishment)
         {
-            sim.CurrentPatrons.Remove(patron);
+            establishment.CurrentPatrons.Remove(patron);
         }
 
         bool CheckBarTopForBeer(Bar bar)
@@ -136,9 +136,9 @@ namespace Lab6
             }
             
         }
-        void LeavingEstablishment(SimulationManager sim)
+        void LeavingEstablishment(Establishment establishment)
         {
-            foreach (var chair in sim.establishment.Table.ChairsAroundTable)
+            foreach (var chair in establishment.Table.ChairsAroundTable)
             {
                 if (!chair.Available)
                 {
