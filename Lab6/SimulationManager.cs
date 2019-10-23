@@ -52,7 +52,7 @@ namespace Lab6
         {
             return bouncer;
         }
-        public Waitress GetWaiter()
+        public Waitress GetWaitress()
         {
             return waitress;
         }
