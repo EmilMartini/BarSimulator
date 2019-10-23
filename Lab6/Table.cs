@@ -6,15 +6,14 @@ namespace Lab6
     public class Table
     {
         public ConcurrentBag<Glass> GlassesOnTable { get; set; }
-        public BlockingCollection<Chair> ChairsAroundTable { get; set; }
-       
+        public BlockingCollection<Chair> ChairsAroundTable { get; private set; }  
         public Table(Establishment est)
         {
             GlassesOnTable = new ConcurrentBag<Glass>();
             ChairsAroundTable = new BlockingCollection<Chair>(est.MaxChairs);
+            InitTable();
         }
-
-        public void InitTable()
+        void InitTable()
         {
             for (int i = 0; i < ChairsAroundTable.BoundedCapacity; i++)
             {

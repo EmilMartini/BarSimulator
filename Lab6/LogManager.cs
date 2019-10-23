@@ -10,64 +10,64 @@ namespace Lab6
     {
         DateTime startTime;
         static MainWindow PresentationLayer;
-        SimulationManager simulationManager;
         Bouncer bouncer;
         Bartender bartender;
         Waitress waitress;
         List<string> WaitressLogMessages = new List<string>();
         List<string> BartenderLogMessages = new List<string>();
         List<string> PatronLogMessages = new List<string>();
-
         public LogManager(MainWindow presentationLayer, SimulationManager sim)
         {
             PresentationLayer = presentationLayer;
             InitLogManager(PresentationLayer, sim);
         }
-        private void InitLogManager(MainWindow presentationLayer, SimulationManager sim)
+        void InitLogManager(MainWindow presentationLayer, SimulationManager sim)
         {
             startTime = DateTime.UtcNow;
             PresentationLayer = presentationLayer;
-            simulationManager = sim;
             bouncer = sim.GetBouncer();
             waitress = sim.GetWaitress();
             bartender = sim.GetBartender();
             presentationLayer.WaitressListbox.ItemsSource = WaitressLogMessages;
             presentationLayer.BartenderListbox.ItemsSource = BartenderLogMessages;
             presentationLayer.PatronsListbox.ItemsSource = PatronLogMessages;
+            SubscribeToEvents();
         }
-        public void SubscribeToEvents(SimulationManager sim)
+        void SubscribeToEvents()
         {
             bouncer.Log += OnBouncerLogEvent;
             Patron.Log += OnPatronLogEvent;
             bartender.Log += OnBartenderLogEvent;
             waitress.Log += OnWaitressLogEvent;
         }
-        private void OnWaitressLogEvent(string s)
+        void OnWaitressLogEvent(string s)
         {
             Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, WaitressLogMessages, s);
         }
-        private void OnBouncerLogEvent(string s)
+        void OnBouncerLogEvent(string s)
         {
             Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, PatronLogMessages, s);
         }
-        private void OnBartenderLogEvent(string s)
+        void OnBartenderLogEvent(string s)
         {
             Print(GetTime, PresentationLayer, PresentationLayer.BartenderListbox, BartenderLogMessages, s);
         }
-        private void OnPatronLogEvent(string message)
+        void OnPatronLogEvent(string message)
         {
             Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, PatronLogMessages, message);
         }   
-        private void Print(Func<DateTime,TimeSpan>func, MainWindow PresentationLayer, System.Windows.Controls.ListBox listBox,List<string> list,string message)
+        void Print(Func<DateTime,TimeSpan>func, MainWindow PresentationLayer, System.Windows.Controls.ListBox listBox,List<string> list,string message)
         {
             var timeStamp = func(DateTime.UtcNow);
             PresentationLayer.Dispatcher.Invoke(() => 
             {
-                list.Insert(0,$"{timeStamp.Minutes}:{timeStamp.Seconds} {message}");
+                string timeFormat = String.Format("{0:c}", timeStamp.ToString());
+                string output = $" {message}";
+                list.Insert(0,timeFormat + output);
                 listBox.Items.Refresh();
             });
         }
-        private TimeSpan GetTime(DateTime now)
+        TimeSpan GetTime(DateTime now)
         {
             return now - startTime;
         }

@@ -68,8 +68,15 @@ namespace Lab6
         }
         private void StartSimButton_Click(object sender, RoutedEventArgs e)
         {
-            DisplaySimulation();
-            SimulationManager Manager = new SimulationManager((SimulationState)SimulationStateDropDown.SelectedItem, double.Parse(speedModifierTextbox.Text));
+            try
+            {
+                DisplaySimulation();
+                SimulationManager Manager = new SimulationManager((SimulationState)SimulationStateDropDown.SelectedItem, double.Parse(speedModifierTextbox.Text));
+                Manager.StartSimulation();
+            } catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

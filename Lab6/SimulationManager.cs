@@ -7,15 +7,14 @@ namespace Lab6
 {
     public class SimulationManager
     {
-        public List<Patron> CurrentPatrons { get; private set; }
-        public Establishment establishment { get; private set; }
-        public Bouncer bouncer { get; private set; }
-        public Bartender bartender { get; private set; }
-        public Waitress waitress { get; private set; }
-        public LogManager logManager { get; private set; }
+        Establishment establishment { get; set; }
+        Bouncer bouncer { get; set; }
+        Bartender bartender { get; set; }
+        Waitress waitress { get; set; }
+        LogManager logManager { get; set; }
         MainWindow window { get; set; }
         DispatcherTimer dispatcherTimer { get; set; }
-        DateTime TimeToClose { get; set; }
+        DateTime timeToClose { get; set; }
         public SimulationManager(SimulationState stateToRun, double simulationSpeed)
         {
             dispatcherTimer = new DispatcherTimer();
@@ -24,21 +23,18 @@ namespace Lab6
             bouncer = new Bouncer();
             bartender = new Bartender(establishment);
             waitress = new Waitress(establishment);
-            
             logManager = new LogManager(window, this);
-            logManager.SubscribeToEvents(this);
-            window.SimulationSpeedLabelInfo.Content = $"Simulation speed: {establishment.SimulationSpeed}";
-            StartSimulation(establishment);
-            InitUITimer();
         }
-        private void StartSimulation(Establishment establishment)
+        public void StartSimulation()
         {
             bouncer.Simulate(establishment);
             bartender.Simulate(establishment);
             waitress.Simulate(establishment);
-            TimeToClose = DateTime.Now + establishment.TimeToClose;
+            timeToClose = DateTime.Now + establishment.TimeToClose;
+            window.SimulationSpeedLabelInfo.Content = $"Simulation speed: {establishment.SimulationSpeed}";
+            InitUITimer();
         }
-        private Establishment GetEstablishment(SimulationState state, double simulationSpeed)
+        Establishment GetEstablishment(SimulationState state, double simulationSpeed)
         {
             switch (state)
             {
@@ -73,13 +69,13 @@ namespace Lab6
         {
             return waitress;
         }
-        private void InitUITimer()
+        void InitUITimer()
         {
             dispatcherTimer.Tick += dispatcherTimer_Tick;
             dispatcherTimer.Interval = new TimeSpan(0,0,0,0,50);
             dispatcherTimer.Start();
         }
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             int availableChairs = 0;
             window.PatronsInPubLabel.Content = $"Patrons in bar {establishment.CurrentPatrons.Count} (Max patrons)";
@@ -93,11 +89,9 @@ namespace Lab6
             window.FreeChairsLabel.Content = $"Number of available chairs {availableChairs}";
             window.TimeToCloseLabel.Content = $"Time left until closing {GetElapsedTime(DateTime.Now)}";
         }
-
-        private int GetElapsedTime(DateTime now)
+        int GetElapsedTime(DateTime now)
         {
-            var calculation = (int)(TimeToClose - now).TotalSeconds;
-
+            var calculation = (int)(timeToClose - now).TotalSeconds;
             if (calculation <= 0)
             {
                 establishment.IsOpen = false;
