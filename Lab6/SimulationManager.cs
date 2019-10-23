@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Threading;
+using System.Linq;
 
 namespace Lab6
 {
@@ -72,9 +73,7 @@ namespace Lab6
             foreach (var chair in establishment.Table.ChairsAroundTable)
             {
                 if (chair.Available)
-                {
                     availableChairs++;
-                }
             }
             window.FreeChairsLabel.Content = $"Number of available chairs {availableChairs}";
             window.TimeToCloseLabel.Content = $"Time left until closing {GetElapsedTime(DateTime.Now)}";

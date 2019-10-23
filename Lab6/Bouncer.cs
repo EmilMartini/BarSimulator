@@ -6,7 +6,7 @@ namespace Lab6
 {
     public class Bouncer
     {
-        public delegate void LogEvent(Patron p, string s);
+        public delegate void LogEvent(string s);
         public event LogEvent Log;
 
         Random rnd = new Random();
@@ -63,7 +63,7 @@ namespace Lab6
             "Carter",
             "Owen"
             };
-        enum State { Waiting, Working, LeavingWork}
+        enum State { Waiting, Working, LeavingWork, StopBouncer}
         State currentState { get; set; }
         public Bouncer(Establishment est, SimulationManager sim)
         {
@@ -74,7 +74,7 @@ namespace Lab6
             currentState = State.Working;
             Task.Run(() =>
             {
-                do
+                while(currentState != State.StopBouncer)
                 {
                     switch (currentState)
                     {
@@ -88,13 +88,14 @@ namespace Lab6
                             LeavingWork();
                             break;
                     }
-                } while (currentState != State.LeavingWork);
+                }
             });
         }
 
         private void LeavingWork()
         {
-            
+            Log("Bouncer is leaving the pub.");
+            currentState = State.StopBouncer;
         }
 
         private void Work(SimulationManager sim)
@@ -107,7 +108,7 @@ namespace Lab6
 
             Patron patron = new Patron(patronNames[rnd.Next(0, patronNames.Length - 1)], sim.establishment, sim);
             sim.CurrentPatrons.Insert(0, patron);
-            Log(patron, "enters the pub");
+            Log($"{patron.Name} enters the pub");
             currentState = State.Waiting;
         }
         private void Wait()

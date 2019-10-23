@@ -35,7 +35,6 @@ namespace Lab6
             presentationLayer.BartenderListbox.ItemsSource = BartenderLogMessages;
             presentationLayer.PatronsListbox.ItemsSource = PatronLogMessages;
         }
-
         public void SubscribeToEvents(SimulationManager sim)
         {
             bouncer.Log += OnBouncerLogEvent;
@@ -43,40 +42,34 @@ namespace Lab6
             bartender.Log += OnBartenderLogEvent;
             waitress.Log += OnWaitressLogEvent;
         }
-
         private void OnWaitressLogEvent(string s)
         {
-            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, s);
+            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, WaitressLogMessages, s);
         }
-        private void OnBouncerLogEvent(Patron p, string s)
+        private void OnBouncerLogEvent(string s)
         {
-            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, s);
+            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, PatronLogMessages, s);
         }
         private void OnBartenderLogEvent(string s)
         {
-            Print(GetTime, PresentationLayer, PresentationLayer.BartenderListbox, "Bartender", BartenderLogMessages, s);
+            Print(GetTime, PresentationLayer, PresentationLayer.BartenderListbox, BartenderLogMessages, s);
         }
-        private void OnPatronLogEvent(Patron p, string message)
+        private void OnPatronLogEvent(string message)
         {
-            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, message);
+            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, PatronLogMessages, message);
         }   
-        private void Print(Func<DateTime,TimeSpan>func, MainWindow PresentationLayer, System.Windows.Controls.ListBox listBox,string name,List<string> list,string message)
+        private void Print(Func<DateTime,TimeSpan>func, MainWindow PresentationLayer, System.Windows.Controls.ListBox listBox,List<string> list,string message)
         {
-            Task.Run(()=> 
+            var timeStamp = func(DateTime.UtcNow);
+            PresentationLayer.Dispatcher.Invoke(() => 
             {
-                var timeStamp = func(DateTime.UtcNow);
-                PresentationLayer.Dispatcher.Invoke(() => 
-                {
-                    list.Insert(0,$"{timeStamp.Minutes}:{timeStamp.Seconds} {name} {message}");
-                    listBox.Items.Refresh();
-                });
+                list.Insert(0,$"{timeStamp.Minutes}:{timeStamp.Seconds} {message}");
+                listBox.Items.Refresh();
             });
         }
         private TimeSpan GetTime(DateTime now)
         {
-            TimeSpan dif;
-            DateTime timeStamp = now;
-            return dif = timeStamp - startTime;
+            return now - startTime;
         }
     }
 }

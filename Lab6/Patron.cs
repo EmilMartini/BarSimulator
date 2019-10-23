@@ -9,7 +9,7 @@ namespace Lab6
     public class Patron
     { 
         public enum State { WaitingForChair, WaitingForBeer, DrinkingBeer, WalkingToBar, WalkingToChair, LeavingEstablishment, RemovePatron }
-        public delegate void PatronEvent(Patron p, String s);
+        public delegate void PatronEvent(string s);
         public static event PatronEvent Log;
 
         public string Name { get; private set; }
@@ -82,7 +82,7 @@ namespace Lab6
         }
         void DrinkingBeer(Table table)
         {
-            Log(this,"is drinking a beer");
+            Log($"{this.Name} is drinking a beer");
             Thread.Sleep(15000);
             foreach (var glass in Holding) // gör med lambda sedan
             {
@@ -96,7 +96,7 @@ namespace Lab6
         {
             if (!CheckForEmptyChair(table))
             {
-                Log(this, "is waiting for a chair");
+                Log($"{this.Name} is waiting for a chair");
             }
             while (!CheckForEmptyChair(table))
             {
@@ -117,7 +117,7 @@ namespace Lab6
         {
             if (!CheckBarTopForBeer(bar))
             {
-                Log(this,"is waiting for a beer"); //detta är ett generiskt event, vad som helst skulle kunna hända
+                Log($"{this.Name} is waiting for a beer"); //detta är ett generiskt event, vad som helst skulle kunna hända
                 //det ända ni gör någonsin är att logga. Då kanske de bör represetera det.
                 //Log(this,"Patron is waiting for beer");
 
@@ -146,21 +146,21 @@ namespace Lab6
                     break;
                 }
             }
-            Log(this, "is leaving establishment");
+            Log($"{this.Name} is leaving establishment");
             Thread.Sleep(5000);
             CurrentState = State.RemovePatron;
             
         }
         void WalkingToBar(Bar bar)
         {
-            Log(this, "is walking to the bar.");
+            Log($"{this.Name} is walking to the bar.");
             Thread.Sleep(5000);
             bar.BarQueue.Enqueue(this);
             CurrentState = State.WaitingForBeer;
         }
         void WalkingToChair()
         {
-            Log(this, "is walking to a chair");
+            Log($"{this.Name} is walking to a chair");
             Thread.Sleep(5000);
             CurrentState = State.WaitingForChair;
         }
