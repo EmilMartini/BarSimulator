@@ -11,6 +11,9 @@ namespace Lab6
         // public static event PatronEvent;
         public enum State { WaitingForDirtyGlass, PickingUpGlass, WalkingToSink, WalkingToTable, CleaningGlass, LeavingWork, ShelfingGlass }
         ConcurrentBag<Glass> carryingGlasses;
+
+        public delegate void WaitressEvent();
+        public event WaitressEvent WaitingForDirtyGlassEvent, PickingUpGlassEvent, WalkingToSinkEvent, WalkingToTableEvent, CleaningGlassEvent, LeavingWorkEvent, ShelfingGlassEvent; 
         public State CurrentState { get; set; }
         public Waitress(Table table, Bar bar)
         {
@@ -70,13 +73,13 @@ namespace Lab6
         }
         void LeavingWork()
         {
-            //LeavingWorkEvent(this);
+            LeavingWorkEvent();
             Thread.Sleep(5000);
             //Log Has left the establishment
         }
         void CleaningGlass()
         {
-            // CleaningGlassEvent
+            CleaningGlassEvent();
             Thread.Sleep(15000);
             foreach (var glass in carryingGlasses) // gör med lambda sedan
             {
@@ -86,19 +89,19 @@ namespace Lab6
         }
         void WalkingToTable()
         {
-            // WalkingToChairEvent(this);
+            WalkingToTableEvent();
             Thread.Sleep(5000);
             CurrentState = State.WaitingForDirtyGlass;
         }
         void WalkingToSink()
         {
-            // WalkingToChairEvent(this);
+            WalkingToSinkEvent();
             Thread.Sleep(5000);
             CurrentState = State.CleaningGlass;
         }
         void PickingUpGlass(Table table)
         {
-            //PickingUpGlassEvent
+            PickingUpGlassEvent();
             foreach (var glass in table.GlassesOnTable)
             {
                 Thread.Sleep(10000);
@@ -111,7 +114,7 @@ namespace Lab6
         {
             if (!CheckTableForDirtyGlass(table))
             {
-                //WaitingForChairEvent(this);
+                WaitingForDirtyGlassEvent();
             }
             while (!CheckTableForDirtyGlass(table))
             {
