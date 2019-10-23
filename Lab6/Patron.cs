@@ -10,7 +10,7 @@ namespace Lab6
     { 
         public enum State { WaitingForChair, WaitingForBeer, DrinkingBeer, WalkingToBar, WalkingToChair, LeavingEstablishment, RemovePatron }
         public delegate void PatronEvent(Patron p, String s);
-        public static event PatronEvent Log, UpdatePatronCount;
+        public static event PatronEvent Log;
 
         public string Name { get; private set; }
         public State CurrentState { get; set; }
@@ -52,8 +52,13 @@ namespace Lab6
                             break;
                     }
                 } while (CurrentState != State.RemovePatron);
+                RemovePatron(this, sim);
             });
-            sim.RemovePatron(this);
+        }
+
+        private void RemovePatron(Patron patron, SimulationManager sim)
+        {
+            sim.CurrentPatrons.Remove(patron);
         }
 
         bool CheckBarTopForBeer(Bar bar)
@@ -99,7 +104,7 @@ namespace Lab6
             }
             foreach (var chair in table.ChairsAroundTable)
             {
-                if (CheckForEmptyChair(table))
+                if (chair.Available)
                 {
                     chair.Available = false;
                     CurrentState = State.DrinkingBeer;
@@ -133,6 +138,14 @@ namespace Lab6
         }
         void LeavingEstablishment(SimulationManager sim)
         {
+            foreach (var chair in sim.establishment.Table.ChairsAroundTable)
+            {
+                if (!chair.Available)
+                {
+                    chair.Available = true;
+                    break;
+                }
+            }
             Log(this, "is leaving establishment");
             Thread.Sleep(5000);
             CurrentState = State.RemovePatron;

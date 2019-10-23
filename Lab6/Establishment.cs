@@ -9,11 +9,11 @@ namespace Lab6
         public int MaxChairs { get; private set; }
         public int SimulationSpeed { get; private set; }
         public bool IsOpen { get; set; }
-        public int TimeToClose { get; set; }
+        public TimeSpan TimeToClose { get; set; }
         public Table Table { get; set; }
         public Bar Bar { get; set; }
 
-        public Establishment(int maxGlasses, int maxChairs, int timeToClose, int simulationSpeed)
+        public Establishment(int maxGlasses, int maxChairs, TimeSpan timeToClose, int simulationSpeed)
         {
             MaxGlasses = maxGlasses;
             MaxChairs = maxChairs;
