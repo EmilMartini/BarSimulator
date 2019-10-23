@@ -22,7 +22,7 @@ namespace Lab6
             MainWindow window = (MainWindow)App.Current.MainWindow;
             bouncer = new Bouncer(establishment, this);
             bartender = new Bartender(establishment);
-            waiter = new Waitress(establishment.Table);
+            waiter = new Waitress(establishment.Table, establishment.Bar);
             CurrentPatrons = new List<Patron>();
             logManager = new LogManager(window, this);
             logManager.SubscribeToEvents(this);

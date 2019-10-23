@@ -5,12 +5,12 @@ namespace Lab6
 {
     public class Table
     {
-        public BlockingCollection<Glass> GlassesOnTable { get; set; }
+        public ConcurrentBag<Glass> GlassesOnTable { get; set; }
         public BlockingCollection<Chair> ChairsAroundTable { get; set; }
        
         public Table(Establishment est)
         {
-            GlassesOnTable = new BlockingCollection<Glass>();
+            GlassesOnTable = new ConcurrentBag<Glass>();
             ChairsAroundTable = new BlockingCollection<Chair>(est.MaxChairs);
         }
 
