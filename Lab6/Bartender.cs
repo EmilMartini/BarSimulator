@@ -43,6 +43,7 @@ namespace Lab6
                             break;
                     }
                 }
+                Console.WriteLine("Stopping Bartender Thread");
             });
         }
         int SpeedModifier(int StartTime)

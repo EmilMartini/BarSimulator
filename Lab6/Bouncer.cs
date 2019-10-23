@@ -88,6 +88,7 @@ namespace Lab6
                             break;
                     }
                 }
+                Console.WriteLine("Stopping Bouncer Thread");
             });
         }
         private void LeavingWork()

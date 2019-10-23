@@ -48,7 +48,8 @@ namespace Lab6
                         default:
                             break;
                     }
-                } 
+                }
+                Console.WriteLine("Stopping Waitress Thread");
             });
         }
         void ShelfingGlass(Bar bar)

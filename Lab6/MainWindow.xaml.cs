@@ -14,10 +14,11 @@ namespace Lab6
         {
             InitializeComponent();
             DisplaySettingsMenu();
-            SimulationStateDropDown.SelectedItem = SimulationState.Default;
         }
         private void DisplaySettingsMenu()
         {
+            SimulationStateDropDown.SelectedItem = SimulationState.Default;
+
             BartenderLabel.Visibility = Visibility.Hidden;
             BartenderListbox.Visibility = Visibility.Hidden;
 
@@ -133,14 +134,15 @@ namespace Lab6
             maxGlassesLabel.Content = $"Max Glasses: {maxGlass}";
             OpenForLabel.Content = $"Open for: {timeSpan.ToString(@"mm\:ss")}";
             patronsPerEntryLabel.Content = $"Patrons per entry: {patronsPerEntry}";
-            patronSimSpeedLabel.Content = $"Patron sim-speed: {patronSimSpeed}";
-            waitressSimSpeedLabel.Content = $"Waitress sim-speed: {waitressSimSpeed}";
+            patronSimSpeedLabel.Content = $"Patron simulation speed: {patronSimSpeed}";
+            waitressSimSpeedLabel.Content = $"Waitress simulation speed: {waitressSimSpeed}";
         }
         private void CloseSimButton_Click(object sender, RoutedEventArgs e)
         {
-            Manager.StopSimulation();
-            DisplaySettingsMenu();
-            SimulationStateDropDown.SelectedItem = SimulationState.Default;
+            if (Manager.StopSimulation())
+            {
+                DisplaySettingsMenu();
+            }
         }
     }
 }

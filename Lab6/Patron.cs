@@ -58,6 +58,7 @@ namespace Lab6
                             break;
                     }
                 }
+                Console.WriteLine($"Stopping {this.Name} Thread");
             });
         }
         private void WalkingToTable()

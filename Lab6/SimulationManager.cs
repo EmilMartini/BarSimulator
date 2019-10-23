@@ -40,12 +40,16 @@ namespace Lab6
             window.SimulationSpeedLabelInfo.Content = $"Simulation speed: {establishment.SimulationSpeed}";
             InitUITimer();
         }
-        public void StopSimulation()
+        public bool StopSimulation()
         {
             cts.Cancel();
-            dispatcherTimer.Stop();
+            if (ct.IsCancellationRequested)
+            {
+                dispatcherTimer.Stop();
+                return true;
+            }
+            return false;
         }
-
         Establishment GetEstablishment(SimulationState state, double simulationSpeed)
         {
             switch (state)
