@@ -100,28 +100,28 @@ namespace Lab6
             switch (SimulationStateDropDown.SelectedItem)
             {
                 case SimulationState.Default:
-                    PrintLabelInfo(9, 8, new TimeSpan(0, 1, 20), 1, 1, 1);
+                    PrintLabelInfo(9, 8, new TimeSpan(0, 2, 0), 1, 1, 1);
                     break;
                 case SimulationState.TwentyGlassThreeChairs:
-                    PrintLabelInfo(3, 20, new TimeSpan(0, 1, 20), 1, 1, 1);
+                    PrintLabelInfo(3, 20, new TimeSpan(0, 2, 0), 1, 1, 1);
                     break;
                 case SimulationState.TwentyChairsThreeGlass:
-                    PrintLabelInfo(20, 3, new TimeSpan(0, 1, 20), 1, 1, 1);
+                    PrintLabelInfo(20, 3, new TimeSpan(0, 2, 0), 1, 1, 1);
                     break;
                 case SimulationState.PatronsSlowMode:
-                    PrintLabelInfo(9, 8, new TimeSpan(0, 1, 20), 1, 0.5, 1);
+                    PrintLabelInfo(9, 8, new TimeSpan(0, 2, 0), 1, 0.5, 1);
                     break;
                 case SimulationState.WaitressBoostMode:
-                    PrintLabelInfo(9, 8, new TimeSpan(0, 1, 20), 1, 1, 2);
+                    PrintLabelInfo(9, 8, new TimeSpan(0, 2, 0), 1, 1, 2);
                     break;
                 case SimulationState.BarOpenForFiveMins:
                     PrintLabelInfo(9, 8, new TimeSpan(0, 5, 0), 1, 1, 1);
                     break;
                 case SimulationState.CouplesNight:
-                    PrintLabelInfo(9, 8, new TimeSpan(0, 1, 20), 2, 1, 1);
+                    PrintLabelInfo(9, 8, new TimeSpan(0, 2, 0), 2, 1, 1);
                     break;
                 case SimulationState.BusLoad:
-                    PrintLabelInfo(9, 8, new TimeSpan(0, 1, 20), 20, 1, 1);
+                    PrintLabelInfo(9, 8, new TimeSpan(0, 2, 0), 20, 1, 1);
                     break;
                 case SimulationState.CrazyState:
                     PrintLabelInfo(100, 100, new TimeSpan(0, 59, 59), 4, 0.2, 3);

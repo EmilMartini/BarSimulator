@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace Lab6
         public event LogEvent Log;
 
         Random random = new Random();
-        string[] patronNames = new string[]
+        List<string> patronNames = new List<string>()
         {
             "Emma",
             "Olivia",
@@ -63,7 +64,7 @@ namespace Lab6
             "Carter",
             "Owen"
             };
-        double simulationSpeed;
+        double simulationSpeed { get; set; }
         enum State { Waiting, Working, LeavingWork, StopBouncer}
         State currentState { get; set; }
 
@@ -107,7 +108,7 @@ namespace Lab6
             for (int i = 0; i < establishment.PatronsPerEntry; i++)
             {
                 establishment.TotalPatrons++;
-                Patron patron = new Patron(patronNames[random.Next(0, patronNames.Length - 1)], establishment, ct);
+                Patron patron = new Patron(patronNames[random.Next(0, patronNames.Count - 1)], establishment, ct);
                 establishment.CurrentPatrons.Insert(0, patron);
                 Log($"{patron.Name} enters the pub");
             }

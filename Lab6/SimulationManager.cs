@@ -16,8 +16,8 @@ namespace Lab6
         MainWindow window { get; set; }
         DispatcherTimer dispatcherTimer { get; set; }
         DateTime timeToClose { get; set; }
-        CancellationTokenSource cts;
-        CancellationToken ct;
+        CancellationTokenSource cts { get; set; }
+        CancellationToken ct { get; set; }
         public SimulationManager(SimulationState stateToRun, double simulationSpeed)
         {
             dispatcherTimer = new DispatcherTimer();
