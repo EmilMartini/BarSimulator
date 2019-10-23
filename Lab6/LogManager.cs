@@ -27,7 +27,7 @@ namespace Lab6
             startTime = DateTime.UtcNow;
             PresentationLayer = presentationLayer;
             bouncer = sim.GetBouncer();
-            waiter = sim.GetWaiter();
+            waitress = sim.GetWaitress();
             bartender = sim.GetBartender();
             presentationLayer.WaitressListbox.ItemsSource = WaitressLogMessages;
             presentationLayer.BartenderListbox.ItemsSource = BartenderLogMessages;
@@ -48,42 +48,41 @@ namespace Lab6
             bartender.LeavingWorkEvent += OnBartenderLeavingWork;
             waitress.LeavingWorkEvent += OnWaitressLeavingWork;
             waitress.PickingUpGlassEvent += OnPickingUpGlass;
+            waitress.CleaningGlassEvent += OnCleaningGlass;
             waitress.ShelfingGlassEvent += OnShelfingGlass;
             waitress.WaitingForDirtyGlassEvent += OnWaitingForDirtyGlass;
             waitress.WalkingToSinkEvent += OnWalkingToSink;
             waitress.WalkingToTableEvent += OnWalkingToTable;
         }
 
+        private void OnCleaningGlass()
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is cleaning the glasses.");
+        }
         private void OnWalkingToTable()
         {
-            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is walking to a table.");
+            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is walking to the table.");
         }
-
         private void OnWalkingToSink()
         {
             Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is walking to sink.");
         }
-
         private void OnWaitingForDirtyGlass()
         {
             Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is waiting for a dirty glass.");
         }
-
         private void OnShelfingGlass()
         {
             Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is shelfing glasses.");
         }
-
         private void OnPickingUpGlass()
         {
             Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is picking up glasses.");
         }
-
         private void OnWaitressLeavingWork()
         {
             Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is leaving work.");
         }
-
         private void OnBartenderLeavingWork()
         {
             Print(GetTime, PresentationLayer, PresentationLayer.BartenderListbox, "Bartender", BartenderLogMessages, "is leaving work.");
