@@ -19,11 +19,11 @@ namespace Lab6
             CurrentState = State.WaitingForPatron;
             simulationSpeed = establishment.SimulationSpeed;
         }
-        public void Simulate(Establishment est)
+        public void Simulate(Establishment est, CancellationToken ct)
         {
             Task.Run(() =>
             {
-                while(CurrentState != State.LeftWork)
+                while(CurrentState != State.LeftWork && !ct.IsCancellationRequested)
                 {
                     switch (CurrentState)
                     {

@@ -17,6 +17,7 @@ namespace Lab6
         public Table Table { get; private set; }
         public Bar Bar { get; private set; }
         public List<Patron> CurrentPatrons { get; private set; }
+        public int TotalPatrons { get; set; }
 
         public Establishment(int maxGlasses, int maxChairs, TimeSpan timeToClose,int patronsPerEntry, double simulationSpeed, double patronSpeed, int waitressSpeed)
         {

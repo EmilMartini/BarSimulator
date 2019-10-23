@@ -67,13 +67,13 @@ namespace Lab6
         enum State { Waiting, Working, LeavingWork, StopBouncer}
         State currentState { get; set; }
 
-        public void Simulate(Establishment establishment)
+        public void Simulate(Establishment establishment, CancellationToken ct)
         {
             simulationSpeed = establishment.SimulationSpeed;  
             currentState = State.Working;
             Task.Run(() =>
             {
-                while(currentState != State.StopBouncer)
+                while(currentState != State.StopBouncer && !ct.IsCancellationRequested)
                 {
                     switch (currentState)
                     {
@@ -81,7 +81,7 @@ namespace Lab6
                             Wait();
                             break;
                         case State.Working:
-                            Work(establishment);
+                            Work(establishment, ct);
                             break;
                         case State.LeavingWork:
                             LeavingWork();
@@ -95,7 +95,7 @@ namespace Lab6
             Log("Bouncer has left the pub.");
             currentState = State.StopBouncer;
         }
-        private void Work(Establishment establishment)
+        private void Work(Establishment establishment, CancellationToken ct)
         {
             if (!establishment.IsOpen)
             {
@@ -105,7 +105,8 @@ namespace Lab6
 
             for (int i = 0; i < establishment.PatronsPerEntry; i++)
             {
-                Patron patron = new Patron(patronNames[random.Next(0, patronNames.Length - 1)], establishment);
+                establishment.TotalPatrons++;
+                Patron patron = new Patron(patronNames[random.Next(0, patronNames.Length - 1)], establishment, ct);
                 establishment.CurrentPatrons.Insert(0, patron);
                 Log($"{patron.Name} enters the pub");
             }

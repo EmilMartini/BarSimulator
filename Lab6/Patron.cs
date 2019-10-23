@@ -18,20 +18,20 @@ namespace Lab6
         public string Name { get; private set; }
         public State CurrentState { get; set; }
         public ConcurrentBag<Glass> Holding { get; set; }
-        public Patron(string name, Establishment establishment)
+        public Patron(string name, Establishment establishment, CancellationToken ct)
         {
             Name = name;
             CurrentState = State.WalkingToBar;
             Holding = new ConcurrentBag<Glass>();
             patronSpeed = establishment.PatronSpeed;
             simulationSpeed = establishment.SimulationSpeed;
-            Simulate(establishment);
+            Simulate(establishment, ct);
         }
-        void Simulate(Establishment establishment)
+        void Simulate(Establishment establishment, CancellationToken ct)
         {
             Task.Run(() =>
             {
-                while (CurrentState != State.LeftPub)
+                while (CurrentState != State.LeftPub && !ct.IsCancellationRequested)
                 {
                     switch (CurrentState)
                     {

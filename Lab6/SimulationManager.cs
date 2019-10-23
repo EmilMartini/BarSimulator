@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Threading;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Lab6
 {
@@ -15,6 +16,8 @@ namespace Lab6
         MainWindow window { get; set; }
         DispatcherTimer dispatcherTimer { get; set; }
         DateTime timeToClose { get; set; }
+        CancellationTokenSource cts;
+        CancellationToken ct;
         public SimulationManager(SimulationState stateToRun, double simulationSpeed)
         {
             dispatcherTimer = new DispatcherTimer();
@@ -27,13 +30,22 @@ namespace Lab6
         }
         public void StartSimulation()
         {
-            bouncer.Simulate(establishment);
-            bartender.Simulate(establishment);
-            waitress.Simulate(establishment);
+            cts = new CancellationTokenSource();
+            ct = cts.Token;
+
+            bouncer.Simulate(establishment, ct);
+            bartender.Simulate(establishment, ct);
+            waitress.Simulate(establishment,ct);
             timeToClose = DateTime.Now + establishment.TimeToClose;
             window.SimulationSpeedLabelInfo.Content = $"Simulation speed: {establishment.SimulationSpeed}";
             InitUITimer();
         }
+        public void StopSimulation()
+        {
+            cts.Cancel();
+            dispatcherTimer.Stop();
+        }
+
         Establishment GetEstablishment(SimulationState state, double simulationSpeed)
         {
             switch (state)
@@ -73,31 +85,33 @@ namespace Lab6
         }
         void InitUITimer()
         {
-            dispatcherTimer.Tick += TimerTick;
-            dispatcherTimer.Interval = new TimeSpan(0,0,0,0,25);
-            dispatcherTimer.Start();
+           dispatcherTimer.Tick += TimerTick;
+           dispatcherTimer.Interval = new TimeSpan(0,0,0,0,100);
+           dispatcherTimer.Start();
         }
         void TimerTick(object sender, EventArgs e)
         {
-            int availableChairs = 0;
-            window.PatronsInPubLabel.Content = $"Patrons in bar: {establishment.CurrentPatrons.Count}";
-            window.CleanGlassesLabel.Content = $"Number of clean glasses: {establishment.Bar.Shelf.Count}";
-
-            foreach (var chair in establishment.Table.ChairsAroundTable)
+            //Försökte göra med lambda men tog för många ms
+            int numberOfAvailableChairs = 0;
+            for (int i = 0; i < establishment.Table.ChairsAroundTable.Count; i++)
             {
-                if (chair.Available)
-                    availableChairs++;
+                if (establishment.Table.ChairsAroundTable.ToList()[i].Available == true)
+                    numberOfAvailableChairs++;
             }
-            window.FreeChairsLabel.Content = $"Number of available chairs: {availableChairs}";
-            window.TimeToCloseLabel.Content = $"Time left until closing: {GetElapsedTime(DateTime.Now)}";
+
+            window.PatronsInPubLabel.Content = $"Patrons in bar: {establishment.CurrentPatrons.Count} (Total: {establishment.TotalPatrons})";
+            window.CleanGlassesLabel.Content = $"Number of clean glasses: {establishment.Bar.Shelf.Count} (Max: {establishment.MaxGlasses})";
+
+            window.FreeChairsLabel.Content = $"Number of available chairs: {numberOfAvailableChairs} (Max: {establishment.MaxChairs})";
+            window.TimeToCloseLabel.Content = "Time left until closing: " + $"{GetElapsedTime(DateTime.Now).ToString(@"mm\:ss")}";
         }
-        int GetElapsedTime(DateTime now)
+        TimeSpan GetElapsedTime(DateTime now)
         {
-            var calculation = (int)(timeToClose - now).TotalSeconds;
-            if (calculation <= 0)
+            TimeSpan calculation = timeToClose - now;
+            if (calculation.TotalSeconds <= 0)
             {
                 establishment.IsOpen = false;
-                return 0;
+                return new TimeSpan(0,0,0);
             }
             else
             {

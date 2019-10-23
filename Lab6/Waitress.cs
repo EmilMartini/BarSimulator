@@ -22,11 +22,11 @@ namespace Lab6
             waitressSpeed = establishment.WaitressSpeed;
             simulationSpeed = establishment.SimulationSpeed;
         }
-        public void Simulate(Establishment establishment)
+        public void Simulate(Establishment establishment, CancellationToken ct)
         {
             Task.Run(() =>
             {
-                while (CurrentState != State.LeftWork) 
+                while (CurrentState != State.LeftWork && !ct.IsCancellationRequested) 
                 {
                     switch (CurrentState)
                     {
