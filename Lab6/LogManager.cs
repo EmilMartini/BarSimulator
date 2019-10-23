@@ -12,7 +12,7 @@ namespace Lab6
         static MainWindow PresentationLayer;
         Bouncer bouncer;
         Bartender bartender;
-        Waitress waiter;
+        Waitress waitress;
         List<string> WaitressLogMessages = new List<string>();
         List<string> BartenderLogMessages = new List<string>();
         List<string> PatronLogMessages = new List<string>();
@@ -45,9 +45,46 @@ namespace Lab6
             bartender.WaitingForPatronEvent += OnWaitingForPatron;
             bartender.WaitingForCleanGlassEvent += OnWaitingForCleanGlass;
             bartender.PouringBeerEvent += OnPouringBeer;
-            bartender.LeavingWorkEvent += OnLeavingWork;
+            bartender.LeavingWorkEvent += OnBartenderLeavingWork;
+            waitress.LeavingWorkEvent += OnWaitressLeavingWork;
+            waitress.PickingUpGlassEvent += OnPickingUpGlass;
+            waitress.ShelfingGlassEvent += OnShelfingGlass;
+            waitress.WaitingForDirtyGlassEvent += OnWaitingForDirtyGlass;
+            waitress.WalkingToSinkEvent += OnWalkingToSink;
+            waitress.WalkingToTableEvent += OnWalkingToTable;
         }
-        private void OnLeavingWork()
+
+        private void OnWalkingToTable()
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is walking to a table.");
+        }
+
+        private void OnWalkingToSink()
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is walking to sink.");
+        }
+
+        private void OnWaitingForDirtyGlass()
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is waiting for a dirty glass.");
+        }
+
+        private void OnShelfingGlass()
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is shelfing glasses.");
+        }
+
+        private void OnPickingUpGlass()
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is picking up glasses.");
+        }
+
+        private void OnWaitressLeavingWork()
+        {
+            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, "Waitress", WaitressLogMessages, "is leaving work.");
+        }
+
+        private void OnBartenderLeavingWork()
         {
             Print(GetTime, PresentationLayer, PresentationLayer.BartenderListbox, "Bartender", BartenderLogMessages, "is leaving work.");
         }
@@ -87,6 +124,7 @@ namespace Lab6
         {
             Print(GetTime, PresentationLayer,PresentationLayer.PatronsListbox, p.Name, PatronLogMessages, "entered the pub.");
         }
+        
         private void Print(Func<DateTime,TimeSpan>func, MainWindow PresentationLayer, System.Windows.Controls.ListBox listBox,string name,List<string> list,string message)
         {
             Task.Run(()=> 
@@ -104,12 +142,6 @@ namespace Lab6
             TimeSpan dif;
             DateTime timeStamp = now;
             return dif = timeStamp - startTime;
-        }
-        private void RefreshAll(MainWindow PresentationLayer)
-        {
-            PresentationLayer.PatronsListbox.Items.Refresh();
-            PresentationLayer.BartenderListbox.Items.Refresh();
-            PresentationLayer.WaitressListbox.Items.Refresh();
         }
     }
 }

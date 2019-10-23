@@ -16,10 +16,11 @@ namespace Lab6
         public Waitress waitress { get; private set; }
         public LogManager logManager { get; private set; }
         public Establishment establishment { get; private set; }
+        MainWindow window { get; set; }
         public SimulationManager(SimulationState stateToRun)
         {
             establishment = GetEstablishment(stateToRun);
-            MainWindow window = (MainWindow)App.Current.MainWindow;
+            window = (MainWindow)App.Current.MainWindow;
             bouncer = new Bouncer(establishment, this);
             bartender = new Bartender(establishment);
             waitress = new Waitress(establishment.Table, establishment.Bar);
