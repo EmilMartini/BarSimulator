@@ -7,11 +7,11 @@ namespace Lab6
     public class SimulationManager
     {
         public List<Patron> CurrentPatrons { get; private set; }
+        public Establishment establishment { get; private set; }
         public Bouncer bouncer { get; private set; }
         public Bartender bartender { get; private set; }
         public Waitress waitress { get; private set; }
         public LogManager logManager { get; private set; }
-        public Establishment establishment { get; private set; }
         MainWindow window { get; set; }
         DispatcherTimer dispatcherTimer { get; set; }
         DateTime TimeToClose { get; set; }
@@ -20,20 +20,20 @@ namespace Lab6
             dispatcherTimer = new DispatcherTimer();
             establishment = GetEstablishment(stateToRun);
             window = (MainWindow)App.Current.MainWindow;
-            bouncer = new Bouncer(establishment, this);
+            bouncer = new Bouncer();
             bartender = new Bartender(establishment);
-            waitress = new Waitress(establishment.Table, establishment.Bar);
-            CurrentPatrons = new List<Patron>();
+            waitress = new Waitress(establishment);
+            
             logManager = new LogManager(window, this);
             logManager.SubscribeToEvents(this);
-            StartSimulation(this);
+            StartSimulation(establishment);
             InitUITimer();
         }
-        private void StartSimulation(SimulationManager simulationManager)
+        private void StartSimulation(Establishment establishment)
         {
-            bouncer.Simulate(simulationManager);
-            bartender.Simulate(simulationManager.establishment);
-            waitress.Simulate(establishment.Table, establishment.Bar);
+            bouncer.Simulate(establishment);
+            bartender.Simulate(establishment);
+            waitress.Simulate(establishment);
             TimeToClose = DateTime.Now + establishment.TimeToClose;
         }
         private Establishment GetEstablishment(SimulationState state)
@@ -41,7 +41,7 @@ namespace Lab6
             switch (state)
             {
                 case SimulationState.Default:
-                    return new Establishment(8, 9, new TimeSpan(0,1,20), 1);
+                    return new Establishment(8, 9, new TimeSpan(0,0,20), 1);
             }
             return null;
         }
