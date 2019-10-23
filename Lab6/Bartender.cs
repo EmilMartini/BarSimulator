@@ -8,7 +8,7 @@ namespace Lab6
 {
     public class Bartender
     {
-        public enum State { WaitingForPatron, WaitingForCleanGlass, PouringBeer, LeavingWork }
+        public enum State { WaitingForPatron, WaitingForCleanGlass, PouringBeer, LeavingWork , LeftWork}
         public State CurrentState { get; set; }
         public delegate void BartenderEvent(string s);
         public event BartenderEvent Log;
@@ -21,12 +21,12 @@ namespace Lab6
         {
             Task.Run(() =>
             {
-                do
+                while(CurrentState != State.LeftWork)
                 {
                     switch (CurrentState)
                     {
                         case State.WaitingForPatron:
-                            WaitingForPatron(est.Bar);
+                            WaitingForPatron(est);
                             break;
                         case State.WaitingForCleanGlass:
                             WaitingForCleanGlass(est.Bar);
@@ -40,7 +40,7 @@ namespace Lab6
                         default:
                             break;
                     }
-                } while (CurrentState != State.LeavingWork);
+                }
             });
         }
         bool CheckBarQueue(Bar bar)
@@ -58,19 +58,29 @@ namespace Lab6
             return false;
         }
 
-        void WaitingForPatron(Bar bar)
+        void WaitingForPatron(Establishment establishment)
         {
-            if (!CheckBarQueue(bar))
+            if (establishment.CurrentPatrons.Count <= 0 && !establishment.IsOpen)
+            {
+                CurrentState = State.LeavingWork;
+                return;
+            }
+            if (!CheckBarQueue(establishment.Bar))
             {
                 Log("is waiting for a patron");
             }
-            while (!CheckBarQueue(bar))
+            while (!CheckBarQueue(establishment.Bar))
             {
+                if(establishment.CurrentPatrons.Count <= 0 && !establishment.IsOpen)
+                {
+                    CurrentState = State.LeavingWork;
+                    return;
+                }
                 Thread.Sleep(3000);
             }
-            if (CheckBarQueue(bar))// ska tas bort
+            if (CheckBarQueue(establishment.Bar))// ska tas bort
             {
-                if (CheckBarShelf(bar))
+                if (CheckBarShelf(establishment.Bar))
                 {
                     CurrentState = State.PouringBeer;
                 } else
@@ -112,7 +122,8 @@ namespace Lab6
         {
             Log("is leaving work");
             Thread.Sleep(5000);
-            
+            CurrentState = State.LeftWork;
+            Log("has left the pub.");
         }
     }
 }

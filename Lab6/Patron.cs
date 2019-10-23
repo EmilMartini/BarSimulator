@@ -148,6 +148,7 @@ namespace Lab6
             }
             Log($"{this.Name} is leaving establishment");
             Thread.Sleep(5000);
+            Log($"{this.Name} has left the pub");
             CurrentState = State.RemovePatron;
             
         }

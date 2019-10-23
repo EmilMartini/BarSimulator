@@ -42,7 +42,7 @@ namespace Lab6
             switch (state)
             {
                 case SimulationState.Default:
-                    return new Establishment(8, 9, new TimeSpan(0,0,20), 1);
+                    return new Establishment(8, 9, new TimeSpan(0,2,0), 1);
             }
             return null;
         }
@@ -67,7 +67,7 @@ namespace Lab6
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             int availableChairs = 0;
-            window.PatronsInPubLabel.Content = $"Patrons in bar {CurrentPatrons.Count} (Max patrons)";
+            window.PatronsInPubLabel.Content = $"Patrons in bar {establishment.CurrentPatrons.Count} (Max patrons)";
             window.CleanGlassesLabel.Content = $"Number of clean glasses {establishment.Bar.Shelf.Count}";
 
             foreach (var chair in establishment.Table.ChairsAroundTable)

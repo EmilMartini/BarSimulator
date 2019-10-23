@@ -94,7 +94,7 @@ namespace Lab6
 
         private void LeavingWork()
         {
-            Log("Bouncer is leaving the pub.");
+            Log("Bouncer has left the pub.");
             currentState = State.StopBouncer;
         }
 
@@ -108,7 +108,7 @@ namespace Lab6
 
             Patron patron = new Patron(patronNames[rnd.Next(0, patronNames.Length - 1)], establishment);
             establishment.CurrentPatrons.Insert(0, patron);
-            Log(patron, "enters the pub");
+            Log($"{patron.Name} enters the pub");
             currentState = State.Waiting;
         }
         private void Wait()
