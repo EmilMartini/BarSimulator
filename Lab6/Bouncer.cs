@@ -8,6 +8,7 @@ namespace Lab6
     {
         public delegate void LogEvent(Patron p, string s);
         public event LogEvent Log;
+
         Random rnd = new Random();
         string[] patronNames = new string[]
         {
@@ -93,7 +94,7 @@ namespace Lab6
 
         private void LeavingWork()
         {
-            throw new NotImplementedException();
+            
         }
 
         private void Work(SimulationManager sim)

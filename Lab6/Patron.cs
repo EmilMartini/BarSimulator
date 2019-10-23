@@ -21,7 +21,6 @@ namespace Lab6
             CurrentState = State.WalkingToBar;
             Holding = new ConcurrentBag<Glass>();
             Simulate(establishment, sim);
-            UpdatePatronCount(this, "Update Visualization of patron count");
         }
         void Simulate(Establishment establishment, SimulationManager sim) // ta bort establishment ersätt med sim
         {
@@ -54,14 +53,7 @@ namespace Lab6
                     }
                 } while (CurrentState != State.RemovePatron);
             });
-            RemovePatron(this, sim);
-        }
-
-        private void RemovePatron(Patron patron, SimulationManager sim)
-        {
-            sim.PatronsToDelete.Add(patron);
-            sim.CurrentPatrons.Remove(patron);
-            sim.PatronsToDelete.Clear();
+            sim.RemovePatron(this);
         }
 
         bool CheckBarTopForBeer(Bar bar)

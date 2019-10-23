@@ -11,7 +11,6 @@ namespace Lab6
     public class SimulationManager
     {
         public List<Patron> CurrentPatrons { get; private set; }
-        public List<Patron> PatronsToDelete { get; private set; }
         public Bouncer bouncer { get; private set; }
         public Bartender bartender { get; private set; }
         public Waitress waitress { get; private set; }
@@ -26,7 +25,6 @@ namespace Lab6
             bartender = new Bartender(establishment);
             waitress = new Waitress(establishment.Table, establishment.Bar);
             CurrentPatrons = new List<Patron>();
-            PatronsToDelete = new List<Patron>();
             logManager = new LogManager(window, this);
             logManager.SubscribeToEvents(this);
             StartSimulation(this);
