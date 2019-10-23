@@ -113,10 +113,10 @@ namespace Lab6
         }
         private void Wait()
         {
-            Thread.Sleep(SpeedModifier(rnd.Next(8000, 10000), simulationSpeed));
+            Thread.Sleep(SpeedModifier(rnd.Next(8000, 10000)));
             currentState = State.Working;
         }
-        private int SpeedModifier(int StartTime, double simulationSpeed)
+        private int SpeedModifier(int StartTime)
         {
             return (int)(StartTime / simulationSpeed);
         }
