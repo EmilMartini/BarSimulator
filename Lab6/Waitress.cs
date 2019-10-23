@@ -14,11 +14,15 @@ namespace Lab6
 
         public delegate void WaitressEvent(string s);
         public event WaitressEvent Log;
+        double waitressSpeed;
+        double simulationSpeed;
         public State CurrentState { get; set; }
         public Waitress(Establishment establishment)
         {
             CurrentState = State.WalkingToTable;
             carryingGlasses = new ConcurrentBag<Glass>();
+            waitressSpeed = establishment.WaitressSpeed;
+            simulationSpeed = establishment.SimulationSpeed;
         }
         public void Simulate(Establishment establishment)
         {
@@ -70,16 +74,20 @@ namespace Lab6
             }
             return false;
         }
+        int SpeedModifier(int normalSpeed)
+        {
+            return (int)((normalSpeed / waitressSpeed) / simulationSpeed);
+        }
         void LeavingWork()
         {
             Log("is leaving work");
-            Thread.Sleep(5000);
+            Thread.Sleep(SpeedModifier(5000));
             Log("has left the pub");
         }
         void CleaningGlass()
         {
             //CleaningGlassEvent();
-            Thread.Sleep(15000);
+            Thread.Sleep(SpeedModifier(15000));
             foreach (var glass in carryingGlasses) // gör med lambda sedan
             {
                 glass.CurrentState = Glass.State.Clean;
@@ -89,13 +97,13 @@ namespace Lab6
         void WalkingToTable()
         {
             Log("is walking to the table");
-            Thread.Sleep(5000);
+            Thread.Sleep(SpeedModifier(5000));
             CurrentState = State.WaitingForDirtyGlass;
         }
         void WalkingToSink()
         {
             Log("is walking to the sink");
-            Thread.Sleep(5000);
+            Thread.Sleep(SpeedModifier(5000));
             CurrentState = State.CleaningGlass;
         }
         void PickingUpGlass(Table table)
@@ -103,7 +111,7 @@ namespace Lab6
             Log("is picking up glasses");
             foreach (var glass in table.GlassesOnTable)
             {
-                Thread.Sleep(10000);
+                Thread.Sleep(SpeedModifier(10000));
                 table.GlassesOnTable = new ConcurrentBag<Glass>(table.GlassesOnTable.Except(new[] { glass }));
                 carryingGlasses.Add(glass);
             }
@@ -127,7 +135,7 @@ namespace Lab6
                     CurrentState = State.LeavingWork;
                     return;
                 }
-                Thread.Sleep(3000);
+                Thread.Sleep(SpeedModifier(3000));
             }
             CurrentState = State.PickingUpGlass;
         }
