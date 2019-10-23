@@ -111,7 +111,10 @@ namespace Lab6
         {
             if (!CheckBarTopForBeer(bar))
             {
-                WaitingForBeerEvent(this);
+                WaitingForBeerEvent(this); //detta är ett generiskt event, vad som helst skulle kunna hända
+                //det ända ni gör någonsin är att logga. Då kanske de bör represetera det.
+                //Log(this,"Patron is waiting for beer");
+
             }
             while (!CheckBarTopForBeer(bar))
             {
