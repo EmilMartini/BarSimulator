@@ -99,7 +99,7 @@ namespace Lab6
             {
                 Log("fetching glass");
                 Thread.Sleep(SpeedModifier(3000));
-                Log("pouring beer");
+                Log($"pouring {bar.BarQueue.First().Name} a beer");
                 Thread.Sleep(SpeedModifier(3000));
                 bar.BarTop.Add(glass);
                 CurrentState = State.WaitingForPatron;

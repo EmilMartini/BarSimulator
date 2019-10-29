@@ -79,7 +79,7 @@ namespace Lab6
         }
         void WashingGlass()
         {
-            Log("washing glasses");
+            Log($"washing {carryingGlasses.Count} glasses");
             Thread.Sleep(SpeedModifier(15000));
             foreach (var glass in carryingGlasses)
             {
