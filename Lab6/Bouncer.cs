@@ -79,8 +79,6 @@ namespace Lab6
             patronsPerEntry = establishment.PatronsPerEntry;
             if (establishment.isBusloadState)
                 busTimer = DateTime.Now + new TimeSpan(0, 0, 20);
-            
-            Console.WriteLine($"{establishment.isBusloadState} | {busTimer} | {DateTime.Now}");
         }
 
         public void Simulate(Establishment establishment, CancellationToken ct)
@@ -128,18 +126,16 @@ namespace Lab6
         }
         private void Wait(CancellationToken ct, Establishment establishment)
         {
-            int timeToSleepInMs = SpeedModifier(random.Next(3000, 10001));
-            var timeToSleep = DateTime.Now + new TimeSpan(0, 0,timeToSleepInMs / 1000);
-
-            while((DateTime.Now < timeToSleep) && !ct.IsCancellationRequested)
+            var timeToSleep = CalculateTimeToSleep(3000, 10001);
+            while((DateTime.Now < timeToSleep) && !ct.IsCancellationRequested &&establishment.IsOpen)
             {
-                if (!establishment.isBusloadState)
-                {
-                    Thread.Sleep(10);
-                    continue;
-                }
-
                 Thread.Sleep(10);
+                if (!establishment.isBusloadState)
+                    continue;
+
+                if(busArrived && patronsPerEntry != establishment.PatronsPerEntry)
+                    patronsPerEntry = establishment.PatronsPerEntry;
+
                 if (!busArrived)
                 {
                     if (DateTime.Now < busTimer)
@@ -153,15 +149,13 @@ namespace Lab6
                         break;
                     }
                 }
-
-                if(patronsPerEntry == 20)
-                {
-                    patronsPerEntry = establishment.PatronsPerEntry;
-                }
             }
-            
-            Console.WriteLine("started working again");
             currentState = State.Working;
+        }
+        private DateTime CalculateTimeToSleep(int minRange, int maxRange)
+        {
+            int timeToSleepInMs = SpeedModifier(random.Next(minRange, maxRange));
+            return DateTime.Now + new TimeSpan(0, 0, timeToSleepInMs / 1000);
         }
         private int SpeedModifier(int StartTime)
         {
