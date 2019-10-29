@@ -34,6 +34,7 @@ namespace Lab6
             FreeChairsLabel.Visibility = Visibility.Hidden;
             TimeToCloseLabel.Visibility = Visibility.Hidden;
             closeSimButton.Visibility = Visibility.Hidden;
+            BarIsOpenLabel.Visibility = Visibility.Hidden;
 
             SettingsLabel.Visibility = Visibility.Visible;
             SimulationStateDropDown.Visibility = Visibility.Visible;
@@ -65,6 +66,7 @@ namespace Lab6
             FreeChairsLabel.Visibility = Visibility.Visible;
             TimeToCloseLabel.Visibility = Visibility.Visible;
             closeSimButton.Visibility = Visibility.Visible;
+            BarIsOpenLabel.Visibility = Visibility.Visible;
 
             SettingsLabel.Visibility = Visibility.Hidden;
             SimulationStateDropDown.Visibility = Visibility.Hidden;

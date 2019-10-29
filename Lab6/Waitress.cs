@@ -8,12 +8,11 @@ namespace Lab6
 {
     public class Waitress
     {
-        ConcurrentBag<Glass> carryingGlasses;
         enum State { WaitingForDirtyGlass, PickingUpGlass, CleaningGlass, LeavingWork, ShelfingGlass, LeftWork }
-        public delegate void WaitressEvent(string s);
-        public event WaitressEvent Log;
-        double waitressSpeed;
-        double simulationSpeed;
+        public event Action<string> Log;
+        ConcurrentBag<Glass> carryingGlasses { get; set; }
+        double waitressSpeed { get; set; }
+        double simulationSpeed { get; set; }
         State CurrentState { get; set; }
         public Waitress(Establishment establishment)
         {

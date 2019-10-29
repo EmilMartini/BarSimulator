@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Threading;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Threading;
 
 namespace Lab6
@@ -18,6 +17,7 @@ namespace Lab6
         DateTime timeToClose { get; set; }
         CancellationTokenSource cts { get; set; }
         CancellationToken ct { get; set; }
+
         public SimulationManager(SimulationState stateToRun, double simulationSpeed)
         {
             dispatcherTimer = new DispatcherTimer();
@@ -96,7 +96,6 @@ namespace Lab6
         }
         void TimerTick(object sender, EventArgs e)
         {
-            //Försökte göra med lambda men tog för många ms
             int numberOfAvailableChairs = 0;
             for (int i = 0; i < establishment.Table.ChairsAroundTable.Count; i++)
             {
@@ -109,6 +108,8 @@ namespace Lab6
 
             window.FreeChairsLabel.Content = $"Number of available chairs: {numberOfAvailableChairs} (Max: {establishment.MaxChairs})";
             window.TimeToCloseLabel.Content = "Time left until closing: " + $"{GetElapsedTime(DateTime.Now).ToString(@"mm\:ss")}";
+
+            window.BarIsOpenLabel.Content = establishment.IsOpen ? @"Bar is: Open" : $"Bar is: Closed";
         }
         TimeSpan GetElapsedTime(DateTime now)
         {
