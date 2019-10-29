@@ -74,6 +74,7 @@ namespace Lab6
             {
                 Log("waiting for a patron");
             }
+            Thread.Sleep(SpeedModifier(300)); // testread
             while (!CheckBarQueue(establishment.Bar))
             {
                 if(establishment.CurrentPatrons.Count <= 0 && !establishment.IsOpen)

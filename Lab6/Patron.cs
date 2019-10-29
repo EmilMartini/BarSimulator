@@ -78,9 +78,10 @@ namespace Lab6
         }
         bool CheckBarTopForBeer(Establishment establishment)
         {
-            if(establishment.Bar.BarTop.Count > 0) 
+            if (establishment.Bar.BarTop.Count > 0)
+            {
                 return true;
-
+            }
             return false;
         }
         bool CheckForEmptyChair(Establishment establishment)
@@ -131,7 +132,7 @@ namespace Lab6
             {
                 Thread.Sleep(SpeedModifier(300));
             }
-            Patron patron = this;
+            Patron patron;
             Glass glass = establishment.Bar.BarTop.ElementAt(0);
             Holding.Add(glass);
             establishment.Bar.BarTop = new ConcurrentBag<Glass>(establishment.Bar.BarTop.Except(new[] { glass }));
