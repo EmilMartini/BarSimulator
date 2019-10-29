@@ -105,8 +105,8 @@ namespace Lab6
                 case SimulationState.TwentyGlassThreeChairs:
                     PrintLabelInfo(3, 20, new TimeSpan(0, 2, 0), 1, 1, 1);
                     break;
-                case SimulationState.TwentyChairsThreeGlass:
-                    PrintLabelInfo(20, 3, new TimeSpan(0, 2, 0), 1, 1, 1);
+                case SimulationState.TwentyChairsFiveGlass:
+                    PrintLabelInfo(20, 5, new TimeSpan(0, 2, 0), 1, 1, 1);
                     break;
                 case SimulationState.PatronsSlowMode:
                     PrintLabelInfo(9, 8, new TimeSpan(0, 2, 0), 1, 0.5, 1);

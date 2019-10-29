@@ -64,13 +64,25 @@ namespace Lab6
             "Carter",
             "Owen"
             };
+        bool busArrived { get; set; }
+        DateTime busTimer { get; set; }
         double simulationSpeed { get; set; }
+        double bouncerSpeed { get; set; }
+        int patronsPerEntry { get; set; }
         enum State { Waiting, Working, LeavingWork, StopBouncer}
         State currentState { get; set; }
 
+        public Bouncer(Establishment establishment)
+        {
+            bouncerSpeed = establishment.BouncerSpeed;
+            simulationSpeed = establishment.SimulationSpeed;
+            patronsPerEntry = establishment.PatronsPerEntry;
+            if (establishment.isBusloadState)
+                busTimer = DateTime.Now + new TimeSpan(0, 0, 20);
+        }
+
         public void Simulate(Establishment establishment, CancellationToken ct)
         {
-            simulationSpeed = establishment.SimulationSpeed;  
             currentState = State.Working;
             Task.Run(() =>
             {
@@ -79,7 +91,7 @@ namespace Lab6
                     switch (currentState)
                     {
                         case State.Waiting:
-                            Wait();
+                            Wait(ct, establishment);
                             break;
                         case State.Working:
                             Work(establishment, ct);
@@ -89,7 +101,6 @@ namespace Lab6
                             break;
                     }
                 }
-                Console.WriteLine("Stopping Bouncer Thread");
             });
         }
         private void LeavingWork()
@@ -104,8 +115,8 @@ namespace Lab6
                 currentState = State.LeavingWork;
                 return;
             }
-
-            for (int i = 0; i < establishment.PatronsPerEntry; i++)
+            
+            for (int i = 0; i < patronsPerEntry; i++)
             {
                 establishment.TotalPatrons++;
                 Patron patron = new Patron(patronNames[random.Next(0, patronNames.Count - 1)], establishment, ct);
@@ -113,14 +124,42 @@ namespace Lab6
             }
             currentState = State.Waiting;
         }
-        private void Wait()
+        private void Wait(CancellationToken ct, Establishment establishment)
         {
-            Thread.Sleep(SpeedModifier(random.Next(3000, 10000)));
+            var timeToSleep = CalculateTimeToSleep(3000, 10001);
+            while((DateTime.Now < timeToSleep) && !ct.IsCancellationRequested &&establishment.IsOpen)
+            {
+                Thread.Sleep(10);
+                if (!establishment.isBusloadState)
+                    continue;
+
+                if(busArrived && patronsPerEntry != establishment.PatronsPerEntry)
+                    patronsPerEntry = establishment.PatronsPerEntry;
+
+                if (!busArrived)
+                {
+                    if (DateTime.Now < busTimer)
+                    {
+                        continue; 
+                    } else
+                    {
+                        patronsPerEntry = 20;
+                        Log("Bus arrived");
+                        busArrived = true;
+                        break;
+                    }
+                }
+            }
             currentState = State.Working;
+        }
+        private DateTime CalculateTimeToSleep(int minRange, int maxRange)
+        {
+            int timeToSleepInMs = SpeedModifier(random.Next(minRange, maxRange));
+            return DateTime.Now + new TimeSpan(0, 0, timeToSleepInMs / 1000);
         }
         private int SpeedModifier(int StartTime)
         {
-            return (int)(StartTime / simulationSpeed);
+            return (int)((StartTime / bouncerSpeed) / simulationSpeed);
         }
     }
 }
