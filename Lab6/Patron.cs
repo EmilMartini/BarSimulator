@@ -9,15 +9,15 @@ namespace Lab6
     public class Patron
     { 
         public enum State { WaitingForChair, WaitingForBeer, DrinkingBeer, LeavingEstablishment, LeftPub, WalkingToBar, WalkingToTable }
-        public static event Action<string> Log;
+        public delegate void PatronEvent(string s);
+        public static event PatronEvent Log;
         Random random = new Random();
-
-        double patronSpeed { get; set; }
-        double simulationSpeed { get; set; }
+        // Det tar en sekund att komma till baren, fyra sekunder att gå till ett bord, och mellan tio och tjugo sekunder (slumpa) att dricka ölen
+        double patronSpeed;
+        double simulationSpeed;
         public string Name { get; private set; }
-        State CurrentState { get; set; }
-        ConcurrentBag<Glass> Holding { get; set; }
-
+        public State CurrentState { get; set; }
+        public ConcurrentBag<Glass> Holding { get; set; }
         public Patron(string name, Establishment establishment, CancellationToken ct)
         {
             Name = name;
@@ -96,7 +96,7 @@ namespace Lab6
         void DrinkingBeer(Establishment establishment)
         {
             Log($"{this.Name} sits down and drinks a beer");
-            Thread.Sleep(SpeedModifier(random.Next(10000, 20000)));
+            Thread.Sleep(SpeedModifier(random.Next(20000, 30000)));
             foreach (var glass in Holding)
             {
                 glass.CurrentState = Glass.State.Dirty;
@@ -111,13 +111,7 @@ namespace Lab6
             Log($"{this.Name} looking for a available chair");
             while (!CheckForEmptyChair(establishment) || establishment.Table.ChairQueue.First() != this)
             {
-                if (establishment.Table.ChairQueue.First() == this) // testrad
-                    Log($"{this.Name} First in line");
-
-                if (establishment.Table.ChairQueue.First() != this)
-                    Log($"{this.Name} not first in line");
-                
-                Thread.Sleep(SpeedModifier(3000));
+                Thread.Sleep(SpeedModifier(300));
             }
             foreach (var chair in establishment.Table.ChairsAroundTable)
             {
@@ -136,14 +130,12 @@ namespace Lab6
             {
                 Thread.Sleep(SpeedModifier(300));
             }
-            if (CheckBarTopForBeer(establishment))
-            {
-                Glass glass = establishment.Bar.BarTop.ElementAt(0);
-                Holding.Add(glass);
-                establishment.Bar.BarTop = new ConcurrentBag<Glass>(establishment.Bar.BarTop.Except(new[] { glass }));
-                establishment.Bar.BarQueue = new ConcurrentQueue<Patron>(establishment.Bar.BarQueue.Except(new[] { this }));
-                CurrentState = State.WalkingToTable;
-            }
+            Patron patron = this;
+            Glass glass = establishment.Bar.BarTop.ElementAt(0);
+            Holding.Add(glass);
+            establishment.Bar.BarTop = new ConcurrentBag<Glass>(establishment.Bar.BarTop.Except(new[] { glass }));
+            establishment.Bar.BarQueue.TryDequeue(out patron);
+            CurrentState = State.WalkingToTable;
         }
         void LeavingEstablishment(Establishment establishment)
         {
