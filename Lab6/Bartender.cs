@@ -8,15 +8,14 @@ namespace Lab6
 {
     public class Bartender
     {
-        public enum State { WaitingForPatron, WaitingForCleanGlass, PouringBeer, LeavingWork , LeftWork}
+        enum State { WaitingForPatron, WaitingForCleanGlass, PouringBeer, LeavingWork , LeftWork}
         public event Action<string> Log;
         State CurrentState { get; set; }
-        double simulationSpeed { get; set; }
-
+        double SimulationSpeed { get; set; }
         public Bartender(Establishment establishment)
         {
             CurrentState = State.WaitingForPatron;
-            simulationSpeed = establishment.SimulationSpeed;
+            SimulationSpeed = establishment.SimulationSpeed;
         }
         public void Simulate(Establishment est, CancellationToken ct)
         {
@@ -46,20 +45,22 @@ namespace Lab6
         }
         int SpeedModifier(int StartTime)
         {
-            return (int)(StartTime / simulationSpeed);
+            return (int)(StartTime / SimulationSpeed);
         }
         bool CheckBarQueue(Bar bar)
         {
             if (bar.BarQueue.Count > 0)
+            {
                 return true;
-            
+            }
             return false;
         }
         bool CheckBarShelf(Bar bar)
         {
             if (bar.Shelf.Count > 0)
+            {
                 return true;
-            
+            }
             return false;
         }
         void WaitingForPatron(Establishment establishment)
@@ -103,7 +104,8 @@ namespace Lab6
                 Thread.Sleep(SpeedModifier(3000));
                 bar.BarTop.Add(glass);
                 CurrentState = State.WaitingForPatron;
-            } else
+            } 
+            else
             {
                 CurrentState = State.WaitingForCleanGlass;
             }
