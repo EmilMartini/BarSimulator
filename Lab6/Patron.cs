@@ -96,7 +96,7 @@ namespace Lab6
         void DrinkingBeer(Establishment establishment)
         {
             Log($"{this.Name} sits down and drinks a beer");
-            Thread.Sleep(SpeedModifier(random.Next(100000, 200000)));
+            Thread.Sleep(SpeedModifier(random.Next(20000, 30000)));
             foreach (var glass in Holding)
             {
                 glass.CurrentState = Glass.State.Dirty;
@@ -111,15 +111,7 @@ namespace Lab6
             Log($"{this.Name} looking for a available chair");
             while (!CheckForEmptyChair(establishment) || establishment.Table.ChairQueue.First() != this)
             {
-                if (establishment.Table.ChairQueue.First() == this) // testrad
-                {
-                    Log($"{this.Name} First in line");
-                }
-                if (establishment.Table.ChairQueue.First() != this)
-                {
-                    Log($"{this.Name} not first in line");
-                }
-                Thread.Sleep(SpeedModifier(3000));
+                Thread.Sleep(SpeedModifier(300));
             }
             foreach (var chair in establishment.Table.ChairsAroundTable)
             {
@@ -138,14 +130,12 @@ namespace Lab6
             {
                 Thread.Sleep(SpeedModifier(300));
             }
-            if (CheckBarTopForBeer(establishment))
-            {
-                Glass glass = establishment.Bar.BarTop.ElementAt(0);
-                Holding.Add(glass);
-                establishment.Bar.BarTop = new ConcurrentBag<Glass>(establishment.Bar.BarTop.Except(new[] { glass }));
-                establishment.Bar.BarQueue = new ConcurrentQueue<Patron>(establishment.Bar.BarQueue.Except(new[] { this }));
-                CurrentState = State.WalkingToTable;
-            }
+            Patron patron = this;
+            Glass glass = establishment.Bar.BarTop.ElementAt(0);
+            Holding.Add(glass);
+            establishment.Bar.BarTop = new ConcurrentBag<Glass>(establishment.Bar.BarTop.Except(new[] { glass }));
+            establishment.Bar.BarQueue.TryDequeue(out patron);
+            CurrentState = State.WalkingToTable;
         }
         void LeavingEstablishment(Establishment establishment)
         {
