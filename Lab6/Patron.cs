@@ -12,19 +12,18 @@ namespace Lab6
         public delegate void PatronEvent(string s);
         public static event PatronEvent Log;
         Random random = new Random();
-        // Det tar en sekund att komma till baren, fyra sekunder att gå till ett bord, och mellan tio och tjugo sekunder (slumpa) att dricka ölen
-        double patronSpeed;
-        double simulationSpeed;
+        State CurrentState { get; set; }
         public string Name { get; private set; }
-        public State CurrentState { get; set; }
-        public ConcurrentBag<Glass> Holding { get; set; }
+        double PatronSpeed { get; set; }
+        double SimulationSpeed { get; set; }
+        ConcurrentBag<Glass> Holding { get; set; }
         public Patron(string name, Establishment establishment, CancellationToken ct)
         {
             Name = name;
             CurrentState = State.WalkingToBar;
             Holding = new ConcurrentBag<Glass>();
-            patronSpeed = establishment.PatronSpeed;
-            simulationSpeed = establishment.SimulationSpeed;
+            PatronSpeed = establishment.PatronSpeed;
+            SimulationSpeed = establishment.SimulationSpeed;
             Simulate(establishment, ct);
         }
         void Simulate(Establishment establishment, CancellationToken ct)
@@ -79,7 +78,7 @@ namespace Lab6
         }
         bool CheckBarTopForBeer(Establishment establishment)
         {
-            if(establishment.Bar.BarTop.Count > 0)
+            if(establishment.Bar.BarTop.Count > 0) 
                 return true;
 
             return false;
@@ -89,7 +88,9 @@ namespace Lab6
             foreach (var chair in establishment.Table.ChairsAroundTable)
             {
                 if (chair.Available)
-                    return true;
+                { 
+                return true;
+                }
             }
             return false;
         }
@@ -152,7 +153,7 @@ namespace Lab6
         }
         int SpeedModifier(int StartTime)
         {
-            return (int)((StartTime / patronSpeed) / simulationSpeed);
+            return (int)((StartTime / PatronSpeed) / SimulationSpeed);
         }
     }
 }
