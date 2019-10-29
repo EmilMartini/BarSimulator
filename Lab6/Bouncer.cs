@@ -127,7 +127,7 @@ namespace Lab6
         private void Wait(CancellationToken ct, Establishment establishment)
         {
             var timeToSleep = CalculateTimeToSleep(3000, 10001);
-            while((DateTime.Now < timeToSleep) && !ct.IsCancellationRequested &&establishment.IsOpen)
+            while((DateTime.Now < timeToSleep) && !ct.IsCancellationRequested && establishment.IsOpen)
             {
                 Thread.Sleep(10);
                 if (!establishment.isBusloadState)
@@ -155,7 +155,7 @@ namespace Lab6
         private DateTime CalculateTimeToSleep(int minRange, int maxRange)
         {
             int timeToSleepInMs = SpeedModifier(random.Next(minRange, maxRange));
-            return DateTime.Now + new TimeSpan(0, 0, timeToSleepInMs / 1000);
+            return DateTime.Now + new TimeSpan(0, 0, 0, 0,timeToSleepInMs);
         }
         private int SpeedModifier(int StartTime)
         {
