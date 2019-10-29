@@ -9,15 +9,15 @@ namespace Lab6
     public class Patron
     { 
         public enum State { WaitingForChair, WaitingForBeer, DrinkingBeer, LeavingEstablishment, LeftPub, WalkingToBar, WalkingToTable }
-        public delegate void PatronEvent(string s);
-        public static event PatronEvent Log;
+        public static event Action<string> Log;
         Random random = new Random();
-        // Det tar en sekund att komma till baren, fyra sekunder att gå till ett bord, och mellan tio och tjugo sekunder (slumpa) att dricka ölen
-        double patronSpeed;
-        double simulationSpeed;
+
+        double patronSpeed { get; set; }
+        double simulationSpeed { get; set; }
         public string Name { get; private set; }
-        public State CurrentState { get; set; }
-        public ConcurrentBag<Glass> Holding { get; set; }
+        State CurrentState { get; set; }
+        ConcurrentBag<Glass> Holding { get; set; }
+
         public Patron(string name, Establishment establishment, CancellationToken ct)
         {
             Name = name;
@@ -96,7 +96,7 @@ namespace Lab6
         void DrinkingBeer(Establishment establishment)
         {
             Log($"{this.Name} sits down and drinks a beer");
-            Thread.Sleep(SpeedModifier(random.Next(100000, 200000)));
+            Thread.Sleep(SpeedModifier(random.Next(10000, 20000)));
             foreach (var glass in Holding)
             {
                 glass.CurrentState = Glass.State.Dirty;
@@ -112,13 +112,11 @@ namespace Lab6
             while (!CheckForEmptyChair(establishment) || establishment.Table.ChairQueue.First() != this)
             {
                 if (establishment.Table.ChairQueue.First() == this) // testrad
-                {
                     Log($"{this.Name} First in line");
-                }
+
                 if (establishment.Table.ChairQueue.First() != this)
-                {
                     Log($"{this.Name} not first in line");
-                }
+                
                 Thread.Sleep(SpeedModifier(3000));
             }
             foreach (var chair in establishment.Table.ChairsAroundTable)

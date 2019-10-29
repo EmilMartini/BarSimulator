@@ -9,9 +9,8 @@ namespace Lab6
     public class Bartender
     {
         public enum State { WaitingForPatron, WaitingForCleanGlass, PouringBeer, LeavingWork , LeftWork}
-        public delegate void BartenderEvent(string s);
-        public event BartenderEvent Log;
-        public State CurrentState { get; set; }
+        public event Action<string> Log;
+        State CurrentState { get; set; }
         double simulationSpeed { get; set; }
 
         public Bartender(Establishment establishment)

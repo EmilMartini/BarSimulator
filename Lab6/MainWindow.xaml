@@ -15,17 +15,17 @@
         <ListBox x:Name="PatronsListbox" HorizontalAlignment="Left" Height="186" Margin="618,163,0,0" VerticalAlignment="Top" Width="241" Visibility="Hidden"/>
         <Label x:Name="WaitressLabel" Content="Waitress" HorizontalAlignment="Left" Height="26" Margin="372,137,0,0" VerticalAlignment="Top" Width="241" Visibility="Hidden"/>
         <Label x:Name="PatronsLabel" Content="Patrons" HorizontalAlignment="Left" Height="26" Margin="618,137,0,0" VerticalAlignment="Top" Width="241" Visibility="Hidden"/>
-        <Label x:Name="PatronsInPubLabel" Content="Patrons in bar(Max patrons)" HorizontalAlignment="Left" Margin="864,186,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
-        <Label x:Name="CleanGlassesLabel" Content="Clean glasses(Total glasses)" HorizontalAlignment="Left" Margin="864,222,0,0" VerticalAlignment="Top" Height="30" Width="223" Visibility="Visible"/>
-        <Label x:Name="FreeChairsLabel" Content="Available chairs (Total chairs)" HorizontalAlignment="Left" Margin="864,257,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
+        <Label x:Name="PatronsInPubLabel" Content="Patrons in bar(Max patrons)" HorizontalAlignment="Left" Margin="864,160,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
+        <Label x:Name="CleanGlassesLabel" Content="Clean glasses(Total glasses)" HorizontalAlignment="Left" Margin="864,196,0,0" VerticalAlignment="Top" Height="30" Width="223" Visibility="Visible"/>
+        <Label x:Name="FreeChairsLabel" Content="Available chairs (Total chairs)" HorizontalAlignment="Left" Margin="864,231,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
         <Label x:Name="SettingsLabel" Content="Setting" HorizontalAlignment="Left" Height="26" Margin="477,187,0,0" VerticalAlignment="Top" Width="156" Visibility="Hidden"/>
-        <Label x:Name="TimeToCloseLabel" Content="Time to closing" HorizontalAlignment="Left" Margin="864,293,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
+        <Label x:Name="TimeToCloseLabel" Content="Time to closing" HorizontalAlignment="Left" Margin="864,267,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
         <ComboBox x:Name="SimulationStateDropDown" HorizontalAlignment="Left" Margin="477,213,0,0" VerticalAlignment="Top" Width="156" Height="48" Initialized="ComboBox_Initialized" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Visibility="Hidden" SelectionChanged="SimulationStateDropDown_SelectionChanged"/>
         <Button x:Name="StartSimButton" Content="Open&#xD;&#xA;Pub" HorizontalAlignment="Left" Margin="638,213,0,0" VerticalAlignment="Top" Width="75" Height="48" Click="StartSimButton_Click" Visibility="Hidden"/>
         <Label x:Name="BartenderLabel" Content="Bartender" HorizontalAlignment="Left" Margin="126,137,0,0" VerticalAlignment="Top" Width="241" Visibility="Hidden"/>
         <TextBox x:Name="speedModifierTextbox" HorizontalAlignment="Left" Height="23" Margin="638,190,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="75" Visibility="Hidden"/>
         <Label x:Name="SimulationSpeedLabel" Content="Simulation&#xD;&#xA;Speed" HorizontalAlignment="Left" Margin="638,148,0,0" VerticalAlignment="Top" Width="75" Visibility="Hidden"/>
-        <Label x:Name="SimulationSpeedLabelInfo" Content="" HorizontalAlignment="Left" Margin="864,137,0,0" VerticalAlignment="Top" Width="217" Visibility="Visible"/>
+        <Label x:Name="SimulationSpeedLabelInfo" Content="" HorizontalAlignment="Left" Margin="864,129,0,0" VerticalAlignment="Top" Width="223" Visibility="Visible"/>
         <Label x:Name="maxGlassesLabel" Content="Max Glasses:" HorizontalAlignment="Left" Margin="234,142,0,0" VerticalAlignment="Top" Width="180" Visibility="Visible"/>
         <Label x:Name="maxChairsLabel" Content="Max Chairs:" HorizontalAlignment="Left" Margin="234,173,0,0" VerticalAlignment="Top" Width="180" Visibility="Visible"/>
         <Label x:Name="patronSimSpeedLabel" Content="Patron sim-speed: " HorizontalAlignment="Left" Margin="234,266,0,0" VerticalAlignment="Top" Width="180" Visibility="Visible"/>
@@ -33,6 +33,7 @@
         <Label x:Name="OpenForLabel" Content="Open for: " HorizontalAlignment="Left" Margin="234,204,0,0" VerticalAlignment="Top" Width="180" Visibility="Visible"/>
         <Label x:Name="patronsPerEntryLabel" Content="Patrons per entry: " HorizontalAlignment="Left" Margin="234,235,0,0" VerticalAlignment="Top" Width="180" Visibility="Visible"/>
         <Button x:Name="closeSimButton" Content="Close Pub" HorizontalAlignment="Left" Margin="864,329,0,0" VerticalAlignment="Top" Width="223" Click="CloseSimButton_Click"/>
+        <Label x:Name="BarIsOpenLabel" Content="Bar is :" HorizontalAlignment="Left" Margin="864,298,0,0" VerticalAlignment="Top" Visibility="Visible" Width="223"/>
 
     </Grid>
 </Window>

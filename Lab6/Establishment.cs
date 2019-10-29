@@ -20,7 +20,7 @@ namespace Lab6
         public Bar Bar { get; private set; }
         public List<Patron> CurrentPatrons { get; private set; }
         public int TotalPatrons { get; set; }
-        public bool isBusloadState { get; set; }
+        public bool isBusloadState { get; private set; }
 
         public Establishment(int maxGlasses, int maxChairs, TimeSpan timeToClose,int patronsPerEntry, double simulationSpeed, double patronSpeed, double waitressSpeed, double bouncerSpeed, bool isBusload)
         {

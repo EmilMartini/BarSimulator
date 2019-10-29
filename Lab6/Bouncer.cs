@@ -7,10 +7,9 @@ namespace Lab6
 {
     public class Bouncer
     {
-        public delegate void LogEvent(string s);
-        public event LogEvent Log;
-
+        public event Action<string> Log;
         Random random = new Random();
+
         List<string> patronNames = new List<string>()
         {
             "Emma",
