@@ -110,7 +110,6 @@ namespace Lab6
                 establishment.TotalPatrons++;
                 Patron patron = new Patron(patronNames[random.Next(0, patronNames.Count - 1)], establishment, ct);
                 establishment.CurrentPatrons.Insert(0, patron);
-                Log($"{patron.Name} enters the pub");
             }
             currentState = State.Waiting;
         }

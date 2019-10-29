@@ -54,13 +54,14 @@ namespace Lab6
         }
         void ShelfingGlass(Bar bar)
         {
+            Log("shelfing washed glasses");
             foreach (var glass in carryingGlasses)
             {
                 bar.Shelf.Add(glass);
                 carryingGlasses = new ConcurrentBag<Glass>(carryingGlasses.Except(new[] { glass }));
             }
             CurrentState = State.WaitingForDirtyGlass;
-        }// lambda
+        }
         bool CheckTableForDirtyGlass(Table table)
         {
             if (table.GlassesOnTable.Count > 0)
@@ -88,7 +89,7 @@ namespace Lab6
             }
             CurrentState = State.ShelfingGlass;
 
-        }// lambda
+        }
         void PickingUpGlass(Table table)
         {
             Log("is picking up glasses");
@@ -99,7 +100,7 @@ namespace Lab6
                 carryingGlasses.Add(glass);
             }
             CurrentState = State.CleaningGlass;
-        }// lambda
+        }
         void WaitingForDirtyGlass(Establishment establishment)
         {
             if (!establishment.IsOpen && establishment.CurrentPatrons.Count < 1)
@@ -118,7 +119,7 @@ namespace Lab6
                     CurrentState = State.LeavingWork;
                     return;
                 }
-                Thread.Sleep(SpeedModifier(3000));
+                Thread.Sleep(SpeedModifier(300));
             }
             CurrentState = State.PickingUpGlass;
         }// snygga till eventuellt
