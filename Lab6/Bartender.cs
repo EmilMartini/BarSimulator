@@ -117,7 +117,7 @@ namespace Lab6
             }
             while (!CheckBarShelf(bar))
             {
-                Thread.Sleep(SpeedModifier(3000));
+                Thread.Sleep(SpeedModifier(300));
             }
             if (CheckBarShelf(bar))
             {
