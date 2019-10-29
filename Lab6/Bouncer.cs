@@ -104,7 +104,7 @@ namespace Lab6
         }
         private void LeavingWork()
         {
-            Log("Bouncer has left the pub.");
+            Log("Bouncer has left the pub.");// => Logger.Log(LogLevel.Info, Category.Bouncer, "Bouncer has left the pub.");
             currentState = State.StopBouncer;
         }
         private void Work(Establishment establishment, CancellationToken ct)
@@ -130,11 +130,13 @@ namespace Lab6
             {
                 Thread.Sleep(10);
                 if (!establishment.isBusloadState)
+                {
                     continue;
-
-                if(busArrived && patronsPerEntry != establishment.PatronsPerEntry)
+                }
+                if (busArrived && patronsPerEntry != establishment.PatronsPerEntry)
+                {
                     patronsPerEntry = establishment.PatronsPerEntry;
-
+                }
                 if (!busArrived)
                 {
                     if (DateTime.Now < busTimer)

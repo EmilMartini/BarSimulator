@@ -95,17 +95,11 @@ namespace Lab6
         }
         void TimerTick(object sender, EventArgs e)
         {
-            int numberOfAvailableChairs = 0;
-            for (int i = 0; i < establishment.Table.ChairsAroundTable.Count; i++)
-            {
-                if (establishment.Table.ChairsAroundTable.ToList()[i].Available == true)
-                    numberOfAvailableChairs++;
-            }
 
             window.PatronsInPubLabel.Content = $"Patrons in bar: {establishment.CurrentPatrons.Count} (Total: {establishment.TotalPatrons})";
             window.CleanGlassesLabel.Content = $"Number of clean glasses: {establishment.Bar.Shelf.Count} (Max: {establishment.MaxGlasses})";
 
-            window.FreeChairsLabel.Content = $"Number of available chairs: {numberOfAvailableChairs} (Max: {establishment.MaxChairs})";
+            window.FreeChairsLabel.Content = $"Number of available chairs: {establishment.Table.GetNumberOfAvailableChairs()} (Max: {establishment.MaxChairs})";
             window.TimeToCloseLabel.Content = "Time left until closing: " + $"{GetElapsedTime(DateTime.Now).ToString(@"mm\:ss")}";
 
             window.BarIsOpenLabel.Content = establishment.IsOpen ? @"Bar is: Open" : $"Bar is: Closed";

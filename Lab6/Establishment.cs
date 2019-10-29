@@ -38,5 +38,11 @@ namespace Lab6
             Bar = new Bar(this);
             CurrentPatrons = new List<Patron>();
         }
+
+        public void SetChairAvailable(Patron patron)
+        {
+            var chair = Table.GetFirstAvailableChair();
+            chair.SetAvailable();
+        }
     }
 }

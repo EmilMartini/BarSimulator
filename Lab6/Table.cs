@@ -1,27 +1,90 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Linq;
 
 namespace Lab6
 {
     public class Table
     {
         public ConcurrentBag<Glass> GlassesOnTable { get; set; }
-        public BlockingCollection<Chair> ChairsAroundTable { get; private set; }
-        public ConcurrentQueue<Patron> ChairQueue { get; set; }
-        public Table(Establishment est)
+        ConcurrentBag<Chair> ChairsAroundTable { get; set; }
+        ConcurrentQueue<Patron> ChairQueue { get; set; }
+        public Table(Establishment establishment)
         {
             GlassesOnTable = new ConcurrentBag<Glass>();
-            ChairsAroundTable = new BlockingCollection<Chair>(est.MaxChairs);
+            ChairsAroundTable = new ConcurrentBag<Chair>();
             ChairQueue = new ConcurrentQueue<Patron>();
-            InitTable();
+            InitTable(establishment);
         }
-        void InitTable()
+        void InitTable(Establishment establishment)
         {
-            for (int i = 0; i < ChairsAroundTable.BoundedCapacity; i++)
+            for (int i = 0; i < establishment.MaxChairs; i++)
             {
                 var chair = new Chair();
-                chair.Available = true;
                 ChairsAroundTable.Add(chair);
+            }
+        }
+
+        public void EnqueuePatron(Patron patron)
+        {
+            ChairQueue.Enqueue(patron);
+        }
+
+        public bool IsFirstInQueue(Patron patron)
+        {
+            if(ChairQueue.First() == patron)
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+
+        public Chair GetFirstAvailableChair()
+        {
+            foreach (var chair in ChairsAroundTable)
+            {
+                if (chair.IsAvailable())
+                {
+                    return chair;
+                }
+            }
+            return null;
+        }
+        public Chair GetFirstTakenChair()
+        {
+            foreach (var chair in ChairsAroundTable)
+            {
+                if (!chair.IsAvailable())
+                {
+                    return chair;
+                }
+            }
+            return null;
+        }
+        public int GetNumberOfAvailableChairs()
+        {
+            int numberOfChairs = 0;
+            foreach (var chair in ChairsAroundTable)
+            {
+                if (chair.IsAvailable())
+                {
+                    numberOfChairs++;
+                }
+            }
+            return numberOfChairs;
+        }
+        public bool TryDequeue(Patron patron)
+        {
+            Patron dequeuedPatron;
+            if (ChairQueue.TryDequeue(out dequeuedPatron))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }
