@@ -54,14 +54,7 @@ namespace Lab6
             }
             return false;
         }
-        bool CheckBarShelf(Bar bar)
-        {
-            if (bar.Shelf.Count > 0)
-            {
-                return true;
-            }
-            return false;
-        }
+        
         void WaitingForPatron(Establishment establishment)
         {
             if (establishment.CurrentPatrons.Count <= 0 && !establishment.IsOpen)
@@ -83,7 +76,7 @@ namespace Lab6
                 }
                 Thread.Sleep(SpeedModifier(300));
             }
-            if (CheckBarShelf(establishment.Bar))
+            if (establishment.Bar.CheckBarShelfForGlass())
             {
                 CurrentState = State.PouringBeer;
             }
@@ -96,13 +89,14 @@ namespace Lab6
         void PouringBeer(Bar bar)
         {
             Glass glass;
-            if(bar.Shelf.TryTake(out glass))
+            if(bar.CheckBarShelfForGlass())
             {
+                glass = bar.GetGlassFromShelf();
                 Log("fetching glass");
                 Thread.Sleep(SpeedModifier(3000));
                 Log($"pouring {bar.BarQueue.First().Name} a beer");
                 Thread.Sleep(SpeedModifier(3000));
-                bar.BarTop.Add(glass);
+                bar.AddGlassToBarTop(glass);
                 CurrentState = State.WaitingForPatron;
             } 
             else
@@ -112,15 +106,15 @@ namespace Lab6
         }
         void WaitingForCleanGlass(Bar bar)
         {
-            if (!CheckBarShelf(bar))
+            if (!bar.CheckBarShelfForGlass())
             {
                 Log("is waiting at the shelf for a clean glass");
             }
-            while (!CheckBarShelf(bar))
+            while (!bar.CheckBarShelfForGlass())
             {
                 Thread.Sleep(SpeedModifier(300));
             }
-            if (CheckBarShelf(bar))
+            if (bar.CheckBarShelfForGlass())
             {
                 CurrentState = State.PouringBeer;
             }

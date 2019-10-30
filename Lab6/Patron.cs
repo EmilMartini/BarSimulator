@@ -69,21 +69,14 @@ namespace Lab6
         void WalkingToBar(Establishment establishment)
         {
             Thread.Sleep(SpeedModifier(1000));
-            establishment.Bar.BarQueue.Enqueue(this);
+            establishment.Bar.AddPatronToBarQueue(this);
             CurrentState = State.WaitingForBeer;
         }
         void RemovePatron(Patron patron, Establishment establishment)
         {
             establishment.CurrentPatrons.Remove(patron);
         }
-        bool CheckBarTopForBeer(Establishment establishment)
-        {
-            if (establishment.Bar.BarTop.Count > 0)
-            {
-                return true;
-            }
-            return false;
-        }
+        
         bool CheckForEmptyChair(Establishment establishment)
         {
             var chair = establishment.Table.GetFirstChairFromCondition(true);
@@ -130,17 +123,12 @@ namespace Lab6
         }
         void WaitingForBeer(Establishment establishment)
         {
-            while (!CheckBarTopForBeer(establishment) || establishment.Bar.BarQueue.First() != this)
+            while (!establishment.Bar.CheckBarTopForBeer() || establishment.Bar.CheckIfFirstInBarQueue(this))
             {
                 Thread.Sleep(SpeedModifier(300));
             }
-            Patron patron;
-            Glass glass = establishment.Bar.BarTop.ElementAt(0);
-            establishment.Bar.BarTop = new ConcurrentBag<Glass>(establishment.Bar.BarTop.Except(new[] { glass }));
-            establishment.Bar.BarQueue.TryDequeue(out patron);
-            Holding.Add(glass);
-
-            
+            establishment.Bar.RemovePatronFromBarQueue(this);
+            Holding.Add(establishment.Bar.TakeGlassFromBarTop());
             CurrentState = State.WalkingToTable;
         }
         void LeavingEstablishment(Establishment establishment)

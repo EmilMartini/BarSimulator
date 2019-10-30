@@ -9,9 +9,9 @@ namespace Lab6
 {
     public class Bar
     {
-        public ConcurrentBag<Glass> Shelf { get; set; }
-        public ConcurrentBag<Glass> BarTop { get; set; }
-        public ConcurrentQueue<Patron> BarQueue { get; set; }
+        ConcurrentBag<Glass> Shelf { get; set; }
+        ConcurrentBag<Glass> BarTop { get; set; }
+        ConcurrentQueue<Patron> BarQueue { get; set; }
         public Bar(Establishment establishment)
         {
             Shelf = new ConcurrentBag<Glass>();
@@ -27,6 +27,58 @@ namespace Lab6
                 glass.CurrentState = Glass.State.Clean;
                 Shelf.Add(glass);
             }
+        }
+        public bool CheckBarShelfForGlass()
+        {
+            if (Shelf.Count > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        public Glass GetGlassFromShelf()
+        {
+            Glass glass;
+            Shelf.TryTake(out glass);
+            return glass;
+        }
+        public void AddGlassToShelf(Glass glass)
+        {
+            Shelf.Add(glass);
+        }
+        public void AddGlassToBarTop(Glass glass)
+        {
+            BarTop.Add(glass);
+        }
+        public Glass TakeGlassFromBarTop()
+        {
+            Glass glass = BarTop.ElementAt(0);
+            BarTop = new ConcurrentBag<Glass>(BarTop.Except(new[] { glass }));
+            return glass;
+        }
+        public bool CheckBarTopForBeer()
+        {
+            if (BarTop.Count > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool CheckIfFirstInBarQueue(Patron patron)
+        {
+            if (BarQueue.First() == patron)
+            {
+                return true;
+            }
+            return false;
+        }
+        public void AddPatronToBarQueue(Patron patron)
+        {
+            BarQueue.Enqueue(patron);
+        }
+        public void RemovePatronFromBarQueue(Patron patron)
+        {
+            BarQueue.TryDequeue(out patron);
         }
     }
 }
