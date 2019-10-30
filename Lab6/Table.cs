@@ -25,11 +25,6 @@ namespace Lab6
             }
         }
 
-        public void EnqueuePatron(Patron patron)
-        {
-            ChairQueue.Enqueue(patron);
-        }
-
         public bool IsFirstInQueue(Patron patron)
         {
             if(ChairQueue.First() == patron)
@@ -40,7 +35,6 @@ namespace Lab6
                 return false;
             }
         }
-
         public Chair GetFirstAvailableChair()
         {
             foreach (var chair in ChairsAroundTable)
@@ -86,6 +80,10 @@ namespace Lab6
             {
                 return false;
             }
+        }
+        public void EnqueuePatron(Patron patron)
+        {
+            ChairQueue.Enqueue(patron);
         }
     }
 }
