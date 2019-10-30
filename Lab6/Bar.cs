@@ -9,14 +9,14 @@ namespace Lab6
 {
     public class Bar
     {
-        ConcurrentBag<Glass> Shelf { get; set; }
-        ConcurrentBag<Glass> BarTop { get; set; }
-        ConcurrentQueue<Patron> BarQueue { get; set; }
+        ConcurrentBag<Glass> shelf;
+        ConcurrentBag<Glass> barTop;
+        ConcurrentQueue<Patron> barQueue;
         public Bar(Establishment establishment)
         {
-            Shelf = new ConcurrentBag<Glass>();
-            BarTop = new ConcurrentBag<Glass>();
-            BarQueue = new ConcurrentQueue<Patron>();
+            shelf = new ConcurrentBag<Glass>();
+            barTop = new ConcurrentBag<Glass>();
+            barQueue = new ConcurrentQueue<Patron>();
             FillShelf(establishment);
         }
         void FillShelf(Establishment establishment)
@@ -25,12 +25,12 @@ namespace Lab6
             {
                 var glass = new Glass();
                 glass.CurrentState = Glass.State.Clean;
-                Shelf.Add(glass);
+                shelf.Add(glass);
             }
         }
         public bool CheckBarShelfForGlass()
         {
-            if (Shelf.Count > 0)
+            if (shelf.Count > 0)
             {
                 return true;
             }
@@ -38,31 +38,31 @@ namespace Lab6
         }
         public int GetNumberOfGlassesInBarShelf()
         {
-            return Shelf.Count();
+            return shelf.Count();
         }
         public Glass GetGlassFromShelf()
         {
             Glass glass;
-            Shelf.TryTake(out glass);
+            shelf.TryTake(out glass);
             return glass;
         }
         public void AddGlassToShelf(Glass glass)
         {
-            Shelf.Add(glass);
+            shelf.Add(glass);
         }
         public void AddGlassToBarTop(Glass glass)
         {
-            BarTop.Add(glass);
+            barTop.Add(glass);
         }
         public Glass TakeGlassFromBarTop()
         {
-            Glass glass = BarTop.ElementAt(0);
-            BarTop = new ConcurrentBag<Glass>(BarTop.Except(new[] { glass }));
+            Glass glass = barTop.ElementAt(0);
+            barTop = new ConcurrentBag<Glass>(barTop.Except(new[] { glass }));
             return glass;
         }
         public bool CheckBarTopForBeer()
         {
-            if (BarTop.Count > 0)
+            if (barTop.Count > 0)
             {
                 return true;
             }
@@ -70,7 +70,7 @@ namespace Lab6
         }
         public bool CheckIfFirstInBarQueue(Patron patron)
         {
-            if (BarQueue.First() == patron)
+            if (barQueue.First() == patron)
             {
                 return true;
             }
@@ -78,15 +78,15 @@ namespace Lab6
         }
         public void AddPatronToBarQueue(Patron patron)
         {
-            BarQueue.Enqueue(patron);
+            barQueue.Enqueue(patron);
         }
         public void RemovePatronFromBarQueue(Patron patron)
         {
-            BarQueue.TryDequeue(out patron);
+            barQueue.TryDequeue(out patron);
         }
         public bool CheckBarQueue()
         {
-            if (BarQueue.Count > 0)
+            if (barQueue.Count > 0)
             {
                 return true;
             }
@@ -94,7 +94,7 @@ namespace Lab6
         }
         public Patron GetFirstInBarQueue()
         {
-            return BarQueue.First();
+            return barQueue.First();
         }
     }
 }
