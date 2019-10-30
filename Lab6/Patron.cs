@@ -16,7 +16,6 @@ namespace Lab6
         double simulationSpeed;
         ConcurrentBag<Glass> holding;
         public string Name { get; private set; }
-
         public Patron(string name, Establishment establishment, CancellationToken ct)
         {
             Name = name;
@@ -72,35 +71,6 @@ namespace Lab6
             establishment.Bar.AddPatronToBarQueue(this);
             currentState = State.WaitingForBeer;
         }
-        void RemovePatron(Patron patron, Establishment establishment)
-        {
-            establishment.CurrentPatrons.Remove(patron);
-        }
-        
-        bool CheckForEmptyChair(Establishment establishment)
-        {
-            var chair = establishment.Table.GetFirstChairFromCondition(true);
-            if(chair != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        void DrinkingBeer(Establishment establishment)
-        {
-            Log($"{this.Name} sits down and drinks a beer");
-            Thread.Sleep(SpeedModifier(random.Next(20000, 30000)));
-            foreach (var glass in holding)
-            {
-                glass.CurrentState = Glass.State.Dirty;
-                establishment.Table.PutGlassOnTable(glass);
-                holding = new ConcurrentBag<Glass>(holding.Except(new[] { glass }));
-            }
-            currentState = State.LeavingEstablishment;
-        }
         void WaitingForChair(Establishment establishment)
         {
             Patron patron = this;
@@ -109,7 +79,6 @@ namespace Lab6
             {
                 Thread.Sleep(SpeedModifier(300));
             }
-
             var chair = establishment.Table.GetFirstChairFromCondition(true);
             if(chair != null)
             {
@@ -127,9 +96,21 @@ namespace Lab6
             {
                 Thread.Sleep(SpeedModifier(300));
             }
-            establishment.Bar.RemovePatronFromBarQueue(this);
             holding.Add(establishment.Bar.TakeGlassFromBarTop());
+            establishment.Bar.RemovePatronFromBarQueue(this);
             currentState = State.WalkingToTable;
+        }
+        void DrinkingBeer(Establishment establishment)
+        {
+            Log($"{this.Name} sits down and drinks a beer");
+            Thread.Sleep(SpeedModifier(random.Next(20000, 30000)));
+            foreach (var glass in holding)
+            {
+                glass.CurrentState = Glass.State.Dirty;
+                establishment.Table.PutGlassOnTable(glass);
+                holding = new ConcurrentBag<Glass>(holding.Except(new[] { glass }));
+            }
+            currentState = State.LeavingEstablishment;
         }
         void LeavingEstablishment(Establishment establishment)
         {
@@ -140,6 +121,22 @@ namespace Lab6
             }
             Log($"{this.Name} finished the beer and left the pub");
             currentState = State.LeftPub;
+        }
+        void RemovePatron(Patron patron, Establishment establishment)
+        {
+            establishment.CurrentPatrons.Remove(patron);
+        }
+        bool CheckForEmptyChair(Establishment establishment)
+        {
+            var chair = establishment.Table.GetFirstChairFromCondition(true);
+            if(chair != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         int SpeedModifier(int StartTime)
         {

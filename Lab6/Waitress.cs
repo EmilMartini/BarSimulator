@@ -12,16 +12,15 @@ namespace Lab6
         enum State { WaitingForDirtyGlass, PickingUpGlass, CleaningGlass, LeavingWork, ShelfingGlass, LeftWork }
         State CurrentState;
         public event Action<string> Log;
-
-        List<Glass> CarryingGlasses;
-        double WaitressSpeed;
-        double SimulationSpeed;
+        List<Glass> carryingGlasses;
+        double waitressSpeed;
+        double simulationSpeed;
         public Waitress(Establishment establishment)
         {
             CurrentState = State.WaitingForDirtyGlass;
-            CarryingGlasses = new List<Glass>();
-            WaitressSpeed = establishment.WaitressSpeed;
-            SimulationSpeed = establishment.SimulationSpeed;
+            carryingGlasses = new List<Glass>();
+            waitressSpeed = establishment.WaitressSpeed;
+            simulationSpeed = establishment.SimulationSpeed;
         }
         public void Simulate(Establishment establishment, CancellationToken ct)
         {
@@ -52,47 +51,6 @@ namespace Lab6
                 }
             });
         }
-        void ShelfingGlass(Bar bar)
-        {
-            Log("shelfing washed glasses");
-            foreach (var glass in CarryingGlasses)
-            {
-                bar.AddGlassToShelf(glass);
-            }
-            CarryingGlasses.RemoveRange(0, CarryingGlasses.Count);
-            CurrentState = State.WaitingForDirtyGlass;
-        }
-        bool CheckTableForDirtyGlass(Table table)
-        {
-            if (table.NumberOfGlasses() > 0)
-            {
-                return true;
-            }
-            return false;
-        }
-        void LeavingWork()
-        {
-            Log("has left the pub");
-            CurrentState = State.LeftWork;
-        }
-        void WashingGlass()
-        {
-            Log($"washing {CarryingGlasses.Count} glasses");
-            Thread.Sleep(SpeedModifier(15000));
-            foreach (var glass in CarryingGlasses)
-            {
-                glass.CurrentState = Glass.State.Clean;
-            }
-            CurrentState = State.ShelfingGlass;
-
-        }
-        void PickingUpGlass(Table table)
-        {
-            Log("is picking up glasses");
-            Thread.Sleep(SpeedModifier(10000));
-            CarryingGlasses.AddRange(table.RemoveGlasses());
-            CurrentState = State.CleaningGlass;
-        }
         void WaitingForDirtyGlass(Establishment establishment)
         {
             if (!establishment.IsOpen && establishment.CurrentPatrons.Count < 1)
@@ -100,11 +58,11 @@ namespace Lab6
                 CurrentState = State.LeavingWork;
                 return;
             }
-            if (!CheckTableForDirtyGlass(establishment.Table))
+            if (establishment.Table.NumberOfGlasses() == 0)
             {
                 Log("is waiting for dirty glasses");
             }
-            while (!CheckTableForDirtyGlass(establishment.Table))
+            while (establishment.Table.NumberOfGlasses() == 0)
             {
                 if (!establishment.IsOpen && establishment.CurrentPatrons.Count < 1)
                 {
@@ -115,9 +73,41 @@ namespace Lab6
             }
             CurrentState = State.PickingUpGlass;
         }
+        void PickingUpGlass(Table table)
+        {
+            Log("is picking up glasses");
+            Thread.Sleep(SpeedModifier(10000));
+            carryingGlasses.AddRange(table.RemoveGlasses());
+            CurrentState = State.CleaningGlass;
+        }
+        void WashingGlass()
+        {
+            Log($"washing {carryingGlasses.Count} glasses");
+            Thread.Sleep(SpeedModifier(15000));
+            foreach (var glass in carryingGlasses)
+            {
+                glass.CurrentState = Glass.State.Clean;
+            }
+            CurrentState = State.ShelfingGlass;
+        }
+        void ShelfingGlass(Bar bar)
+        {
+            Log("shelfing washed glasses");
+            foreach (var glass in carryingGlasses)
+            {
+                bar.AddGlassToShelf(glass);
+            }
+            carryingGlasses.RemoveRange(0, carryingGlasses.Count);
+            CurrentState = State.WaitingForDirtyGlass;
+        }
+        void LeavingWork()
+        {
+            Log("has left the pub");
+            CurrentState = State.LeftWork;
+        }
         int SpeedModifier(int normalSpeed)
         {
-            return (int)((normalSpeed / WaitressSpeed) / SimulationSpeed);
+            return (int)((normalSpeed / waitressSpeed) / simulationSpeed);
         }
     }
 }
