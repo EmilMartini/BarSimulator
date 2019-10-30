@@ -82,7 +82,7 @@ namespace Lab6
             var chair = establishment.Table.GetFirstChairFromCondition(true);
             if(chair != null)
             {
-                chair.SetAvailability(false);
+                chair.Available = false;
                 if (establishment.Table.TryDequeue(this))
                 {
                     currentState = State.DrinkingBeer;
@@ -117,7 +117,7 @@ namespace Lab6
             var chair = establishment.Table.GetFirstChairFromCondition(false);
             if(chair != null)
             {
-                chair.SetAvailability(true);
+                chair.Available = true;
             }
             Log($"{this.Name} finished the beer and left the pub");
             currentState = State.LeftPub;
