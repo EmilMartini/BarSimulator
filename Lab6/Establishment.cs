@@ -41,8 +41,8 @@ namespace Lab6
 
         public void SetChairAvailable(Patron patron)
         {
-            var chair = Table.GetFirstAvailableChair();
-            chair.SetAvailable();
+            var chair = Table.GetFirstChairFromCondition(false);
+            chair.SetAvailability(true);
         }
     }
 }

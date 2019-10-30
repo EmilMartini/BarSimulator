@@ -6,7 +6,7 @@ namespace Lab6
 {
     public class Table
     {
-        public ConcurrentBag<Glass> GlassesOnTable { get; set; }
+        ConcurrentBag<Glass> GlassesOnTable { get; set; }
         ConcurrentBag<Chair> ChairsAroundTable { get; set; }
         ConcurrentQueue<Patron> ChairQueue { get; set; }
         public Table(Establishment establishment)
@@ -24,33 +24,22 @@ namespace Lab6
                 ChairsAroundTable.Add(chair);
             }
         }
-
         public bool IsFirstInQueue(Patron patron)
         {
             if(ChairQueue.First() == patron)
             {
                 return true;
-            } else
+            }
+            else
             {
                 return false;
             }
         }
-        public Chair GetFirstAvailableChair()
+        public Chair GetFirstChairFromCondition(bool availableCondition)
         {
             foreach (var chair in ChairsAroundTable)
             {
-                if (chair.IsAvailable())
-                {
-                    return chair;
-                }
-            }
-            return null;
-        }
-        public Chair GetFirstTakenChair()
-        {
-            foreach (var chair in ChairsAroundTable)
-            {
-                if (!chair.IsAvailable())
+                if (chair.IsAvailable() == availableCondition)
                 {
                     return chair;
                 }

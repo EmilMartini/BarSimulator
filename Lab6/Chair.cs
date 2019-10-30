@@ -6,12 +6,12 @@
 
         public Chair()
         {
-            this.Available = true;
+            Available = true;
         }
 
         public bool IsAvailable()
         {
-            if (this.Available)
+            if (Available)
             {
                 return true;
             }
@@ -21,20 +21,9 @@
             }
         }
 
-        public void SetAvailable()
+        public void SetAvailability(bool availability)
         {
-            if(!this.Available)
-            {
-                this.Available = true;
-            }
-        }
-
-        public void SetToTaken()
-        {
-            if (this.Available)
-            {
-                this.Available = false;
-            }
+            Available = availability;
         }
     }
 }

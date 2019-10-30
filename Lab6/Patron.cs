@@ -86,7 +86,7 @@ namespace Lab6
         }
         bool CheckForEmptyChair(Establishment establishment)
         {
-            var chair = establishment.Table.GetFirstAvailableChair();
+            var chair = establishment.Table.GetFirstChairFromCondition(true);
             if(chair != null)
             {
                 return true;
@@ -117,10 +117,10 @@ namespace Lab6
                 Thread.Sleep(SpeedModifier(300));
             }
 
-            var chair = establishment.Table.GetFirstAvailableChair();
+            var chair = establishment.Table.GetFirstChairFromCondition(true);
             if(chair != null)
             {
-                chair.SetToTaken();
+                chair.SetAvailability(false);
                 if (establishment.Table.TryDequeue(this))
                 {
                     CurrentState = State.DrinkingBeer;
@@ -145,10 +145,10 @@ namespace Lab6
         }
         void LeavingEstablishment(Establishment establishment)
         {
-            var chair = establishment.Table.GetFirstTakenChair();
+            var chair = establishment.Table.GetFirstChairFromCondition(false);
             if(chair != null)
             {
-                chair.SetAvailable();
+                chair.SetAvailability(true);
             }
             Log($"{this.Name} finished the beer and left the pub");
             CurrentState = State.LeftPub;
