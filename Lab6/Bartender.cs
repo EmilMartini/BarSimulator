@@ -9,20 +9,20 @@ namespace Lab6
     {
         enum State { WaitingForPatron, WaitingForCleanGlass, PouringBeer, LeavingWork , LeftWork}
         public event Action<string> Log;
-        State CurrentState { get; set; }
-        double SimulationSpeed { get; set; }
+        State currentState;
+        double SsmulationSpeed;
         public Bartender(Establishment establishment)
         {
-            CurrentState = State.WaitingForPatron;
-            SimulationSpeed = establishment.SimulationSpeed;
+            currentState = State.WaitingForPatron;
+            SsmulationSpeed = establishment.SimulationSpeed;
         }
         public void Simulate(Establishment est, CancellationToken ct)
         {
             Task.Run(() =>
             {
-                while(CurrentState != State.LeftWork && !ct.IsCancellationRequested)
+                while(currentState != State.LeftWork && !ct.IsCancellationRequested)
                 {
-                    switch (CurrentState)
+                    switch (currentState)
                     {
                         case State.WaitingForPatron:
                             WaitingForPatron(est);
@@ -44,15 +44,13 @@ namespace Lab6
         }
         int SpeedModifier(int StartTime)
         {
-            return (int)(StartTime / SimulationSpeed);
+            return (int)(StartTime / SsmulationSpeed);
         }
-        
-        
         void WaitingForPatron(Establishment establishment)
         {
             if (establishment.CurrentPatrons.Count <= 0 && !establishment.IsOpen)
             {
-                CurrentState = State.LeavingWork;
+                currentState = State.LeavingWork;
                 return;
             }
             if (!establishment.Bar.CheckBarQueue())
@@ -64,20 +62,19 @@ namespace Lab6
             {
                 if(establishment.CurrentPatrons.Count <= 0 && !establishment.IsOpen)
                 {
-                    CurrentState = State.LeavingWork;
+                    currentState = State.LeavingWork;
                     return;
                 }
                 Thread.Sleep(SpeedModifier(300));
             }
             if (establishment.Bar.CheckBarShelfForGlass())
             {
-                CurrentState = State.PouringBeer;
+                currentState = State.PouringBeer;
             }
             else
             {
-                CurrentState = State.WaitingForCleanGlass;
+                currentState = State.WaitingForCleanGlass;
             }
-            
         }
         void PouringBeer(Bar bar)
         {
@@ -90,11 +87,11 @@ namespace Lab6
                 Log($"pouring {bar.GetFirstInBarQueue().Name} a beer");
                 Thread.Sleep(SpeedModifier(3000));
                 bar.AddGlassToBarTop(glass);
-                CurrentState = State.WaitingForPatron;
+                currentState = State.WaitingForPatron;
             } 
             else
             {
-                CurrentState = State.WaitingForCleanGlass;
+                currentState = State.WaitingForCleanGlass;
             }
         }
         void WaitingForCleanGlass(Bar bar)
@@ -109,12 +106,12 @@ namespace Lab6
             }
             if (bar.CheckBarShelfForGlass())
             {
-                CurrentState = State.PouringBeer;
+                currentState = State.PouringBeer;
             }
         }
         void LeavingWork()
         {
-            CurrentState = State.LeftWork;
+            currentState = State.LeftWork;
             Log("left the pub.");
         }
     }

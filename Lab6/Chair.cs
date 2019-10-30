@@ -2,16 +2,14 @@
 {
     public class Chair
     {
-        bool Available { get;  set; }
-
+        bool available;
         public Chair()
         {
-            Available = true;
+            available = true;
         }
-
         public bool IsAvailable()
         {
-            if (Available)
+            if (available)
             {
                 return true;
             }
@@ -20,10 +18,9 @@
                 return false;
             }
         }
-
         public void SetAvailability(bool availability)
         {
-            Available = availability;
+            available = availability;
         }
     }
 }
