@@ -12,10 +12,11 @@ namespace Lab6
         public static event Action<string> Log;
         Random random = new Random();
         State currentState;
-        public string Name { get; private set; }
         double patronSpeed;
         double simulationSpeed;
         ConcurrentBag<Glass> holding;
+        public string Name { get; private set; }
+
         public Patron(string name, Establishment establishment, CancellationToken ct)
         {
             Name = name;

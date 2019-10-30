@@ -7,16 +7,16 @@ namespace Lab6
 {
     public class SimulationManager
     {
-        Establishment establishment { get; set; }
-        Bouncer bouncer { get; set; }
-        Bartender bartender { get; set; }
-        Waitress waitress { get; set; }
-        LogManager logManager { get; set; }
-        MainWindow window { get; set; }
-        DispatcherTimer dispatcherTimer { get; set; }
-        DateTime timeToClose { get; set; }
-        CancellationTokenSource cts { get; set; }
-        CancellationToken ct { get; set; }
+        Establishment establishment;
+        Bouncer bouncer;
+        Bartender bartender;
+        Waitress waitress;
+        LogManager logManager;
+        MainWindow window;
+        DispatcherTimer dispatcherTimer;
+        DateTime timeToClose;
+        CancellationTokenSource cts;
+        CancellationToken ct;
 
         public SimulationManager(SimulationState stateToRun, double simulationSpeed)
         {
