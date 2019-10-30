@@ -103,12 +103,12 @@ namespace Lab6
                 }
             });
         }
-        private void LeavingWork()
+        void LeavingWork()
         {
             Log("Bouncer has left the pub.");// => Logger.Log(LogLevel.Info, Category.Bouncer, "Bouncer has left the pub.");
             CurrentState = State.StopBouncer;
         }
-        private void Work(Establishment establishment, CancellationToken ct)
+        void Work(Establishment establishment, CancellationToken ct)
         {
             if (!establishment.IsOpen)
             {
@@ -123,13 +123,13 @@ namespace Lab6
             }
             CurrentState = State.Waiting;
         }
-        private void Wait(CancellationToken ct, Establishment establishment)
+        void Wait(CancellationToken ct, Establishment establishment)
         {
             var timeToSleep = CalculateTimeToSleep(3000, 10001);
             while((DateTime.Now < timeToSleep) && !ct.IsCancellationRequested && establishment.IsOpen)
             {
                 Thread.Sleep(10);
-                if (!establishment.isBusloadState)
+                if (!establishment.isBusloadState || BusArrived)
                 {
                     continue;
                 }
@@ -154,12 +154,12 @@ namespace Lab6
             }
             CurrentState = State.Working;
         }
-        private DateTime CalculateTimeToSleep(int minRange, int maxRange)
+        DateTime CalculateTimeToSleep(int minRange, int maxRange)
         {
             int timeToSleepInMs = SpeedModifier(random.Next(minRange, maxRange));
             return DateTime.Now + new TimeSpan(0, 0, 0, 0,timeToSleepInMs);
         }
-        private int SpeedModifier(int StartTime)
+        int SpeedModifier(int StartTime)
         {
             return (int)((StartTime / BouncerSpeed) / SimulationSpeed);
         }
