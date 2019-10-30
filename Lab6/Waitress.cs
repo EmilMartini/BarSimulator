@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,15 +10,16 @@ namespace Lab6
     public class Waitress
     {
         enum State { WaitingForDirtyGlass, PickingUpGlass, CleaningGlass, LeavingWork, ShelfingGlass, LeftWork }
+        State CurrentState;
         public event Action<string> Log;
-        ConcurrentBag<Glass> CarryingGlasses { get; set; }
-        double WaitressSpeed { get; set; }
-        double SimulationSpeed { get; set; }
-        State CurrentState { get; set; }
+
+        List<Glass> CarryingGlasses;
+        double WaitressSpeed;
+        double SimulationSpeed;
         public Waitress(Establishment establishment)
         {
             CurrentState = State.WaitingForDirtyGlass;
-            CarryingGlasses = new ConcurrentBag<Glass>();
+            CarryingGlasses = new List<Glass>();
             WaitressSpeed = establishment.WaitressSpeed;
             SimulationSpeed = establishment.SimulationSpeed;
         }
@@ -56,21 +58,17 @@ namespace Lab6
             foreach (var glass in CarryingGlasses)
             {
                 bar.Shelf.Add(glass);
-                CarryingGlasses = new ConcurrentBag<Glass>(CarryingGlasses.Except(new[] { glass }));
             }
+            CarryingGlasses.RemoveRange(0, CarryingGlasses.Count);
             CurrentState = State.WaitingForDirtyGlass;
         }
         bool CheckTableForDirtyGlass(Table table)
         {
-            if (table.GlassesOnTable.Count > 0)
+            if (table.NumberOfGlasses() > 0)
             {
                 return true;
             }
             return false;
-        }
-        int SpeedModifier(int normalSpeed)
-        {
-            return (int)((normalSpeed / WaitressSpeed) / SimulationSpeed);
         }
         void LeavingWork()
         {
@@ -92,11 +90,7 @@ namespace Lab6
         {
             Log("is picking up glasses");
             Thread.Sleep(SpeedModifier(10000));
-            foreach (var glass in table.GlassesOnTable)
-            {
-                table.GlassesOnTable = new ConcurrentBag<Glass>(table.GlassesOnTable.Except(new[] { glass }));
-                CarryingGlasses.Add(glass);
-            }
+            CarryingGlasses.AddRange(table.RemoveGlasses());
             CurrentState = State.CleaningGlass;
         }
         void WaitingForDirtyGlass(Establishment establishment)
@@ -120,6 +114,10 @@ namespace Lab6
                 Thread.Sleep(SpeedModifier(300));
             }
             CurrentState = State.PickingUpGlass;
+        }
+        int SpeedModifier(int normalSpeed)
+        {
+            return (int)((normalSpeed / WaitressSpeed) / SimulationSpeed);
         }
     }
 }

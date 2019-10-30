@@ -9,21 +9,20 @@ namespace Lab6
     public class Patron
     { 
         public enum State { WaitingForChair, WaitingForBeer, DrinkingBeer, LeavingEstablishment, LeftPub, WalkingToBar, WalkingToTable }
-        public delegate void PatronEvent(string s);
-        public static event PatronEvent Log;
+        public static event Action<string> Log;
         Random random = new Random();
-        State CurrentState { get; set; }
+        State currentState;
         public string Name { get; private set; }
-        double PatronSpeed { get; set; }
-        double SimulationSpeed { get; set; }
-        ConcurrentBag<Glass> Holding { get; set; }
+        double patronSpeed;
+        double simulationSpeed;
+        ConcurrentBag<Glass> holding;
         public Patron(string name, Establishment establishment, CancellationToken ct)
         {
             Name = name;
-            CurrentState = State.WalkingToBar;
-            Holding = new ConcurrentBag<Glass>();
-            PatronSpeed = establishment.PatronSpeed;
-            SimulationSpeed = establishment.SimulationSpeed;
+            currentState = State.WalkingToBar;
+            holding = new ConcurrentBag<Glass>();
+            patronSpeed = establishment.PatronSpeed;
+            simulationSpeed = establishment.SimulationSpeed;
             Simulate(establishment, ct);
         }
         void Simulate(Establishment establishment, CancellationToken ct)
@@ -31,9 +30,9 @@ namespace Lab6
             Task.Run(() =>
             {
                 Log($"{Name} entered the bar");
-                while (CurrentState != State.LeftPub && !ct.IsCancellationRequested)
+                while (currentState != State.LeftPub && !ct.IsCancellationRequested)
                 {
-                    switch (CurrentState)
+                    switch (currentState)
                     {
                         case State.WaitingForChair:
                             WaitingForChair(establishment);
@@ -64,13 +63,13 @@ namespace Lab6
         {
             Thread.Sleep(SpeedModifier(4000));
             establishment.Table.EnqueuePatron(this);
-            CurrentState = State.WaitingForChair;
+            currentState = State.WaitingForChair;
         }
         void WalkingToBar(Establishment establishment)
         {
             Thread.Sleep(SpeedModifier(1000));
             establishment.Bar.AddPatronToBarQueue(this);
-            CurrentState = State.WaitingForBeer;
+            currentState = State.WaitingForBeer;
         }
         void RemovePatron(Patron patron, Establishment establishment)
         {
@@ -93,13 +92,13 @@ namespace Lab6
         {
             Log($"{this.Name} sits down and drinks a beer");
             Thread.Sleep(SpeedModifier(random.Next(20000, 30000)));
-            foreach (var glass in Holding)
+            foreach (var glass in holding)
             {
                 glass.CurrentState = Glass.State.Dirty;
-                establishment.Table.GlassesOnTable.Add(glass);
-                Holding = new ConcurrentBag<Glass>(Holding.Except(new[] { glass }));
+                establishment.Table.PutGlassOnTable(glass);
+                holding = new ConcurrentBag<Glass>(holding.Except(new[] { glass }));
             }
-            CurrentState = State.LeavingEstablishment;
+            currentState = State.LeavingEstablishment;
         }
         void WaitingForChair(Establishment establishment)
         {
@@ -116,7 +115,7 @@ namespace Lab6
                 chair.SetAvailability(false);
                 if (establishment.Table.TryDequeue(this))
                 {
-                    CurrentState = State.DrinkingBeer;
+                    currentState = State.DrinkingBeer;
                     return;
                 }
             }
@@ -129,7 +128,7 @@ namespace Lab6
             }
             establishment.Bar.RemovePatronFromBarQueue(this);
             Holding.Add(establishment.Bar.TakeGlassFromBarTop());
-            CurrentState = State.WalkingToTable;
+            currentState = State.WalkingToTable;
         }
         void LeavingEstablishment(Establishment establishment)
         {
@@ -139,11 +138,11 @@ namespace Lab6
                 chair.SetAvailability(true);
             }
             Log($"{this.Name} finished the beer and left the pub");
-            CurrentState = State.LeftPub;
+            currentState = State.LeftPub;
         }
         int SpeedModifier(int StartTime)
         {
-            return (int)((StartTime / PatronSpeed) / SimulationSpeed);
+            return (int)((StartTime / patronSpeed) / simulationSpeed);
         }
     }
 }

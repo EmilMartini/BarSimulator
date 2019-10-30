@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Lab6
 {
     public class Table
     {
-        ConcurrentBag<Glass> GlassesOnTable { get; set; }
-        ConcurrentBag<Chair> ChairsAroundTable { get; set; }
-        ConcurrentQueue<Patron> ChairQueue { get; set; }
+        ConcurrentBag<Glass> GlassesOnTable;
+        ConcurrentBag<Chair> ChairsAroundTable;
+        ConcurrentQueue<Patron> ChairQueue;
         public Table(Establishment establishment)
         {
             GlassesOnTable = new ConcurrentBag<Glass>();
@@ -73,6 +74,26 @@ namespace Lab6
         public void EnqueuePatron(Patron patron)
         {
             ChairQueue.Enqueue(patron);
+        }
+        public void PutGlassOnTable(Glass glass)
+        {
+            GlassesOnTable.Add(glass);
+        }
+
+        public int NumberOfGlasses()
+        {
+            return GlassesOnTable.Count();
+        }
+
+
+        //KOLLA IGENOM
+        public List<Glass> RemoveGlasses()
+        {
+            int glassesToRemove = GlassesOnTable.Count;
+            List<Glass> glassesToReturn = new List<Glass>();
+            glassesToReturn.AddRange(GlassesOnTable.Take<Glass>(glassesToRemove).ToList());
+            GlassesOnTable = new ConcurrentBag<Glass>(GlassesOnTable.Except(glassesToReturn));
+            return glassesToReturn;
         }
     }
 }
