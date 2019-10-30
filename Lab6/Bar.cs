@@ -19,7 +19,7 @@ namespace Lab6
             BarQueue = new ConcurrentQueue<Patron>();
             FillShelf(establishment);
         }
-        private void FillShelf(Establishment establishment)
+        void FillShelf(Establishment establishment)
         {
             for (int i = 0; i < establishment.MaxGlasses; i++)
             {
@@ -35,6 +35,10 @@ namespace Lab6
                 return true;
             }
             return false;
+        }
+        public int GetNumberOfGlassesInBarShelf()
+        {
+            return Shelf.Count();
         }
         public Glass GetGlassFromShelf()
         {
@@ -79,6 +83,18 @@ namespace Lab6
         public void RemovePatronFromBarQueue(Patron patron)
         {
             BarQueue.TryDequeue(out patron);
+        }
+        public bool CheckBarQueue()
+        {
+            if (BarQueue.Count > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        public Patron GetFirstInBarQueue()
+        {
+            return BarQueue.First();
         }
     }
 }

@@ -97,7 +97,7 @@ namespace Lab6
         {
 
             window.PatronsInPubLabel.Content = $"Patrons in bar: {establishment.CurrentPatrons.Count} (Total: {establishment.TotalPatrons})";
-            window.CleanGlassesLabel.Content = $"Number of clean glasses: {establishment.Bar.Shelf.Count} (Max: {establishment.MaxGlasses})";
+            window.CleanGlassesLabel.Content = $"Number of clean glasses: {establishment.Bar.GetNumberOfGlassesInBarShelf()} (Max: {establishment.MaxGlasses})";
 
             window.FreeChairsLabel.Content = $"Number of available chairs: {establishment.Table.GetNumberOfAvailableChairs()} (Max: {establishment.MaxChairs})";
             window.TimeToCloseLabel.Content = "Time left until closing: " + $"{GetElapsedTime(DateTime.Now).ToString(@"mm\:ss")}";
