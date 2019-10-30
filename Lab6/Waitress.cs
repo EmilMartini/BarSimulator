@@ -57,7 +57,7 @@ namespace Lab6
             Log("shelfing washed glasses");
             foreach (var glass in CarryingGlasses)
             {
-                bar.Shelf.Add(glass);
+                bar.AddGlassToShelf(glass);
             }
             CarryingGlasses.RemoveRange(0, CarryingGlasses.Count);
             CurrentState = State.WaitingForDirtyGlass;

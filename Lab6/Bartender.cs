@@ -46,14 +46,7 @@ namespace Lab6
         {
             return (int)(StartTime / SimulationSpeed);
         }
-        bool CheckBarQueue(Bar bar)
-        {
-            if (bar.BarQueue.Count > 0)
-            {
-                return true;
-            }
-            return false;
-        }
+        
         
         void WaitingForPatron(Establishment establishment)
         {
@@ -62,12 +55,12 @@ namespace Lab6
                 CurrentState = State.LeavingWork;
                 return;
             }
-            if (!CheckBarQueue(establishment.Bar))
+            if (!establishment.Bar.CheckBarQueue())
             {
                 Log("waiting for a patron");
             }
             Thread.Sleep(SpeedModifier(300));
-            while (!CheckBarQueue(establishment.Bar))
+            while (!establishment.Bar.CheckBarQueue())
             {
                 if(establishment.CurrentPatrons.Count <= 0 && !establishment.IsOpen)
                 {
@@ -94,7 +87,7 @@ namespace Lab6
                 glass = bar.GetGlassFromShelf();
                 Log("fetching glass");
                 Thread.Sleep(SpeedModifier(3000));
-                Log($"pouring {bar.BarQueue.First().Name} a beer");
+                Log($"pouring {bar.GetFirstInBarQueue().Name} a beer");
                 Thread.Sleep(SpeedModifier(3000));
                 bar.AddGlassToBarTop(glass);
                 CurrentState = State.WaitingForPatron;

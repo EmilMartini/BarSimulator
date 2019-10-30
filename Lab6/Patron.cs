@@ -122,12 +122,12 @@ namespace Lab6
         }
         void WaitingForBeer(Establishment establishment)
         {
-            while (!establishment.Bar.CheckBarTopForBeer() || establishment.Bar.CheckIfFirstInBarQueue(this))
+            while (!establishment.Bar.CheckBarTopForBeer() || !establishment.Bar.CheckIfFirstInBarQueue(this))
             {
                 Thread.Sleep(SpeedModifier(300));
             }
             establishment.Bar.RemovePatronFromBarQueue(this);
-            Holding.Add(establishment.Bar.TakeGlassFromBarTop());
+            holding.Add(establishment.Bar.TakeGlassFromBarTop());
             currentState = State.WalkingToTable;
         }
         void LeavingEstablishment(Establishment establishment)
