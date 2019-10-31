@@ -68,7 +68,7 @@ namespace Lab6
         double simulationSpeed;
         double bouncerSpeed;
         int patronsPerEntry;
-        State currentState;
+        State currentState = State.Waiting;
         public Bouncer(Establishment establishment)
         {
             bouncerSpeed = establishment.BouncerSpeed;
@@ -81,7 +81,6 @@ namespace Lab6
         }
         public void Simulate(Establishment establishment, CancellationToken ct)
         {
-            currentState = State.Working;
             Task.Run(() =>
             {
                 while(currentState != State.StopBouncer && !ct.IsCancellationRequested)
