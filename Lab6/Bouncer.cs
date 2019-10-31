@@ -123,7 +123,7 @@ namespace Lab6
                     } 
                     else
                     {
-                        patronsPerEntry = 20;
+                        patronsPerEntry = 15;
                         Log("Bus arrived");
                         busArrived = true;
                         break;
