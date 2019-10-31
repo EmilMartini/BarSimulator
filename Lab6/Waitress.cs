@@ -18,7 +18,7 @@ namespace Lab6
         public Waitress(Establishment establishment)
         {
             CurrentState = State.WaitingForDirtyGlass;
-            carryingGlasses = new List<Glass>();
+            carryingGlasses = new List<Glass>(); 
             waitressSpeed = establishment.WaitressSpeed;
             simulationSpeed = establishment.SimulationSpeed;
         }
@@ -53,18 +53,18 @@ namespace Lab6
         }
         void WaitingForDirtyGlass(Establishment establishment)
         {
-            if (!establishment.IsOpen && establishment.CurrentPatrons.Count < 1)
+            if (TimeToGoHome(establishment))
             {
                 CurrentState = State.LeavingWork;
                 return;
             }
-            if (establishment.Table.NumberOfGlasses() == 0)
+            if (establishment.Table.NumberOfGlasses() == 0) 
             {
                 Log("is waiting for dirty glasses");
             }
             while (establishment.Table.NumberOfGlasses() == 0)
             {
-                if (!establishment.IsOpen && establishment.CurrentPatrons.Count < 1)
+                if (TimeToGoHome(establishment))
                 {
                     CurrentState = State.LeavingWork;
                     return;
@@ -72,6 +72,14 @@ namespace Lab6
                 Thread.Sleep(SpeedModifier(300));
             }
             CurrentState = State.PickingUpGlass;
+        }
+        bool TimeToGoHome(Establishment establishment)
+        {
+            if (!establishment.IsOpen && establishment.CurrentPatrons.Count < 1)
+            {
+                return true;
+            }
+            return false;
         }
         void PickingUpGlass(Table table)
         {

@@ -10,11 +10,11 @@ namespace Lab6
         enum State { WaitingForPatron, WaitingForCleanGlass, PouringBeer, LeavingWork , LeftWork}
         public event Action<string> Log;
         State currentState;
-        double SsmulationSpeed;
+        double simulationSpeed;
         public Bartender(Establishment establishment)
         {
             currentState = State.WaitingForPatron;
-            SsmulationSpeed = establishment.SimulationSpeed;
+            simulationSpeed = establishment.SimulationSpeed;
         }
         public void Simulate(Establishment est, CancellationToken ct)
         {
@@ -44,11 +44,11 @@ namespace Lab6
         }
         int SpeedModifier(int StartTime)
         {
-            return (int)(StartTime / SsmulationSpeed);
+            return (int)(StartTime / simulationSpeed);
         }
         void WaitingForPatron(Establishment establishment)
         {
-            if (establishment.CurrentPatrons.Count <= 0 && !establishment.IsOpen)
+            if (establishment.CurrentPatrons.Count <= 0 && !establishment.IsOpen) //Återigen count bör vara en metod
             {
                 currentState = State.LeavingWork;
                 return;

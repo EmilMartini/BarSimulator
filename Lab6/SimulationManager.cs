@@ -22,11 +22,11 @@ namespace Lab6
         {
             dispatcherTimer = new DispatcherTimer();
             establishment = GetEstablishment(stateToRun, simulationSpeed);
-            window = (MainWindow)App.Current.MainWindow;
+            window = (MainWindow)App.Current.MainWindow; 
             bouncer = new Bouncer(establishment);
             bartender = new Bartender(establishment);
             waitress = new Waitress(establishment);
-            logManager = new LogManager(window, this);
+            logManager = new LogManager(window, this); 
         }
         public void StartSimulation()
         {
@@ -96,11 +96,11 @@ namespace Lab6
         void TimerTick(object sender, EventArgs e)
         {
 
-            //window.PatronsInPubLabel.Content = $"Patrons in bar: {establishment.CurrentPatrons.Count} (Total: {establishment.TotalPatrons})";
-            //window.CleanGlassesLabel.Content = $"Number of clean glasses: {establishment.Bar.GetNumberOfGlassesInBarShelf()} (Max: {establishment.MaxGlasses})";
-            //window.FreeChairsLabel.Content = $"Number of available chairs: {establishment.Table.GetNumberOfAvailableChairs()} (Max: {establishment.MaxChairs})";
-            //window.TimeToCloseLabel.Content = "Time left until closing: " + $"{GetElapsedTime(DateTime.Now).ToString(@"mm\:ss")}";
-            //window.BarIsOpenLabel.Content = establishment.IsOpen ? @"Bar is: Open" : $"Bar is: Closed";
+            window.PatronsInPubLabel.Content = $"Patrons in bar: {establishment.CurrentPatrons.Count} (Total: {establishment.TotalPatrons})";
+            window.CleanGlassesLabel.Content = $"Number of clean glasses: {establishment.Bar.GetNumberOfGlassesInBarShelf()} (Max: {establishment.MaxGlasses})";
+            window.FreeChairsLabel.Content = $"Number of available chairs: {establishment.Table.GetNumberOfAvailableChairs()} (Max: {establishment.MaxChairs})";
+            window.TimeToCloseLabel.Content = "Time left until closing: " + $"{GetElapsedTime(DateTime.Now).ToString(@"mm\:ss")}";
+            window.BarIsOpenLabel.Content = establishment.IsOpen ? @"Bar is: Open" : $"Bar is: Closed";
         }
         TimeSpan GetElapsedTime(DateTime now)
         {

@@ -9,11 +9,17 @@ namespace Lab6
     /// </summary>
     public partial class MainWindow : Window
     {
-        SimulationManager Manager;
-        public MainWindow()
+        SimulationManager manager; //Liten bokstav på privata fält
+        public MainWindow()  
         {
             InitializeComponent();
             DisplaySettingsMenu();
+            //Hade kunnat lägga settings i ett nytt window för att slippa pilla på hidden
+            //Ni får ändra så att det inte kommer in en gäst direkt när baren öppnar
+            //Enkapsulera CurrentPatrons i establishement
+            //Ni tar väldigt många parametrerar i konstruktorn för establishmenten, inte lättläsligt
+            //GetFirstChairFromCondition i denna metoden använder ni inte parametern ni skickar in
+            
         }
         private void DisplaySettingsMenu()
         {
@@ -81,7 +87,8 @@ namespace Lab6
             patronSimSpeedLabel.Visibility = Visibility.Hidden;
             waitressSimSpeedLabel.Visibility = Visibility.Hidden;
         }
-        private void ComboBox_Initialized(object sender, EventArgs e)
+        private void ComboBox_Initialized(object sender, EventArgs e) 
+            //Vad är comboBox? Antar att det har med settings att göra
         {
             SimulationStateDropDown.ItemsSource = Enum.GetValues(typeof(SimulationState)).Cast<SimulationState>();
         }
@@ -90,8 +97,8 @@ namespace Lab6
             try
             {
                 DisplaySimulation();
-                Manager = new SimulationManager((SimulationState)SimulationStateDropDown.SelectedItem, double.Parse(speedModifierTextbox.Text));
-                Manager.StartSimulation();
+                manager = new SimulationManager((SimulationState)SimulationStateDropDown.SelectedItem, double.Parse(speedModifierTextbox.Text));
+                manager.StartSimulation();
             } catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
@@ -141,7 +148,7 @@ namespace Lab6
         }
         private void CloseSimButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Manager.StopSimulation())
+            if (manager.StopSimulation())
             {
                 DisplaySettingsMenu();
             }

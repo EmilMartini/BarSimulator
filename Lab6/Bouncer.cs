@@ -74,7 +74,7 @@ namespace Lab6
             bouncerSpeed = establishment.BouncerSpeed;
             simulationSpeed = establishment.SimulationSpeed;
             patronsPerEntry = establishment.PatronsPerEntry;
-            if (establishment.isBusloadState)
+            if (establishment.IsBusloadState)
             {
                 busTimer = DateTime.Now + new TimeSpan(0, 0, 20);
             }
@@ -107,7 +107,7 @@ namespace Lab6
             while((DateTime.Now < timeToSleep) && !ct.IsCancellationRequested && establishment.IsOpen)
             {
                 Thread.Sleep(10);
-                if (!establishment.isBusloadState || busArrived)
+                if (!establishment.IsBusloadState || busArrived)
                 {
                     continue;
                 }
