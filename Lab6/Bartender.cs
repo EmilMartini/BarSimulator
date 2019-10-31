@@ -86,6 +86,7 @@ namespace Lab6
                 Thread.Sleep(SpeedModifier(3000));
                 Log($"pouring {bar.GetFirstInBarQueue().Name} a beer");
                 Thread.Sleep(SpeedModifier(3000));
+                glass.CurrentState = Glass.State.Full;
                 bar.AddGlassToBarTop(glass);
                 currentState = State.WaitingForPatron;
             } 
