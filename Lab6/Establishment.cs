@@ -26,7 +26,7 @@ namespace Lab6
         {
             MaxGlasses = maxGlasses;
             MaxChairs = maxChairs;
-            TimeToClose = timeToClose;
+            TimeToClose = CalculateTimeToClose(timeToClose, simulationSpeed);
             SimulationSpeed = simulationSpeed;
             WaitressSpeed = waitressSpeed;
             BouncerSpeed = bouncerSpeed;
@@ -37,6 +37,11 @@ namespace Lab6
             IsOpen = true; 
             Bar = new Bar(this);
             CurrentPatrons = new List<Patron>();
+        }
+
+        private TimeSpan CalculateTimeToClose(TimeSpan input, double simulationSpeed)
+        {
+            return TimeSpan.FromSeconds(input.TotalSeconds / simulationSpeed);
         }
 
         public void SetChairAvailable(Patron patron)

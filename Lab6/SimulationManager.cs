@@ -71,7 +71,7 @@ namespace Lab6
                 case SimulationState.BusLoad:
                     return new Establishment(8, 9, new TimeSpan(0, 2, 0), 1, simulationSpeed, 1, 1, 0.5, true);
                 case SimulationState.CrazyState:
-                    return new Establishment(100, 100, new TimeSpan(1, 0, 0), 5,5,0.5,2,1,true);
+                    return new Establishment(100, 100, new TimeSpan(1, 0, 0), 5,simulationSpeed,0.5,2,1,true);
             }
             return null;
         }

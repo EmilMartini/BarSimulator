@@ -90,7 +90,7 @@ namespace Lab6
             double parsed;
             if(double.TryParse(speedModifierTextbox.Text.Replace('.',','), out parsed))
             {
-                if(parsed > 0)
+                if(parsed > 0 && parsed < 11)
                 {
                     DisplaySimulation();
                     Manager = new SimulationManager((SimulationState)SimulationStateDropDown.SelectedItem, parsed);
