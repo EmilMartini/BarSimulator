@@ -40,7 +40,7 @@ namespace Lab6
         {
             foreach (var chair in ChairsAroundTable)
             {
-                if (chair.Available)
+                if (chair.Available == availableCondition)
                 {
                     return chair;
                 }

@@ -100,8 +100,8 @@ namespace Lab6
                 if(parsed > 0 && parsed < 11)
                 {
                     DisplaySimulation();
-                    Manager = new SimulationManager((SimulationState)SimulationStateDropDown.SelectedItem, parsed);
-                    Manager.StartSimulation();
+                    manager = new SimulationManager((SimulationState)SimulationStateDropDown.SelectedItem, parsed);
+                    manager.StartSimulation();
                 }
             }
         }
