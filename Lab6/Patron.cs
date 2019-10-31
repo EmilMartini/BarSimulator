@@ -79,22 +79,18 @@ namespace Lab6
             {
                 Thread.Sleep(SpeedModifier(300));
             }
-            var chair = establishment.Table.GetFirstChairFromCondition(true);
-            if(chair != null)
+            establishment.Table.GetFirstChairFromCondition(true).Available = false;
+            if (establishment.Table.TryDequeue(this))
             {
-                chair.Available = false;
-                if (establishment.Table.TryDequeue(this))
-                {
-                    currentState = State.DrinkingBeer;
-                    return;
-                }
+                currentState = State.DrinkingBeer;
+                return;
             }
         }
         void WaitingForBeer(Establishment establishment)
         {
             while (!establishment.Bar.CheckBarTopForBeer() || !establishment.Bar.CheckIfFirstInBarQueue(this))
             {
-                Thread.Sleep(SpeedModifier(300));
+                Thread.Sleep(SpeedModifier(100));
             }
             holding.Add(establishment.Bar.TakeGlassFromBarTop());
             establishment.Bar.RemovePatronFromBarQueue(this);
