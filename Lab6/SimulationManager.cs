@@ -75,18 +75,6 @@ namespace Lab6
             }
             return null;
         }
-        public Bartender GetBartender()
-        {
-            return bartender;
-        }
-        public Bouncer GetBouncer()
-        {
-            return bouncer;
-        }
-        public Waitress GetWaitress()
-        {
-            return waitress;
-        }
         void InitUITimer()
         {
            dispatcherTimer.Tick += TimerTick;
@@ -114,6 +102,18 @@ namespace Lab6
             {
                 return calculation;
             }
+        }
+        public Bartender GetBartender()
+        {
+            return bartender;
+        }
+        public Bouncer GetBouncer()
+        {
+            return bouncer;
+        }
+        public Waitress GetWaitress()
+        {
+            return waitress;
         }
     }
 }
