@@ -87,14 +87,15 @@ namespace Lab6
         }
         private void StartSimButton_Click(object sender, RoutedEventArgs e)
         {
-            try
+            double parsed;
+            if(double.TryParse(speedModifierTextbox.Text.Replace('.',','), out parsed))
             {
-                DisplaySimulation();
-                Manager = new SimulationManager((SimulationState)SimulationStateDropDown.SelectedItem, double.Parse(speedModifierTextbox.Text));
-                Manager.StartSimulation();
-            } catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+                if(parsed > 0)
+                {
+                    DisplaySimulation();
+                    Manager = new SimulationManager((SimulationState)SimulationStateDropDown.SelectedItem, parsed);
+                    Manager.StartSimulation();
+                }
             }
         }
         private void SimulationStateDropDown_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

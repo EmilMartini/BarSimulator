@@ -59,7 +59,6 @@
     <Compile Include="Bartender.cs" />
     <Compile Include="Bouncer.cs" />
     <Compile Include="Chair.cs" />
-    <Compile Include="DisplayManager.cs" />
     <Compile Include="Establishment.cs" />
     <Compile Include="Glass.cs" />
     <Compile Include="LogManager.cs" />
