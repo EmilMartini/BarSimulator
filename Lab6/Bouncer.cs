@@ -10,7 +10,6 @@ namespace Lab6
         enum State { Waiting, Working, LeavingWork, StopBouncer}
         public event Action<string> Log;
         Random random = new Random();
-
         List<string> patronNames = new List<string>()
         {
             "Emma",
@@ -70,7 +69,6 @@ namespace Lab6
         double bouncerSpeed;
         int patronsPerEntry;
         State currentState;
-
         public Bouncer(Establishment establishment)
         {
             bouncerSpeed = establishment.BouncerSpeed;
@@ -103,26 +101,6 @@ namespace Lab6
                 }
             });
         }
-        void LeavingWork()
-        {
-            Log("Bouncer has left the pub.");// => Logger.Log(LogLevel.Info, Category.Bouncer, "Bouncer has left the pub.");
-            currentState = State.StopBouncer;
-        }
-        void Work(Establishment establishment, CancellationToken ct)
-        {
-            if (!establishment.IsOpen)
-            {
-                currentState = State.LeavingWork;
-                return;
-            }
-            for (int i = 0; i < patronsPerEntry; i++)
-            {
-                establishment.TotalPatrons++;
-                Patron patron = new Patron(patronNames[random.Next(0, patronNames.Count - 1)], establishment, ct);
-                establishment.CurrentPatrons.Insert(0, patron);
-            }
-            currentState = State.Waiting;
-        }
         void Wait(CancellationToken ct, Establishment establishment)
         {
             var timeToSleep = CalculateTimeToSleep(3000, 10001);
@@ -153,6 +131,26 @@ namespace Lab6
                 }
             }
             currentState = State.Working;
+        }
+        void Work(Establishment establishment, CancellationToken ct)
+        {
+            if (!establishment.IsOpen)
+            {
+                currentState = State.LeavingWork;
+                return;
+            }
+            for (int i = 0; i < patronsPerEntry; i++)
+            {
+                establishment.TotalPatrons++;
+                Patron patron = new Patron(patronNames[random.Next(0, patronNames.Count - 1)], establishment, ct);
+                establishment.CurrentPatrons.Insert(0, patron);
+            }
+            currentState = State.Waiting;
+        }
+        void LeavingWork()
+        {
+            Log("Bouncer has left the pub.");// => Logger.Log(LogLevel.Info, Category.Bouncer, "Bouncer has left the pub.");
+            currentState = State.StopBouncer;
         }
         DateTime CalculateTimeToSleep(int minRange, int maxRange)
         {
