@@ -73,7 +73,7 @@ namespace Lab6
         }
         bool TimeToGoHome(Establishment establishment)
         {
-            if (!establishment.IsOpen && establishment.CurrentPatrons.Count < 1)
+            if (!establishment.IsOpen && establishment.NumberOfCurrentPatrons() < 1)
             {
                 return true;
             }

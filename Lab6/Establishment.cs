@@ -8,6 +8,7 @@ namespace Lab6
     {
 
         int totalPatrons;
+        List<Patron> currentPatrons;
         public int MaxGlasses { get; private set; }
         public int MaxChairs { get; private set; }
         public double SimulationSpeed { get; private set; }
@@ -19,7 +20,6 @@ namespace Lab6
         public TimeSpan TimeToClose { get; private set; }
         public Table Table { get; private set; }
         public Bar Bar { get; private set; }
-        public List<Patron> CurrentPatrons { get; private set; }
         public bool IsBusloadState { get; private set; }
 
         public Establishment(int maxGlasses, int maxChairs, TimeSpan timeToClose,int patronsPerEntry, double simulationSpeed, double patronSpeed, double waitressSpeed, double bouncerSpeed, bool isBusload)
@@ -36,28 +36,33 @@ namespace Lab6
             Table = new Table(this);
             IsOpen = true; 
             Bar = new Bar(this);
-            CurrentPatrons = new List<Patron>();
+            currentPatrons = new List<Patron>();
         }
 
         TimeSpan CalculateTimeToClose(TimeSpan input, double simulationSpeed)
         {
             return TimeSpan.FromSeconds(input.TotalSeconds / simulationSpeed);
         }
-
-        public void SetChairAvailable(Patron patron)
+        public void SetChairAvailable()
         {
-            var chair = Table.GetFirstChairFromCondition(false);
-            chair.Available = true;
+            Table.GetFirstChairFromCondition(false).Available = true;
         }
-
         public void AddPatron(Patron patron)
         {
-            CurrentPatrons.Insert(0, patron);
+            currentPatrons.Insert(0, patron);
             totalPatrons++;
+        }
+        public void RemovePatron(Patron patron)
+        {
+            currentPatrons.Remove(patron);
         }
         public int TotalNumberOfPatrons()
         {
             return totalPatrons;
+        }
+        public int NumberOfCurrentPatrons()
+        {
+            return currentPatrons.Count;
         }
     }
 }

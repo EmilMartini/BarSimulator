@@ -45,7 +45,6 @@ namespace Lab6
                             break;
                         case State.LeavingEstablishment:
                             LeavingEstablishment(establishment);
-                            RemovePatron(this, establishment);
                             break;
                         case State.WalkingToBar:
                             WalkingToBar(establishment);
@@ -111,11 +110,8 @@ namespace Lab6
         {
             establishment.Table.GetFirstChairFromCondition(false).Available = true;
             Log($"{this.Name} finished the beer and left the pub");
+            establishment.RemovePatron(this);
             currentState = State.LeftPub;
-        }
-        void RemovePatron(Patron patron, Establishment establishment)
-        {
-            establishment.CurrentPatrons.Remove(patron);
         }
         bool CheckForEmptyChair(Establishment establishment)
         {
