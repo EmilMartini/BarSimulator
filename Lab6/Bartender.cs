@@ -15,7 +15,7 @@ namespace Lab6
             currentState = State.WaitingForPatron;
             simulationSpeed = establishment.SimulationSpeed;
         }
-        public void Simulate(Establishment est, CancellationToken ct)
+        public void Simulate(Establishment establishment, CancellationToken ct)
         {
             Task.Run(() =>
             {
@@ -24,13 +24,13 @@ namespace Lab6
                     switch (currentState)
                     {
                         case State.WaitingForPatron:
-                            WaitingForPatron(est);
+                            WaitingForPatron(establishment);
                             break;
                         case State.WaitingForCleanGlass:
-                            WaitingForCleanGlass(est.Bar);
+                            WaitingForCleanGlass(establishment.Bar);
                             break;
                         case State.PouringBeer:
-                            PouringBeer(est.Bar);
+                            PouringBeer(establishment.Bar);
                             break;
                         case State.LeavingWork:
                             LeavingWork();
@@ -47,24 +47,24 @@ namespace Lab6
         }
         void WaitingForPatron(Establishment establishment)
         {
-            if (establishment.CurrentPatrons.Count <= 0 && !establishment.IsOpen) //Återigen count bör vara en metod
+            if (TimeToGoHome(establishment))
             {
                 currentState = State.LeavingWork;
                 return;
             }
+            Thread.Sleep(SpeedModifier(300));
             if (!establishment.Bar.CheckBarQueue())
             {
                 Log("waiting for a patron");
-            }
-            Thread.Sleep(SpeedModifier(300));
-            while (!establishment.Bar.CheckBarQueue())
-            {
-                if(establishment.CurrentPatrons.Count <= 0 && !establishment.IsOpen)
+                while (!establishment.Bar.CheckBarQueue())
                 {
-                    currentState = State.LeavingWork;
-                    return;
+                    if(TimeToGoHome(establishment))
+                    {
+                        currentState = State.LeavingWork;
+                        return;
+                    }
+                    Thread.Sleep(SpeedModifier(300));
                 }
-                Thread.Sleep(SpeedModifier(300));
             }
             if (establishment.Bar.CheckBarShelfForGlass())
             {
@@ -74,6 +74,14 @@ namespace Lab6
             {
                 currentState = State.WaitingForCleanGlass;
             }
+        }
+        bool TimeToGoHome(Establishment establishment)
+        {
+            if (!establishment.IsOpen && establishment.CurrentPatrons.Count < 1)
+            {
+                return true;
+            }
+            return false;
         }
         void PouringBeer(Bar bar)
         {
@@ -99,12 +107,12 @@ namespace Lab6
             if (!bar.CheckBarShelfForGlass())
             {
                 Log("is waiting at the shelf for a clean glass");
+                while (!bar.CheckBarShelfForGlass())
+                {
+                    Thread.Sleep(SpeedModifier(300));
+                }
             }
-            while (!bar.CheckBarShelfForGlass())
-            {
-                Thread.Sleep(SpeedModifier(300));
-            }
-            if (bar.CheckBarShelfForGlass())
+            else 
             {
                 currentState = State.PouringBeer;
             }
