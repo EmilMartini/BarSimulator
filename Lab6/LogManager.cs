@@ -6,31 +6,30 @@ namespace Lab6
     public class LogManager
     {
         DateTime startTime;
-        static MainWindow PresentationLayer;
+        static MainWindow view;
         Bouncer bouncer;
         Bartender bartender;
         Waitress waitress;
-        List<string> WaitressLogMessages;
-        List<string> BartenderLogMessages;
-        List<string> PatronLogMessages;
-        public LogManager(MainWindow presentationLayer, SimulationManager sim)
+        List<string> waitressLogMessages;
+        List<string> bartenderLogMessages;
+        List<string> patronLogMessages;
+        public LogManager(MainWindow view, SimulationManager sim)
         {
-            PresentationLayer = presentationLayer;
-            InitLogManager(PresentationLayer, sim);
+            InitLogManager(view, sim);
         }
-        void InitLogManager(MainWindow presentationLayer, SimulationManager sim)
+        void InitLogManager(MainWindow view, SimulationManager simulationManager)
         {
             startTime = DateTime.UtcNow;
-            PresentationLayer = presentationLayer;
-            bouncer = sim.GetBouncer();
-            waitress = sim.GetWaitress();
-            bartender = sim.GetBartender();
-            WaitressLogMessages = new List<string>();
-            BartenderLogMessages = new List<string>();
-            PatronLogMessages = new List<string>();
-            presentationLayer.WaitressListbox.ItemsSource = WaitressLogMessages;
-            presentationLayer.BartenderListbox.ItemsSource = BartenderLogMessages;
-            presentationLayer.PatronsListbox.ItemsSource = PatronLogMessages;
+            LogManager.view = view;
+            bouncer = simulationManager.GetBouncer();
+            waitress = simulationManager.GetWaitress();
+            bartender = simulationManager.GetBartender();
+            waitressLogMessages = new List<string>();
+            bartenderLogMessages = new List<string>();
+            patronLogMessages = new List<string>();
+            view.WaitressListbox.ItemsSource = waitressLogMessages;
+            view.BartenderListbox.ItemsSource = bartenderLogMessages;
+            view.PatronsListbox.ItemsSource = patronLogMessages;
             SubscribeToEvents();
         }
         void SubscribeToEvents()
@@ -42,24 +41,24 @@ namespace Lab6
         }
         void OnWaitressLogEvent(string s)
         {
-            Print(GetTime, PresentationLayer, PresentationLayer.WaitressListbox, WaitressLogMessages, s);
+            Print(GetTime, view, view.WaitressListbox, waitressLogMessages, s);
         }
         void OnBouncerLogEvent(string s)
         {
-            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, PatronLogMessages, s);
+            Print(GetTime, view, view.PatronsListbox, patronLogMessages, s);
         }
         void OnBartenderLogEvent(string s)
         {
-            Print(GetTime, PresentationLayer, PresentationLayer.BartenderListbox, BartenderLogMessages, s);
+            Print(GetTime, view, view.BartenderListbox, bartenderLogMessages, s);
         }
         void OnPatronLogEvent(string message)
         {
-            Print(GetTime, PresentationLayer, PresentationLayer.PatronsListbox, PatronLogMessages, message);
+            Print(GetTime, view, view.PatronsListbox, patronLogMessages, message);
         }   
-        void Print(Func<DateTime,TimeSpan>func, MainWindow PresentationLayer, System.Windows.Controls.ListBox listBox,List<string> list,string message)
+        void Print(Func<DateTime,TimeSpan>func, MainWindow view, System.Windows.Controls.ListBox listBox,List<string> list,string message)
         {
             var timeStamp = func(DateTime.UtcNow);
-            PresentationLayer.Dispatcher.Invoke(() => 
+            view.Dispatcher.Invoke(() => 
             {
                 list.Insert(0, $"{timeStamp.ToString(@"mm\:ss")} {message}");
                 listBox.Items.Refresh();

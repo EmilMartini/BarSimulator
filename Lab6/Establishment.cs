@@ -7,6 +7,7 @@ namespace Lab6
     public class Establishment
     {
 
+        int totalPatrons;
         public int MaxGlasses { get; private set; }
         public int MaxChairs { get; private set; }
         public double SimulationSpeed { get; private set; }
@@ -19,8 +20,7 @@ namespace Lab6
         public Table Table { get; private set; }
         public Bar Bar { get; private set; }
         public List<Patron> CurrentPatrons { get; private set; }
-        public int TotalPatrons { get; set; }
-        public bool IsBusloadState { get; private set; } 
+        public bool IsBusloadState { get; private set; }
 
         public Establishment(int maxGlasses, int maxChairs, TimeSpan timeToClose,int patronsPerEntry, double simulationSpeed, double patronSpeed, double waitressSpeed, double bouncerSpeed, bool isBusload)
         {
@@ -39,7 +39,7 @@ namespace Lab6
             CurrentPatrons = new List<Patron>();
         }
 
-        private TimeSpan CalculateTimeToClose(TimeSpan input, double simulationSpeed)
+        TimeSpan CalculateTimeToClose(TimeSpan input, double simulationSpeed)
         {
             return TimeSpan.FromSeconds(input.TotalSeconds / simulationSpeed);
         }
@@ -48,6 +48,16 @@ namespace Lab6
         {
             var chair = Table.GetFirstChairFromCondition(false);
             chair.Available = true;
+        }
+
+        public void AddPatron(Patron patron)
+        {
+            CurrentPatrons.Insert(0, patron);
+            totalPatrons++;
+        }
+        public int TotalNumberOfPatrons()
+        {
+            return totalPatrons;
         }
     }
 }

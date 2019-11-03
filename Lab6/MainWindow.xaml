@@ -20,10 +20,10 @@
         <Label x:Name="FreeChairsLabel" Content="Available chairs (Total chairs)" HorizontalAlignment="Left" Margin="864,231,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
         <Label x:Name="SettingsLabel" Content="Setting" HorizontalAlignment="Left" Height="26" Margin="477,187,0,0" VerticalAlignment="Top" Width="156" Visibility="Hidden"/>
         <Label x:Name="TimeToCloseLabel" Content="Time to closing" HorizontalAlignment="Left" Margin="864,267,0,0" VerticalAlignment="Top" Height="31" Width="223" Visibility="Visible"/>
-        <ComboBox x:Name="SimulationStateDropDown" HorizontalAlignment="Left" Margin="477,213,0,0" VerticalAlignment="Top" Width="156" Height="48" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Visibility="Hidden" SelectionChanged="SimulationStateDropDown_SelectionChanged"/>
+        <ComboBox x:Name="SimulationStateDropDown" HorizontalAlignment="Left" Margin="477,213,0,0" VerticalAlignment="Top" Width="156" Height="48" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Visibility="Hidden"/>
         <Button x:Name="StartSimButton" Content="Open&#xD;&#xA;Pub" HorizontalAlignment="Left" Margin="638,213,0,0" VerticalAlignment="Top" Width="75" Height="48" Click="StartSimButton_Click" Visibility="Hidden"/>
         <Label x:Name="BartenderLabel" Content="Bartender" HorizontalAlignment="Left" Margin="35,98,0,0" VerticalAlignment="Top" Width="241" Visibility="Visible"/>
-        <TextBox x:Name="speedModifierTextbox" HorizontalAlignment="Left" Height="23" Margin="638,190,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="75" Visibility="Hidden"/>
+        <TextBox x:Name="speedModifierTextbox" HorizontalAlignment="Left" Height="23" Margin="638,190,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="75" Visibility="Hidden" TextChanged="SpeedModifierTextbox_TextChanged"/>
         <Label x:Name="SimulationSpeedLabel" Content="Simulation&#xD;&#xA;Speed" HorizontalAlignment="Left" Margin="638,148,0,0" VerticalAlignment="Top" Width="75" Visibility="Hidden"/>
         <Label x:Name="SimulationSpeedLabelInfo" Content="" HorizontalAlignment="Left" Margin="864,129,0,0" VerticalAlignment="Top" Width="223" Visibility="Visible"/>
         <Label x:Name="maxGlassesLabel" Content="Max Glasses:" HorizontalAlignment="Left" Margin="234,142,0,0" VerticalAlignment="Top" Width="180" Visibility="Visible"/>

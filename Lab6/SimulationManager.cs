@@ -13,14 +13,14 @@ namespace Lab6
         Waitress waitress;
         LogManager logManager;
         MainWindow window;
-        DispatcherTimer dispatcherTimer;
+        DispatcherTimer timer;
         DateTime timeToClose;
         CancellationTokenSource cts;
         CancellationToken ct;
 
         public SimulationManager(SimulationState stateToRun, double simulationSpeed)
         {
-            dispatcherTimer = new DispatcherTimer();
+            timer = new DispatcherTimer();
             establishment = GetEstablishment(stateToRun, simulationSpeed);
             window = (MainWindow)App.Current.MainWindow; 
             bouncer = new Bouncer(establishment);
@@ -32,7 +32,6 @@ namespace Lab6
         {
             cts = new CancellationTokenSource();
             ct = cts.Token;
-
             bouncer.Simulate(establishment, ct);
             bartender.Simulate(establishment, ct);
             waitress.Simulate(establishment,ct);
@@ -45,7 +44,7 @@ namespace Lab6
             cts.Cancel();
             if (ct.IsCancellationRequested)
             {
-                dispatcherTimer.Stop();
+                timer.Stop();
                 return true;
             }
             return false;
@@ -64,27 +63,26 @@ namespace Lab6
                     return new Establishment(8, 9, new TimeSpan(0, 2, 0), 1, simulationSpeed, 0.5, 1, 1, false);
                 case SimulationState.WaitressBoostMode:
                     return new Establishment(8, 9, new TimeSpan(0, 2, 0), 1, simulationSpeed, 1, 2, 1, false);
-                case SimulationState.BarOpenForFiveMins:
+                case SimulationState.BarOpenForFiveMinutes:
                     return new Establishment(8, 9, new TimeSpan(0, 5, 0), 1, simulationSpeed, 1, 1, 1, false);
                 case SimulationState.CouplesNight:
                     return new Establishment(8, 9, new TimeSpan(0, 2, 0), 2, simulationSpeed, 1, 1, 1, false);
                 case SimulationState.BusLoad:
                     return new Establishment(8, 9, new TimeSpan(0, 2, 0), 1, simulationSpeed, 1, 1, 0.5, true);
-                case SimulationState.CrazyState:
+                case SimulationState.CrazyMode:
                     return new Establishment(100, 100, new TimeSpan(1, 0, 0), 5,simulationSpeed,0.5,2,1,true);
             }
             return null;
         }
         void InitUITimer()
         {
-           dispatcherTimer.Tick += TimerTick;
-           dispatcherTimer.Interval = new TimeSpan(0,0,0,0,100);
-           dispatcherTimer.Start();
+           timer.Tick += TimerTick;
+           timer.Interval = new TimeSpan(0,0,0,0,100);
+           timer.Start();
         }
         void TimerTick(object sender, EventArgs e)
         {
-
-            window.PatronsInPubLabel.Content = $"Patrons in bar: {establishment.CurrentPatrons.Count} (Total: {establishment.TotalPatrons})";
+            window.PatronsInPubLabel.Content = $"Patrons in bar: {establishment.CurrentPatrons.Count} (Total: {establishment.TotalNumberOfPatrons()})";
             window.CleanGlassesLabel.Content = $"Number of clean glasses: {establishment.Bar.GetNumberOfGlassesInBarShelf()} (Max: {establishment.MaxGlasses})";
             window.FreeChairsLabel.Content = $"Number of available chairs: {establishment.Table.GetNumberOfAvailableChairs()} (Max: {establishment.MaxChairs})";
             window.TimeToCloseLabel.Content = "Time left until closing: " + $"{GetElapsedTime(DateTime.Now).ToString(@"mm\:ss")}";

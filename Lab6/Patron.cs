@@ -14,13 +14,13 @@ namespace Lab6
         State currentState;
         double patronSpeed;
         double simulationSpeed;
-        ConcurrentBag<Glass> holding;
+        ConcurrentBag<Glass> carrying;
         public string Name { get; private set; }
         public Patron(string name, Establishment establishment, CancellationToken ct)
         {
             Name = name;
             currentState = State.WalkingToBar;
-            holding = new ConcurrentBag<Glass>();
+            carrying = new ConcurrentBag<Glass>();
             patronSpeed = establishment.PatronSpeed;
             simulationSpeed = establishment.SimulationSpeed;
             Simulate(establishment, ct);
@@ -96,29 +96,24 @@ namespace Lab6
             {
                 Thread.Sleep(SpeedModifier(300));
             }
-            holding.Add(establishment.Bar.TakeGlassFromBarTop());
+            carrying.Add(establishment.Bar.TakeGlassFromBarTop());
             establishment.Bar.RemovePatronFromBarQueue(this);
             currentState = State.WalkingToTable;
         }
         void DrinkingBeer(Establishment establishment)
         {
+            Glass glass;
             Log($"{this.Name} sits down and drinks a beer");
             Thread.Sleep(SpeedModifier(random.Next(20000, 30000)));
-            foreach (var glass in holding)
+            if(carrying.TryTake(out glass))
             {
-                glass.CurrentState = Glass.State.Dirty;
                 establishment.Table.PutGlassOnTable(glass);
-                holding = new ConcurrentBag<Glass>(holding.Except(new[] { glass }));
             }
             currentState = State.LeavingEstablishment;
         }
         void LeavingEstablishment(Establishment establishment)
         {
-            var chair = establishment.Table.GetFirstChairFromCondition(false);
-            if(chair != null)
-            {
-                chair.Available = true;
-            }
+            establishment.Table.GetFirstChairFromCondition(false).Available = true;
             Log($"{this.Name} finished the beer and left the pub");
             currentState = State.LeftPub;
         }

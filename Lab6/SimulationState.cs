@@ -7,9 +7,9 @@
         TwentyChairsFiveGlass,
         PatronsSlowMode,
         WaitressBoostMode,
-        BarOpenForFiveMins,
+        BarOpenForFiveMinutes,
         CouplesNight,
         BusLoad,
-        CrazyState
+        CrazyMode
     };
 }

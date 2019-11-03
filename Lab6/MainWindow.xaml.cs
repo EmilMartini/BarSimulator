@@ -11,66 +11,35 @@ namespace Lab6
     {
         SimulationManager manager; //Liten bokstav på privata fält
         DisplayController controller;
+        double parsedSimulationSpeed;
         public MainWindow()  
         {
             InitializeComponent();
             controller = new DisplayController(this);
             controller.Start();
-            
-            //Enkapsulera CurrentPatrons i establishement
-            //Ni tar väldigt många parametrerar i konstruktorn för establishmenten, inte lättläsligt
         }
-        private void StartSimButton_Click(object sender, RoutedEventArgs e)
+        void StartSimButton_Click(object sender, RoutedEventArgs e)
         {
-            double parsed;
-            if(double.TryParse(speedModifierTextbox.Text.Replace('.',','), out parsed))
-            {
-                if(parsed > 0 && parsed < 11)
-                {
-                    controller.DisplaySimulation();
-                    manager = new SimulationManager((SimulationState)SimulationStateDropDown.SelectedItem, parsed);
-                    manager.StartSimulation();
-                }
-            }
+            controller.DisplaySimulation();
+            manager = new SimulationManager((SimulationState)SimulationStateDropDown.SelectedItem, parsedSimulationSpeed);
+            manager.StartSimulation();
         }
-        private void SimulationStateDropDown_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            switch (SimulationStateDropDown.SelectedItem)
-            {
-                case SimulationState.Default:
-                    controller.PrintLabelInfo(9, 8, new TimeSpan(0, 2, 0), 1, 1, 1);
-                    break;
-                case SimulationState.TwentyGlassThreeChairs:
-                    controller.PrintLabelInfo(3, 20, new TimeSpan(0, 2, 0), 1, 1, 1);
-                    break;
-                case SimulationState.TwentyChairsFiveGlass:
-                    controller.PrintLabelInfo(20, 5, new TimeSpan(0, 2, 0), 1, 1, 1);
-                    break;
-                case SimulationState.PatronsSlowMode:
-                    controller.PrintLabelInfo(9, 8, new TimeSpan(0, 2, 0), 1, 0.5, 1);
-                    break;
-                case SimulationState.WaitressBoostMode:
-                    controller.PrintLabelInfo(9, 8, new TimeSpan(0, 2, 0), 1, 1, 2);
-                    break;
-                case SimulationState.BarOpenForFiveMins:
-                    controller.PrintLabelInfo(9, 8, new TimeSpan(0, 5, 0), 1, 1, 1);
-                    break;
-                case SimulationState.CouplesNight:
-                    controller.PrintLabelInfo(9, 8, new TimeSpan(0, 2, 0), 2, 1, 1);
-                    break;
-                case SimulationState.BusLoad:
-                    controller.PrintLabelInfo(9, 8, new TimeSpan(0, 2, 0), 20, 1, 1);
-                    break;
-                case SimulationState.CrazyState:
-                    controller.PrintLabelInfo(100, 100, new TimeSpan(0, 59, 59), 4, 0.2, 3);
-                    break;
-            }
-        }
-        private void CloseSimButton_Click(object sender, RoutedEventArgs e)
+        void CloseSimButton_Click(object sender, RoutedEventArgs e)
         {
             if (manager.StopSimulation())
             {
                 controller.DisplaySettings();
+            }
+        }
+        void SpeedModifierTextbox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (double.TryParse(speedModifierTextbox.Text.Replace('.', ','), out parsedSimulationSpeed) && parsedSimulationSpeed > 0 && parsedSimulationSpeed < 6)
+            {
+                StartSimButton.IsEnabled = true;
+            }
+            else
+            {
+                StartSimButton.IsEnabled = false;
             }
         }
     }

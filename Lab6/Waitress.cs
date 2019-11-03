@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,14 +8,14 @@ namespace Lab6
     public class Waitress
     {
         enum State { WaitingForDirtyGlass, PickingUpGlass, CleaningGlass, LeavingWork, ShelfingGlass, LeftWork }
-        State CurrentState;
+        State currentState;
         public event Action<string> Log;
         List<Glass> carryingGlasses;
         double waitressSpeed;
         double simulationSpeed;
         public Waitress(Establishment establishment)
         {
-            CurrentState = State.WaitingForDirtyGlass;
+            currentState = State.WaitingForDirtyGlass;
             carryingGlasses = new List<Glass>(); 
             waitressSpeed = establishment.WaitressSpeed;
             simulationSpeed = establishment.SimulationSpeed;
@@ -26,9 +24,9 @@ namespace Lab6
         {
             Task.Run(() =>
             {
-                while (CurrentState != State.LeftWork && !ct.IsCancellationRequested) 
+                while (currentState != State.LeftWork && !ct.IsCancellationRequested) 
                 {
-                    switch (CurrentState)
+                    switch (currentState)
                     {
                         case State.WaitingForDirtyGlass:
                             WaitingForDirtyGlass(establishment);
@@ -55,7 +53,7 @@ namespace Lab6
         {
             if (TimeToGoHome(establishment))
             {
-                CurrentState = State.LeavingWork;
+                currentState = State.LeavingWork;
                 return;
             }
             if (establishment.Table.NumberOfGlasses() == 0) 
@@ -66,12 +64,12 @@ namespace Lab6
             {
                 if (TimeToGoHome(establishment))
                 {
-                    CurrentState = State.LeavingWork;
+                    currentState = State.LeavingWork;
                     return;
                 }
                 Thread.Sleep(SpeedModifier(300));
             }
-            CurrentState = State.PickingUpGlass;
+            currentState = State.PickingUpGlass;
         }
         bool TimeToGoHome(Establishment establishment)
         {
@@ -86,7 +84,7 @@ namespace Lab6
             Log("is picking up glasses");
             Thread.Sleep(SpeedModifier(10000));
             carryingGlasses.AddRange(table.RemoveGlasses());
-            CurrentState = State.CleaningGlass;
+            currentState = State.CleaningGlass;
         }
         void WashingGlass()
         {
@@ -96,7 +94,7 @@ namespace Lab6
             {
                 glass.CurrentState = Glass.State.Clean;
             }
-            CurrentState = State.ShelfingGlass;
+            currentState = State.ShelfingGlass;
         }
         void ShelfingGlass(Bar bar)
         {
@@ -106,12 +104,12 @@ namespace Lab6
                 bar.AddGlassToShelf(glass);
             }
             carryingGlasses.RemoveRange(0, carryingGlasses.Count);
-            CurrentState = State.WaitingForDirtyGlass;
+            currentState = State.WaitingForDirtyGlass;
         }
         void LeavingWork()
         {
             Log("has left the pub");
-            CurrentState = State.LeftWork;
+            currentState = State.LeftWork;
         }
         int SpeedModifier(int normalSpeed)
         {

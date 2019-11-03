@@ -6,14 +6,14 @@ namespace Lab6
 {
     public class Table
     {
-        ConcurrentBag<Glass> GlassesOnTable;
-        ConcurrentBag<Chair> ChairsAroundTable;
-        ConcurrentQueue<Patron> ChairQueue;
+        ConcurrentBag<Glass> glassesOnTable;
+        ConcurrentBag<Chair> chairsAroundTable;
+        ConcurrentQueue<Patron> chairQueue;
         public Table(Establishment establishment)
         {
-            GlassesOnTable = new ConcurrentBag<Glass>();
-            ChairsAroundTable = new ConcurrentBag<Chair>();
-            ChairQueue = new ConcurrentQueue<Patron>();
+            glassesOnTable = new ConcurrentBag<Glass>();
+            chairsAroundTable = new ConcurrentBag<Chair>();
+            chairQueue = new ConcurrentQueue<Patron>();
             InitTable(establishment);
         }
         void InitTable(Establishment establishment)
@@ -21,12 +21,12 @@ namespace Lab6
             for (int i = 0; i < establishment.MaxChairs; i++)
             {
                 var chair = new Chair();
-                ChairsAroundTable.Add(chair);
+                chairsAroundTable.Add(chair);
             }
         }
         public bool IsFirstInQueue(Patron patron)
         {
-            if(ChairQueue.First() == patron)
+            if(chairQueue.First() == patron)
             {
                 return true;
             }
@@ -37,7 +37,7 @@ namespace Lab6
         }
         public Chair GetFirstChairFromCondition(bool availableCondition)
         {
-            foreach (var chair in ChairsAroundTable)
+            foreach (var chair in chairsAroundTable)
             {
                 if (chair.Available == availableCondition)
                 {
@@ -48,20 +48,12 @@ namespace Lab6
         }
         public int GetNumberOfAvailableChairs()
         {
-            int numberOfChairs = 0;
-            foreach (var chair in ChairsAroundTable)
-            {
-                if (chair.Available)
-                {
-                    numberOfChairs++;
-                }
-            }
-            return numberOfChairs;
+            return chairsAroundTable.Where(o => o.Available).Count();
         }
         public bool TryDequeue(Patron patron)
         {
             Patron dequeuedPatron;
-            if (ChairQueue.TryDequeue(out dequeuedPatron))
+            if (chairQueue.TryDequeue(out dequeuedPatron))
             {
                 return true;
             }
@@ -72,26 +64,22 @@ namespace Lab6
         }
         public void EnqueuePatron(Patron patron)
         {
-            ChairQueue.Enqueue(patron);
+            chairQueue.Enqueue(patron);
         }
         public void PutGlassOnTable(Glass glass)
         {
-            GlassesOnTable.Add(glass);
+            glassesOnTable.Add(glass);
         }
-
         public int NumberOfGlasses()
         {
-            return GlassesOnTable.Count();
+            return glassesOnTable.Count();
         }
-
-
-        //KOLLA IGENOM
         public List<Glass> RemoveGlasses()
         {
-            int glassesToRemove = GlassesOnTable.Count;
+            int glassesToRemove = glassesOnTable.Count;
             List<Glass> glassesToReturn = new List<Glass>();
-            glassesToReturn.AddRange(GlassesOnTable.Take<Glass>(glassesToRemove).ToList());
-            GlassesOnTable = new ConcurrentBag<Glass>(GlassesOnTable.Except(glassesToReturn));
+            glassesToReturn.AddRange(glassesOnTable.Take<Glass>(glassesToRemove).ToList());
+            glassesOnTable = new ConcurrentBag<Glass>(glassesOnTable.Except(glassesToReturn));
             return glassesToReturn;
         }
     }

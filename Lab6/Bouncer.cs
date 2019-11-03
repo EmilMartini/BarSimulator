@@ -7,7 +7,8 @@ namespace Lab6
 {
     public class Bouncer
     {
-        enum State { Waiting, Working, LeavingWork, StopBouncer}
+        enum State { Waiting, Working, LeavingWork, LeftWork}
+        State currentState;
         public event Action<string> Log;
         Random random = new Random();
         List<string> patronNames = new List<string>()
@@ -68,7 +69,6 @@ namespace Lab6
         double simulationSpeed;
         double bouncerSpeed;
         int patronsPerEntry;
-        State currentState = State.Waiting;
         public Bouncer(Establishment establishment)
         {
             bouncerSpeed = establishment.BouncerSpeed;
@@ -83,7 +83,7 @@ namespace Lab6
         {
             Task.Run(() =>
             {
-                while(currentState != State.StopBouncer && !ct.IsCancellationRequested)
+                while(currentState != State.LeftWork && !ct.IsCancellationRequested)
                 {
                     switch (currentState)
                     {
@@ -140,16 +140,15 @@ namespace Lab6
             }
             for (int i = 0; i < patronsPerEntry; i++)
             {
-                establishment.TotalPatrons++;
                 Patron patron = new Patron(patronNames[random.Next(0, patronNames.Count - 1)], establishment, ct);
-                establishment.CurrentPatrons.Insert(0, patron);
+                establishment.AddPatron(patron);
             }
             currentState = State.Waiting;
         }
         void LeavingWork()
         {
-            Log("Bouncer has left the pub.");// => Logger.Log(LogLevel.Info, Category.Bouncer, "Bouncer has left the pub.");
-            currentState = State.StopBouncer;
+            Log("Bouncer has left the pub.");
+            currentState = State.LeftWork;
         }
         DateTime CalculateTimeToSleep(int minRange, int maxRange)
         {

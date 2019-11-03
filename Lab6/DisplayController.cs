@@ -73,14 +73,5 @@ namespace Lab6
                 settingControls[i].Visibility = System.Windows.Visibility.Visible;
             }
         }
-        public void PrintLabelInfo(int maxChairs, int maxGlass, TimeSpan timeSpan, int patronsPerEntry, double patronSimSpeed, double waitressSimSpeed)
-        {
-            view.maxChairsLabel.Content = $"Max Chairs: {maxChairs}";
-            view.maxGlassesLabel.Content = $"Max Glasses: {maxGlass}";
-            view.OpenForLabel.Content = $"Open for: {timeSpan.ToString(@"mm\:ss")}";
-            view.patronsPerEntryLabel.Content = $"Patrons per entry: {patronsPerEntry}";
-            view.patronSimSpeedLabel.Content = $"Patron simulation speed: {patronSimSpeed}";
-            view.waitressSimSpeedLabel.Content = $"Waitress simulation speed: {waitressSimSpeed}";
-        }
     }
 }

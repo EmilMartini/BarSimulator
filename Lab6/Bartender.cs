@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,8 +7,8 @@ namespace Lab6
     public class Bartender
     {
         enum State { WaitingForPatron, WaitingForCleanGlass, PouringBeer, LeavingWork , LeftWork}
-        public event Action<string> Log;
         State currentState;
+        public event Action<string> Log;
         double simulationSpeed;
         public Bartender(Establishment establishment)
         {
