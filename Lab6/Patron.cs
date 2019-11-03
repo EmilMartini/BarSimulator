@@ -27,9 +27,9 @@ namespace Lab6
         }
         void Simulate(Establishment establishment, CancellationToken ct)
         {
+            Log($"{Name} entered the bar");
             Task.Run(() =>
             {
-                Log($"{Name} entered the bar");
                 while (currentState != State.LeftPub && !ct.IsCancellationRequested)
                 {
                     switch (currentState)

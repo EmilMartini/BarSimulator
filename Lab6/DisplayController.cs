@@ -20,12 +20,6 @@ namespace Lab6
                 view.StartSimButton,
                 view.SimulationSpeedLabel,
                 view.speedModifierTextbox,
-                view.maxChairsLabel,
-                view.maxGlassesLabel,
-                view.patronsPerEntryLabel,
-                view.OpenForLabel,
-                view.patronSimSpeedLabel,
-                view.waitressSimSpeedLabel,
             };
             simulationControls = new Control[]
             {
