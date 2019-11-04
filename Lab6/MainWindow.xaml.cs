@@ -9,7 +9,7 @@ namespace Lab6
     /// </summary>
     public partial class MainWindow : Window
     {
-        SimulationManager manager; //Liten bokstav på privata fält
+        SimulationManager manager;
         DisplayController controller;
         double parsedSimulationSpeed;
         public MainWindow()  

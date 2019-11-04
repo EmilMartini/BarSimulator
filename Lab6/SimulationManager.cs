@@ -93,7 +93,7 @@ namespace Lab6
             TimeSpan calculation = timeToClose - now;
             if (calculation.TotalSeconds <= 0)
             {
-                establishment.IsOpen = false;
+                establishment.CloseBar();
                 return new TimeSpan(0,0,0);
             }
             else
